@@ -52,7 +52,7 @@ function FormularioGrado() {
             <div>
                 <Link to="/"><img className="logoCab2" src={eina} /></Link>
                 <Link to="/">
-                    <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "350px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
+                    <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
                 </Link>
                 <hr size="5px" color="black" />
             </div>

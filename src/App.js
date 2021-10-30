@@ -16,11 +16,11 @@ function App() {
     
     <div className="App">
 
-      <img className="logoCab" src={eina} />
+      <img className="logoCab" src={eina} style={{"margin-right":"1100px"}}/>
       <hr size="5px" color="black" />
       <br></br>
 
-      <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-top":"120px", "margin-left": "20%"}}>
+      <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-top":"120px", "margin-left": "27%"}}>
         <div className="inicioAux">
           <img className="imagenLogos" src={calendar}/>
           <p id="textoImg">CALENDARIO GRADOS</p>
@@ -35,7 +35,7 @@ function App() {
       </div>
 
 
-      <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-top":"50px", "margin-left": "20%"}}>
+      <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-top":"50px", "margin-left": "27%"}}>
         <div className="inicioAux">
           <img className="imagenLogos" src={calendar}/>
           <p id="textoImg">CALENDARIO MÁSTERES</p>
