@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import App2 from './timetable/calendarioGrado/calendarioGrado'
+import Raiz from './root/Raiz'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Raiz />
   </React.StrictMode>,
   document.getElementById('root')
 );
