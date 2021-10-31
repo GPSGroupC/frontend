@@ -2,19 +2,19 @@ import React, { Fragment, useState, useEffect } from "react";
 import eina from '../../../images/eina-logo.png'
 import calendar from '../../../images/calendar-logo.png'
 import { Link } from 'react-router-dom'
-
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import Stack from '@mui/material/Stack';
 import isWeekend from 'date-fns/isWeekend';
+import axios from 'axios'
 
 
 
 
 
-
+const baseUrl = "http://localhost:8000"
 
 
 
@@ -52,6 +52,24 @@ class FormularioGrado extends React.Component {
             console.log(this.state.estadoCurso)
         })
     
+    }
+
+    handleGuardarCambios =  () => {
+        console.log(this.state)
+        axios({ method: 'POST', url: baseUrl + "/updateCalendar", 
+        data: { 
+            fecha_inicio_1: this.state.inicioPrimer_cuatri, 
+            fecha_inicio_2: this.state.inicioSegundo_cuatri, 
+            date_startSeptember: this.state.inicioSegundaConvocatoria, 
+            course: this.state.estadoCurso, 
+            lastUpdate: this.state.ultModificacion 
+        }})
+            .then( () => {
+                console.log("Exito en el envio");
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
 
@@ -159,7 +177,7 @@ class FormularioGrado extends React.Component {
 
 
                 <Link to="/">
-                    <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                    <button onClick={this.handleGuardarCambios} type="button" class="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
                 
                 
