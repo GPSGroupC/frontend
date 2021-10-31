@@ -28,8 +28,10 @@ function App() {
             <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "70px"}}>EDITAR</button>
           </Link>
           <div>
-            <button type="button" class="btn btn-outline-info btn-lg">Exportar a PDF</button>
-            <button type="button" class="btn btn-outline-info btn-lg">Exportar a iCAL</button>
+              <Link to="/calendario-pdf">
+                <button type="button" class="btn btn-outline-info btn-lg">Exportar a PDF</button>
+              </Link>
+              <button type="button" class="btn btn-outline-info btn-lg">Exportar a iCAL</button>
           </div>
         </div>
       </div>
@@ -39,11 +41,11 @@ function App() {
         <div className="inicioAux">
           <img className="imagenLogos" src={calendar}/>
           <p id="textoImg">CALENDARIO MÁSTERES</p>
-          <Link to="/calendario-master">
-            <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "35px"}}>EDITAR</button>
-          </Link>
+          <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "35px"}}>EDITAR</button>
           <div>
-            <button type="button" class="btn btn-outline-info btn-lg">Exportar a PDF</button>
+              <Link to="/calendario-pdf">
+                  <button type="button" class="btn btn-outline-info btn-lg">Exportar a PDF</button>
+              </Link>
             <button type="button" class="btn btn-outline-info btn-lg">Exportar a iCAL</button>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 import App from '../App'
 import CalendarioGrado from '../timetable/calendarioGrado/formularios/FormularioGrado'
 import CalendarioMaster from '../timetable/calendarioMaster/formularios/FormularioMaster'
+import TimetableToPdf from "../timetable/TimetableToPdf";
 
 function Raiz(){
 
@@ -14,6 +15,8 @@ function Raiz(){
             <Route exact path="/home" component={App} />
             <Route exact path="/calendario-grado" component={CalendarioGrado}/>
             <Route exact path="/calendario-master" component={CalendarioMaster}/>
+            <Route exact path="/calendario-pdf" component={TimetableToPdf}/>
+
         </BrowserRouter>
 
     )
