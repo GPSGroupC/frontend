@@ -8,6 +8,7 @@ import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
+import CalendarioGrado from "./timetable/calendarioGrado/CalendarioGrado";
 
 
 function App() {
@@ -43,10 +44,8 @@ function App() {
             <p id="textoImg">CALENDARIO MÁSTERES</p>
             <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "35px"}}>EDITAR</button>
             <div>
-              <Link to="/calendario-pdf">
                 <button type="button" class="btn btn-outline-info btn-lg">Exportar a PDF</button>
-              </Link>
-              <button type="button" class="btn btn-outline-info btn-lg">Exportar a iCAL</button>
+                <button type="button" class="btn btn-outline-info btn-lg">Exportar a iCAL</button>
             </div>
           </div>
         </div>
