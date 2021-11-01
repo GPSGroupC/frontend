@@ -156,3 +156,24 @@ button {
   font-weight: bold;
 }
 
+.divToPrint{
+  position: absolute;
+  left: 30%;
+}
+.pdfHeader{
+  display: flex;
+}
+.pdfBody {
+  position: absolute;
+  left: 50%;
+}
+.pdfHeader p {
+  margin-left: 50px;
+  color: dimgrey;
+  padding: 14px;
+}
+.printButton {
+  position: absolute;
+  left: 45%;
+  top:80%
+}
