@@ -18,7 +18,7 @@ const baseUrl = "http://localhost:8000"
 
 
 
-class FormularioGrado extends React.Component {
+class Formulario extends React.Component {
 
     constructor(props) {
         super(props)
@@ -187,5 +187,5 @@ class FormularioGrado extends React.Component {
     }
 }
 
-export default FormularioGrado;
+export default Formulario;
 
