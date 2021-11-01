@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import App from '../App'
-import CalendarioGrado from '../timetable/calendarioGrado/formularios/FormularioGrado'
+import CalendarioGrado from '../timetable/calendarioGrado/CalendarioGrado'
 import CalendarioMaster from '../timetable/calendarioMaster/formularios/FormularioMaster'
 import TimetableToPdf from "../timetable/TimetableToPdf";
 

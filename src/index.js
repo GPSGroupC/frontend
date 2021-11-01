@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import App2 from './timetable/calendarioGrado/calendarioGrado'
 import Raiz from './root/Raiz'
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Raiz />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <Raiz />
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function
