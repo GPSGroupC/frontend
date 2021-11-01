@@ -2,7 +2,7 @@ import React, {Component, useLayoutEffect} from 'react';
 const { datesGenerator } = require('dates-generator');
 
 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-const days = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo']
+const days = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
 class Calendario extends Component {
     constructor(props) {
@@ -63,13 +63,11 @@ class Calendario extends Component {
                             Siguiente
                         </div>
                     </div>
-                        {months[this.state.calendar.month]}
                     <div>
-
-                        <div>
                             <table style={{ width: '100%' }}>
                                 <tbody>
                                 <tr>
+                                    <td>{this.state.calendar.year}</td>
                                     {days.map((day) => (
                                         <td key={day} style={{ padding: '5px 0' }}>
                                             <div style={{ textAlign: 'center', padding: '5px 0' }}>
@@ -78,7 +76,11 @@ class Calendario extends Component {
                                         </td>
                                     ))}
                                 </tr>
-
+                                <tr>
+                                    <td rowSpan={this.state.dates.length + 1} scope="rowgroup">
+                                        {months[this.state.calendar.month]}
+                                    </td>
+                                </tr>
                                 {this.state.dates.length > 0 && this.state.dates.map((week) => (
                                     <tr key={JSON.stringify(week[0])}>
                                         {week.map((each) => (
@@ -92,8 +94,6 @@ class Calendario extends Component {
                                 ))}
                                 </tbody>
                             </table>
-                        </div>
-
                     </div>
                     <div style={{ padding: 10 }}>
                         Fecha seleccionada: {this.state.selectedDate.toLocaleString()}
