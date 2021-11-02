@@ -56,11 +56,11 @@ class Formulario extends React.Component {
 
     handleGuardarCambios =  () => {
         console.log(this.state)
-        axios({ method: 'POST', url: baseUrl + "/updateCalendar", 
+        axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar", 
         data: { 
             fecha_inicio_1: this.state.inicioPrimer_cuatri, 
             fecha_inicio_2: this.state.inicioSegundo_cuatri, 
-            date_startSeptember: this.state.inicioSegundaConvocatoria, 
+            convSeptiembre: this.state.inicioSegundaConvocatoria, 
             course: this.state.estadoCurso, 
             lastUpdate: this.state.ultModificacion 
         }})
