@@ -44,12 +44,15 @@ class Calendario extends Component {
     //Actualizar los checkbox con el estado interno de la fecha seleccionada
     onOpenDialog = (date) => {
         console.log(date.jsDate)
-        //Obtener todos los checkbox
+        //Checkboxs
         let convocatoria = document.getElementById("convocatoria")
         let festivo = document.getElementById("festivo")
         let lectivo = document.getElementById("lectivo")
         let semanaAB = document.getElementById("semanaAB")
         let horarioCambiado = document.getElementById("horarioCambiado")
+        //Selects
+        let selectSemanaAB = document.getElementById("selectSemanaAB")
+        let selectHorarioCambiado = document.getElementById("selectHorarioCambiado")
 
 
         //Deseleccionar todos los checkbox
@@ -70,11 +73,13 @@ class Calendario extends Component {
                 lectivo.checked = true
                 break;
         }
-        if (date.semanaAB != undefined  && (date.semanaAB == "a" ||date.semanaAB == "b")) {
+        if (date.semanaAB != undefined) {
             semanaAB.checked = true
+            date.semanaAB = selectSemanaAB.value
         }
         if (date.horarioCambiado != undefined) {
             horarioCambiado.checked = true
+            date.horarioCambiado = selectHorarioCambiado.value
         }
 
         this.setState((state, props) => ({
@@ -87,11 +92,14 @@ class Calendario extends Component {
     //Actualizar estado interno de la fecha seleccionada
     onCloseDialog = () => {
         let newDateType = "lectivo"
-        //Obtener los checkbox
+        //Checkboxs
         let convocatoria = document.getElementById("convocatoria")
         let festivo = document.getElementById("festivo")
         let semanaAB = document.getElementById("semanaAB")
         let horarioCambiado = document.getElementById("horarioCambiado")
+        //Selects
+        let selectSemanaAB = document.getElementById("selectSemanaAB")
+        let selectHorarioCambiado = document.getElementById("selectHorarioCambiado")
 
         if (convocatoria.checked) {
             newDateType = "convocatoria"
@@ -100,12 +108,12 @@ class Calendario extends Component {
         }
 
         if (semanaAB.checked) {
-            this.state.selectedDate.semanaAB = "a"
+            this.state.selectedDate.semanaAB = selectSemanaAB.value
         } else {
             this.state.selectedDate.semanaAB = null
         }
         if (horarioCambiado.checked) {
-            this.state.selectedDate.horarioCambiado = "L"
+            this.state.selectedDate.horarioCambiado = selectHorarioCambiado.value
         } else {
             this.state.selectedDate.horarioCambiado = null
         }
@@ -117,12 +125,13 @@ class Calendario extends Component {
 
     //Hacer que los checkbox sean excluyentes
     onSelectedCheckBox = (id) => {
+        //checkboxs
         let convocatoria = document.getElementById("convocatoria")
         let festivo = document.getElementById("festivo")
         let lectivo = document.getElementById("lectivo")
         let semanaAB = document.getElementById("semanaAB")
         let horarioCambiado = document.getElementById("horarioCambiado")
-
+        //Selects
         switch (id) {
             case "convocatoria":
                 if (convocatoria.checked) {
@@ -190,10 +199,23 @@ class Calendario extends Component {
                         <label><input type="checkbox" id="lectivo" onChange={() => {this.onSelectedCheckBox("lectivo")}}></input>Lectivo</label><br/>
                         <ul>
                             <li>
-                                <label><input type="checkbox" id="semanaAB" onChange={() => {this.onSelectedCheckBox("semanaAB")}}></input>Semana</label><br/>
+                                <label><input type="checkbox" id="semanaAB" onChange={() => {this.onSelectedCheckBox("semanaAB")}}></input>Semana</label>
+                                <select id="selectSemanaAB">
+                                    <option value="a">a</option>
+                                    <option value="b">b</option>
+                                </select>
                             </li>
                             <li>
                                 <label><input type="checkbox" id="horarioCambiado" onChange={() => {this.onSelectedCheckBox("horarioCambiado")}}></input>Dia con horario cambiado a</label><br/>
+                                <select id="selectHorarioCambiado">
+                                    <option value="L">L</option>
+                                    <option value="M">M</option>
+                                    <option value="X">X</option>
+                                    <option value="J">J</option>
+                                    <option value="V">V</option>
+                                    <option value="S">S</option>
+                                    <option value="D">D</option>
+                                </select>
                             </li>
                         </ul>
                     </li>
