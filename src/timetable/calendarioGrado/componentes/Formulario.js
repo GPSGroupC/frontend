@@ -30,6 +30,44 @@ class Formulario extends React.Component {
             estadoCurso: "2021-2022"
         }
     }
+
+    getAllCalendarData = async (curso) => {
+        axios({ method: 'GET', url: baseUrl + "/calendar/getCalendar", 
+        params: { 
+            course: curso,      
+        }})
+        .then( (response) => {
+            if(response.status !== 225){
+                let dateIC1 = this.parseDate(response.data[0].fechainicio1.split('-'))
+                let dateIC2 = this.parseDate(response.data[0].fechainicio2.split('-'))
+                let dateIS1 = this.parseDate(response.data[0].fechainiciosept.split('-'))
+                this.handleChangePrimerCuatri(dateIC1)
+                this.handleChangeSegundoCuatri(dateIC2)
+                this.handleChangeSegundaConv(dateIS1)
+            }else{
+                this.handleChangePrimerCuatri(null)
+                this.handleChangeSegundoCuatri(null)
+                this.handleChangeSegundaConv(null)
+            }
+        })
+        .catch(error => {
+                console.log(error);
+        })
+    }
+    /**
+     * 
+     * @param {String} date : Recibe un array con una fecha en formato DD-MM-YYYY
+     * , donde date[2] = AÑO , date[1] = MES, date[0] = dia
+     * @returns Devuelve una Date en formato YYYY-MM-DD
+     */
+    parseDate = (date) => {
+        //El mes se numera desde el 0, por eso (Mes=date[1]) - 1
+        return new Date(date[2], date[1] - 1,date[0])
+    }
+
+    componentDidMount = () => {
+        this.getAllCalendarData('2021-2022')
+    }
     
     
     handleChangeUltModificacion = (newValue) => {
@@ -37,7 +75,7 @@ class Formulario extends React.Component {
     };
     
     handleChangePrimerCuatri = (newValue) => {
-        this.setState({ inicioPrimer_cuatri: newValue})    };
+        this.setState({ inicioPrimer_cuatri: newValue})};
 
     handleChangeSegundoCuatri = (newValue) => {
         this.setState({ inicioSegundo_cuatri: newValue})
@@ -49,7 +87,7 @@ class Formulario extends React.Component {
 
     HandleChangeCurso = (cursoSeleccionado) => {
         this.setState({estadoCurso: cursoSeleccionado.target.value}, () =>{
-            console.log(this.state.estadoCurso)
+           this.getAllCalendarData(cursoSeleccionado.target.value)
         })
     
     }
@@ -125,9 +163,9 @@ class Formulario extends React.Component {
                             inputFormat="dd/MM/yyyy"
                             value={this.state.inicioPrimer_cuatri}
                             onChange={this.handleChangePrimerCuatri}
-                            defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[0],8)}
-                            minDate={new Date("1-9-" + this.state.estadoCurso.split('-')[0])}
-                            maxDate={new Date("30-9-" + this.state.estadoCurso.split('-')[0])}
+                            defaultCalendarMonth={ new Date(this.state.estadoCurso.split('-')[0],8)}
+                            minDate={new Date("9-1-" + this.state.estadoCurso.split('-')[0])}
+                            maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[0])}
                             shouldDisableDate={isWeekend}
                             renderInput={(params) => <TextField {...params} />}
                         />  
@@ -141,9 +179,9 @@ class Formulario extends React.Component {
                             label="dd/mm/yyyy"
                             inputFormat="dd/MM/yyyy"
                             value={this.state.inicioSegundo_cuatri}
-                            defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[0],1)}
-                            minDate={new Date("1-2-" + this.state.estadoCurso.split('-')[0])}
-                            maxDate={new Date("29-2-" + this.state.estadoCurso.split('-')[0])}
+                            defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1],1)}
+                            minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
+                            maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
                             onChange={this.handleChangeSegundoCuatri}
                             renderInput={(params) => <TextField {...params} />}
                         />  
@@ -157,9 +195,9 @@ class Formulario extends React.Component {
                             inputFormat="dd/MM/yyyy"
                             value={this.state.inicioSegundaConvocatoria}
                             onChange={this.handleChangeSegundaConv}
-                            defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[0],8)}
-                            minDate={new Date("1-9-" + this.state.estadoCurso.split('-')[0])}
-                            maxDate={new Date("30-9-" + this.state.estadoCurso.split('-')[0])}
+                            defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1],8)}
+                            minDate={new Date("9-1-" + this.state.estadoCurso.split('-')[1])}
+                            maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[1])}
                             renderInput={(params) => <TextField {...params} />}
                         />  
                     </Stack>
