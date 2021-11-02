@@ -176,3 +176,11 @@ button {
   left: 45%;
   top:80%
 }
+
+td.festivo {
+  background-color: #a2f29f;
+}
+td.convocatoria {
+  background-color: #d675bd;
+}
+

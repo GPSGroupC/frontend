@@ -161,7 +161,7 @@ class Calendario extends Component {
                     {month.length > 0 && month.map((week) => (
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day) => (
-                                <td key={JSON.stringify(day)} style={{ padding: '5px 0' }}>
+                                <td key={JSON.stringify(day)} class={day.type} style={{ padding: '5px 0' }}>
                                     <div onClick={() => this.onOpenDialog(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
                                         {day.date}
                                     </div>
