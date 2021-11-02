@@ -1,4 +1,4 @@
-import React, {Component, useLayoutEffect} from 'react';
+import React, {Component} from 'react';
 const { datesGenerator } = require('dates-generator');
 
 const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -9,28 +9,32 @@ class Calendario extends Component {
         super(props)
         this.state = {
             selectedDate: new Date(),
-            semestre1:{dates: [], year: -1},
-            semestre2:{dates: [], year: -1},
-            recuperacion:{dates: [], year: -1}
+            semestre1:{dates: [], year: -1, monthNames:[]},
+            semestre2:{dates: [], year: -1, monthNames:[]},
+            recuperacion:{dates: [], year: -1, monthNames:[]}
         }
     }
 
-    /* Dada una fecha inicial y una duración, devuelve un periodo en formato:
-    *  periodo := { dates: [ mes ], year }
-    *  mes:= [ semana ]
-    *  semana:= [ {dia} ]
+    /* Dado un mes y año inicial, donde:
+    *       month 0 -> Enero, month 11 -> Diciembre.
+    *  Devuelve un periodo en formato:
+    *       periodo := { dates, year, monthNames }
+    *       dates:= [ mes ]
+    *       mes:= [ semana ]
+    *       semana:= [ {dia} ]
     */
-    getPeriodo = (firstDate, numMonths) => {
-        let date = firstDate
-        let datesPeriodo = []
+    getPeriodo = (month, year, numMonths) => {
+        //startingDay 0 -> Domingo, startingDay 6 -> Sabado
+        let queryDate = {month: month, year: year, startingDay: 1}
+        let acumDates = []
+        let monthNames = []
         for (let i = 0; i < numMonths; i++) {
-            // dates -> mes[ semana[ {dia} ] ]
-            const { dates, nextMonth, nextYear } = datesGenerator(date)
-            datesPeriodo = [...datesPeriodo,dates]
-            date = {month: nextMonth, year: nextYear}
+            const { dates, nextMonth, nextYear } = datesGenerator(queryDate)
+            acumDates = [...acumDates,dates]
+            monthNames = [...monthNames, months[queryDate.month]]
+            queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
         }
-        //periodo[ mes[ semana[ {dia} ] ] ]
-        return { dates: datesPeriodo, year: firstDate.year}
+        return { dates: acumDates, year: year, monthNames: monthNames}
     }
 
     //Detectar que se ha pulsado una fecha
@@ -44,9 +48,10 @@ class Calendario extends Component {
 
     //Inicializar información
     componentDidMount() {
-        this.state.semestre1 = this.getPeriodo({ month: 9, year: 2021 }, 5)
-        this.state.semestre2 = this.getPeriodo({ month: 2, year: 2022 }, 5)
-        this.state.recuperacion = this.getPeriodo({ month: 9, year: 2022 }, 1)
+        //month 0 -> Enero, month 11 -> Diciembre
+        this.state.semestre1 = this.getPeriodo(8, 2021, 5)
+        this.state.semestre2 = this.getPeriodo( 1, 2022 , 5)
+        this.state.recuperacion = this.getPeriodo( 8, 2022 , 1)
 
         this.setState((state, props) => ({}))
     }
@@ -67,12 +72,12 @@ class Calendario extends Component {
                     ))}
                 </tr>
                 </thead>
-                {periodo.dates.length > 0 && periodo.dates.map((month) => (
+                {periodo.dates.length > 0 && periodo.dates.map((month,index) => (
 
                     <tbody>
                     <tr>
                         <td rowSpan={month.length + 1} scope="rowgroup">
-                            {months[month[0][0].month]}
+                            {periodo.monthNames[index]}
                         </td>
                     </tr>
                     {month.length > 0 && month.map((week) => (
