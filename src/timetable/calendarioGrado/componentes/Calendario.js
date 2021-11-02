@@ -12,12 +12,10 @@ class Calendario extends Component {
             semestre1:{dates: [], year: -1, monthNames:[]},
             semestre2:{dates: [], year: -1, monthNames:[]},
             recuperacion:{dates: [], year: -1, monthNames:[]},
-            //Dialogo checkbox
+            //Estado de la ventana de los checkboxs
             showDialog: false,
-            //Estado de una fecha seleccionada
+            //Estado de la fecha seleccionada
             selectedDate: new Date(),
-            selectedDateLectivoWeek: "C",
-            selectedDateLectivoChange: "none",
         }
     }
 
@@ -43,17 +41,22 @@ class Calendario extends Component {
         return { dates: acumDates, year: year, monthNames: monthNames}
     }
 
-
+    //Actualizar los checkbox con el estado interno de la fecha seleccionada
     onOpenDialog = (date) => {
+        console.log(date.jsDate)
         //Obtener todos los checkbox
         let convocatoria = document.getElementById("convocatoria")
         let festivo = document.getElementById("festivo")
         let lectivo = document.getElementById("lectivo")
+        let semanaAB = document.getElementById("semanaAB")
+        let horarioCambiado = document.getElementById("horarioCambiado")
+
 
         //Deseleccionar todos los checkbox
         convocatoria.checked = false
         festivo.checked = false
-
+        semanaAB.checked = false
+        horarioCambiado.checked = false
         //Seleccionar los checkbox segun el estado del día seleccionado
         switch(date.type) {
             case "convocatoria":
@@ -67,6 +70,13 @@ class Calendario extends Component {
                 lectivo.checked = true
                 break;
         }
+        if (date.semanaAB != undefined  && (date.semanaAB == "a" ||date.semanaAB == "b")) {
+            semanaAB.checked = true
+        }
+        if (date.horarioCambiado != undefined) {
+            horarioCambiado.checked = true
+        }
+
         this.setState((state, props) => ({
             selectedDate: date,
             showDialog: true,
@@ -74,16 +84,30 @@ class Calendario extends Component {
 
     }
 
+    //Actualizar estado interno de la fecha seleccionada
     onCloseDialog = () => {
         let newDateType = "lectivo"
         //Obtener los checkbox
         let convocatoria = document.getElementById("convocatoria")
         let festivo = document.getElementById("festivo")
+        let semanaAB = document.getElementById("semanaAB")
+        let horarioCambiado = document.getElementById("horarioCambiado")
 
         if (convocatoria.checked) {
             newDateType = "convocatoria"
         } else if (festivo.checked) {
             newDateType = "festivo"
+        }
+
+        if (semanaAB.checked) {
+            this.state.selectedDate.semanaAB = "a"
+        } else {
+            this.state.selectedDate.semanaAB = null
+        }
+        if (horarioCambiado.checked) {
+            this.state.selectedDate.horarioCambiado = "L"
+        } else {
+            this.state.selectedDate.horarioCambiado = null
         }
         this.state.selectedDate.type = newDateType
         this.setState((state, props) => ({
@@ -91,29 +115,57 @@ class Calendario extends Component {
         }))
     }
 
+    //Hacer que los checkbox sean excluyentes
     onSelectedCheckBox = (id) => {
         let convocatoria = document.getElementById("convocatoria")
         let festivo = document.getElementById("festivo")
         let lectivo = document.getElementById("lectivo")
+        let semanaAB = document.getElementById("semanaAB")
+        let horarioCambiado = document.getElementById("horarioCambiado")
+
         switch (id) {
             case "convocatoria":
                 if (convocatoria.checked) {
                     festivo.checked = false
                     lectivo.checked = false
+                    semanaAB.checked = false
+                    horarioCambiado.checked = false
                 }
                 break;
             case "festivo":
                 if (festivo.checked) {
                     convocatoria.checked = false
                     lectivo.checked = false
+                    semanaAB.checked = false
+                    horarioCambiado.checked = false
                 }
+                break;
             case "lectivo":
                 if (lectivo.checked) {
                     convocatoria.checked = false
                     festivo.checked = false
+                } else {
+                    //Deseleccionar dia lectivo
+                    semanaAB.checked = false
+                    horarioCambiado.checked = false
                 }
-            }
+                break;
+            case "semanaAB":
+                if (semanaAB.checked) {
+                    lectivo.checked = true
+                    convocatoria.checked = false
+                    festivo.checked = false
+                }
+                break;
+            case "horarioCambiado":
+                if (horarioCambiado.checked) {
+                    lectivo.checked = true
+                    convocatoria.checked = false
+                    festivo.checked = false
+                }
+        }
     }
+
     //Inicializar información
     componentDidMount() {
         //month 0 -> Enero, month 11 -> Diciembre
@@ -127,9 +179,25 @@ class Calendario extends Component {
     htmlDialog() {
         return (
             <dialog id="dialog" open={this.state.showDialog ? true : false}>
-                <label><input type="checkbox" id="convocatoria" onChange={() => {this.onSelectedCheckBox("convocatoria")}}></input>Convocatoria</label><br/>
-                <label><input type="checkbox" id="festivo" onChange={() => {this.onSelectedCheckBox("festivo")}}></input>Festivo</label><br/>
-                <label><input type="checkbox" id="lectivo" onChange={() => {this.onSelectedCheckBox("lectivo")}}></input>Lectivo</label><br/>
+                <ul>
+                    <li>
+                        <label><input type="checkbox" id="convocatoria" onChange={() => {this.onSelectedCheckBox("convocatoria")}}></input>Convocatoria</label><br/>
+                    </li>
+                    <li>
+                        <label><input type="checkbox" id="festivo" onChange={() => {this.onSelectedCheckBox("festivo")}}></input>Festivo</label><br/>
+                    </li>
+                    <li>
+                        <label><input type="checkbox" id="lectivo" onChange={() => {this.onSelectedCheckBox("lectivo")}}></input>Lectivo</label><br/>
+                        <ul>
+                            <li>
+                                <label><input type="checkbox" id="semanaAB" onChange={() => {this.onSelectedCheckBox("semanaAB")}}></input>Semana</label><br/>
+                            </li>
+                            <li>
+                                <label><input type="checkbox" id="horarioCambiado" onChange={() => {this.onSelectedCheckBox("horarioCambiado")}}></input>Dia con horario cambiado a</label><br/>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
                 <button className="btn btn-info" id="closeDialog" onClick={() => this.onCloseDialog()}>Cerrar</button>
             </dialog>
         )
@@ -160,10 +228,17 @@ class Calendario extends Component {
                     </tr>
                     {month.length > 0 && month.map((week) => (
                         <tr key={JSON.stringify(week[0])}>
-                            {week.map((day) => (
-                                <td key={JSON.stringify(day)} class={day.type} style={{ padding: '5px 0' }}>
+                            {week.map((day, dayIndex) => (
+                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
                                     <div onClick={() => this.onOpenDialog(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
-                                        {day.date}
+                                        {day.type == "lectivo" && day.semanaAB != undefined && day.horarioCambiado != undefined
+                                            ? day.date + " " + day.horarioCambiado + day.semanaAB
+                                            : day.type == "lectivo" && day.semanaAB != undefined && day.horarioCambiado == undefined
+                                                ? day.date + " " + days[dayIndex] + day.semanaAB
+                                                : day.type == "lectivo" && day.semanaAB == undefined && day.horarioCambiado != undefined
+                                                    ? day.date + " " + day.horarioCambiado
+                                                    : day.date
+                                        }
                                     </div>
                                 </td>
                             ))}
