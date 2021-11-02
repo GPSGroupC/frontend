@@ -118,7 +118,7 @@ class Formulario extends React.Component {
                 <div>
                     <Link to="/"><img className="logoCab2" src={eina} /></Link>
                     <Link to="/">
-                        <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
+                        <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
                     </Link>
                     <hr size="5px" color="black" />
                 </div>
@@ -126,9 +126,9 @@ class Formulario extends React.Component {
         
                 <div className="filtro2">
                 <h4 className="titulo">CALENDARIO GRADOS</h4>
-                <div class="form-group" style={{"width":"35%"}}>
-                    <label for="exampleSelect1" class="form-label mt-4">Curso</label>
-                    <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} class="form-select" id="exampleSelect1">
+                <div className="form-group" style={{"width":"35%"}}>
+                    <label for="exampleSelect1" className="form-label mt-4">Curso</label>
+                    <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select" id="exampleSelect1">
                         <option value="2021-2022">2021-2022</option>
                         <option value="2022-2023">2022-2023</option>
                         <option value="2023-2024">2023-2024</option>
@@ -215,7 +215,7 @@ class Formulario extends React.Component {
 
 
                 <Link to="/">
-                    <button onClick={this.handleGuardarCambios} type="button" class="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                    <button onClick={this.handleGuardarCambios} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
                 
                 

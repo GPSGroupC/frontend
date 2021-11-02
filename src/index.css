@@ -164,8 +164,7 @@ button {
   display: flex;
 }
 .pdfBody {
-  position: absolute;
-  left: 50%;
+  display: block;
 }
 .pdfHeader p {
   margin-left: 50px;
