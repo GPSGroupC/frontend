@@ -34,6 +34,14 @@ class Calendario extends Component {
         let monthNames = []
         for (let i = 0; i < numMonths; i++) {
             const { dates, nextMonth, nextYear } = datesGenerator(queryDate)
+            dates.map( (week) => {
+                week.map( (day, dayIndex) => {
+                    if (dayIndex == 5 || dayIndex == 6) {
+                        //Caso es sabado o domingo
+                        day.type = "festivo"
+                    }
+                })
+            })
             acumDates = [...acumDates,dates]
             monthNames = [...monthNames, months[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
