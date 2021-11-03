@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React from "react";
 import eina from '../../../images/eina-logo.png'
 import calendar from '../../../images/calendar-logo.png'
 import { Link } from 'react-router-dom'
@@ -15,7 +15,7 @@ import axios from 'axios'
 
 
 const baseUrl = "http://localhost:8000"
-
+const herokuUrl = "https://timetableeina-back.herokuapp.com/"
 
 
 class Formulario extends React.Component {
@@ -32,22 +32,25 @@ class Formulario extends React.Component {
     }
 
     getAllCalendarData = async (curso) => {
-        axios({ method: 'GET', url: baseUrl + "/calendar/getCalendar", 
+        axios({ method: 'GET', url: herokuUrl + "/calendar/getCalendar", 
         params: { 
             course: curso,      
         }})
         .then( (response) => {
             if(response.status !== 225){
+              
                 let dateIC1 = this.parseDate(response.data[0].fechainicio1.split('-'))
                 let dateIC2 = this.parseDate(response.data[0].fechainicio2.split('-'))
                 let dateIS1 = this.parseDate(response.data[0].fechainiciosept.split('-'))
                 this.handleChangePrimerCuatri(dateIC1)
                 this.handleChangeSegundoCuatri(dateIC2)
                 this.handleChangeSegundaConv(dateIS1)
+                this.handleChangeUltModificacion(this.parseDate(response.data[0].fechaultmodificacion.split('-')))
             }else{
                 this.handleChangePrimerCuatri(null)
                 this.handleChangeSegundoCuatri(null)
                 this.handleChangeSegundaConv(null)
+                this.handleChangeUltModificacion(null)
             }
         })
         .catch(error => {
@@ -93,14 +96,13 @@ class Formulario extends React.Component {
     }
 
     handleGuardarCambios =  () => {
-        console.log(this.state)
-        axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar", 
+
+        axios({ method: 'POST', url: herokuUrl + "/calendar/updateCalendar", 
         data: { 
             fecha_inicio_1: this.state.inicioPrimer_cuatri, 
             fecha_inicio_2: this.state.inicioSegundo_cuatri, 
-            convSeptiembre: this.state.inicioSegundaConvocatoria, 
+            convSeptiembre: this.state.inicioSegundaConvocatoria,
             course: this.state.estadoCurso, 
-            lastUpdate: this.state.ultModificacion 
         }})
             .then( () => {
                 console.log("Exito en el envio");
@@ -148,7 +150,7 @@ class Formulario extends React.Component {
                             label="dd/mm/yyyy"
                             inputFormat="dd/MM/yyyy"
                             value={this.state.ultModificacion}
-                            onChange={this.handleChangeUltModificacion}
+                            readOnly={true}
                             renderInput={(params) => <TextField {...params} />}
                         />
                     </Stack>
