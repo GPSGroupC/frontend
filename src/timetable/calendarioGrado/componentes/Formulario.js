@@ -15,7 +15,7 @@ import axios from 'axios'
 
 
 const baseUrl = "http://localhost:8000"
-const herokuUrl = "https://timetableeina-back.herokuapp.com/"
+const herokuUrl = "https://timetableeina-back.herokuapp.com"
 
 
 class Formulario extends React.Component {
