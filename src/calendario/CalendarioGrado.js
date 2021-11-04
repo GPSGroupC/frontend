@@ -69,10 +69,10 @@ class CalendarioGrado extends Component {
     }
 
     //METODOS FORMULARIOS
-    handleChangeUltModificacion = (newValue) => {
+   /* handleChangeUltModificacion = (newValue) => {
         console.log("handlechange:" + newValue)
         this.setState({ ultModificacion: newValue})
-    };
+    };*/
 
     handleChangePrimerCuatri = (newValue) => { //TODO: SEGUIR AQUI
         this.setState({ inicioPrimer_cuatri: newValue,
@@ -98,6 +98,7 @@ class CalendarioGrado extends Component {
                  this.state.inicioSegundo_cuatri,
                  this.state.inicioSegundaConvocatoria,
                  this.state.ultModificacion] = await Api.getAllCalendarData(cursoSeleccionado.target.value)
+             console.log("changeCOurse: " + this.state.inicioPrimer_cuatri)
          })
 
          console.log("holaaaa" + cursoSeleccionado.target.value)
@@ -407,7 +408,7 @@ class CalendarioGrado extends Component {
                                 label="dd/mm/yyyy"
                                 inputFormat="dd/MM/yyyy"
                                 value={this.state.ultModificacion}
-                                onChange={this.handleChangeUltModificacion}
+                                readOnly={true}
                                 renderInput={(params) => <TextField {...params} />}
                             />
                         </Stack>

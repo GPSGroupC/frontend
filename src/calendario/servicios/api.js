@@ -26,7 +26,6 @@ class Api {
     }
 
     static putAllCalendarData = async(inicio1, inicio2, inicio3, course, lastUpdate) => {
-        console.log("PUT: " + inicio1)
         axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar",
             data: {
                 fecha_inicio_1: inicio1,
