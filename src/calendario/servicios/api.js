@@ -5,6 +5,7 @@ const baseUrl = "https://timetableeina-back.herokuapp.com"
 
 class Api {
     static getAllCalendarData = async (curso) => {
+        console.log("getAllCalendarData: " +  curso)
         let dateIC1 = null,dateIC2 = null,dateIS1 = null, ultMod = null
         await axios({ method: 'GET', url: baseUrl + "/calendar/getCalendar",
             params: {
@@ -21,7 +22,6 @@ class Api {
             .catch(error => {
                 console.log(error);
             })
-        console.log(dateIC1,"\n", dateIC2,"\n", dateIS1,"\n", ultMod)
         return [dateIC1, dateIC2, dateIS1, ultMod]
     }
 

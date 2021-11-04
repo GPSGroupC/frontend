@@ -13,11 +13,11 @@ import Pdf from "./utils/Pdf";
 const { datesGenerator } = require('dates-generator');
 
 
-//Cabeceras
+//Cabeceras del calendario
 const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
-//Tipos de fecha
+//Tipos internos de cada fecha del calendario
 const TIPOFECHA = {C: 'convocatoria', F: 'festivo', L: 'lectivo'};
 const TIPOFECHALECTIVO = {S: 'semanaAB', H: 'horarioCambiado'};
 
@@ -25,56 +25,52 @@ class CalendarioGrado extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            //Estado formularios
+            //FORMULARIOS
             ultModificacion: null,
             inicioPrimer_cuatri:null,
             inicioSegundo_cuatri:null,
             inicioSegundaConvocatoria:null,
             estadoCurso: "2021-2022",
-            //Estado calendario
-            //Objetos periodo -> (semestre1, semestre2 y recuperacion)
-            //  dates:      lista de fechas con formato: meses[ semanas[ {fecha} ] ]
-            //  year:       Año mostrado en la interfaz
-            //  monthNames: lista de nombres de meses mostrados en la interfaz
-            //
+            //CALENDARIO
             semestre1:{dates: [], year: -1, monthNames:[]},
             semestre2:{dates: [], year: -1, monthNames:[]},
             recuperacion:{dates: [], year: -1, monthNames:[]},
-            //Estado de la ventana de opciones
+            //VENTANA DE OPCIONES
             showDialog: false,
-            //Fecha seleccionada al hacer click
+            //FECHA SELECCIONADA
             selectedDate: new Date(),
         }
     }
 
     /**
-     * Inicializa todos los periodos del calendario.
-     * Este metodo se ejecuta solo la primera vez que el componente Calendario
-     * se renderiza.
+     * Actualiza los formularios y el calendario
+     *
+     * @param curso {string}  Curso que se quiere actualizar
      */
-    async componentDidMount () {
-        [this.state.inicioPrimer_cuatri,
-            this.state.inicioSegundo_cuatri,
-            this.state.inicioSegundaConvocatoria,
-            this.state.ultModificacion] = await Api.getAllCalendarData("2021-2022")
-        //month 0 -> Enero, month 11 -> Diciembre
-        this.state.semestre1 = this.getPeriodo(this.state.inicioPrimer_cuatri?.getMonth() ?? 8
-            ,this.state.inicioPrimer_cuatri?.getFullYear() ?? 2021, 5)
-        this.state.semestre2 = this.getPeriodo( this.state.inicioSegundo_cuatri?.getMonth() ?? 1
-            , this.state.inicioSegundo_cuatri?.getFullYear() ?? 2022 , 5)
-        this.state.recuperacion = this.getPeriodo( this.state.inicioSegundaConvocatoria?.getMonth() ?? 8
-            ,this.state.inicioSegundaConvocatoria?.getFullYear() ?? 2022 , 1)
-
-        this.setState(() => ({}))
+    async updateCalendario(curso) {
+        await Api.getAllCalendarData(curso).then(r => {
+            this.setState({
+                inicioPrimer_cuatri: r[0],
+                inicioSegundo_cuatri: r[1],
+                inicioSegundaConvocatoria: r[2],
+                ultModificacion: r[3],
+                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8,r[0]?.getFullYear() ?? 2021, 5),
+                semestre2: this.getPeriodo( r[1]?.getMonth() ?? 1,r[1]?.getFullYear() ?? 2022 , 5),
+                recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8,r[2]?.getFullYear() ?? 2022, 1)
+            })
+        })
     }
 
-    //METODOS FORMULARIOS
-   /* handleChangeUltModificacion = (newValue) => {
-        console.log("handlechange:" + newValue)
-        this.setState({ ultModificacion: newValue})
-    };*/
+    /**
+     * Al acceder por primera vez, se actualizan los formularios y el calendario
+     * con el curso actual.
+     */
+    async componentDidMount () {
+        await this.updateCalendario(this.state.course)
+    }
 
-    handleChangePrimerCuatri = (newValue) => { //TODO: SEGUIR AQUI
+    //METODOS PARA FORMULARIOS
+    handleChangePrimerCuatri = (newValue) => {
         this.setState({ inicioPrimer_cuatri: newValue,
             semestre1: this.getPeriodo(newValue?.getMonth() ?? 8,newValue?.getFullYear() ?? 2021, 5)
         })};
@@ -91,22 +87,13 @@ class CalendarioGrado extends Component {
         })
     };
 
-     HandleChangeCurso = async (cursoSeleccionado) => {
-         console.log("holaaaa" + cursoSeleccionado.target.value)
-         this.setState({estadoCurso: cursoSeleccionado.target.value}, async () => {
-             [this.state.inicioPrimer_cuatri,
-                 this.state.inicioSegundo_cuatri,
-                 this.state.inicioSegundaConvocatoria,
-                 this.state.ultModificacion] = await Api.getAllCalendarData(cursoSeleccionado.target.value)
-             console.log("changeCOurse: " + this.state.inicioPrimer_cuatri)
-         })
-
-         console.log("holaaaa" + cursoSeleccionado.target.value)
-         this.setState(() => ({ estadoCurso: cursoSeleccionado.target.value }))
-     };
+    HandleChangeCurso =  async (curso) => { //TODO: seguir aqui
+        this.setState({estadoCurso: curso.target.value,})
+        await this.updateCalendario(curso.target.value)
+    }
 
 
-    //METODOS CALENDARIO
+    //METODOS PARA CALENDARIO
     /**
      * Devuelve un objecto periodo inicializado {dates,year,monthNames}
      *
@@ -127,6 +114,9 @@ class CalendarioGrado extends Component {
             monthNames = [...monthNames, MONTHS[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
         }
+        //  dates:      lista de fechas con formato: meses[ semanas[ {fecha} ] ]
+        //  year:       Año mostrado en la interfaz
+        //  monthNames: lista de nombres de meses mostrados en la interfaz
         return { dates: acumDates, year: year, monthNames: monthNames}
     }
 
@@ -328,7 +318,12 @@ class CalendarioGrado extends Component {
             </dialog>
         )
     }
-    //Tabla html para cada periodo del calendario
+
+    /**
+     * Muestra una tabla con un periodo del calendario, como el primer semestre...
+     *
+     * @param periodo   Objeto periodo que se quiere renderizar en una tabla
+     */
     htmlTable(periodo) {
         return (
             <table style={{ width: '100%' }}>
