@@ -57,9 +57,12 @@ class CalendarioGrado extends Component {
             this.state.inicioSegundo_cuatri,
             this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData("2021-2022")
         //month 0 -> Enero, month 11 -> Diciembre
-        this.state.semestre1 = this.getPeriodo(8, 2021, 5)
-        this.state.semestre2 = this.getPeriodo( 1, 2022 , 5)
-        this.state.recuperacion = this.getPeriodo( 8, 2022 , 1)
+        this.state.semestre1 = this.getPeriodo(this.state.inicioPrimer_cuatri?.getMonth ?? 8
+            ,this.state.inicioPrimer_cuatri?.getFullYear ?? 2021, 5)
+        this.state.semestre2 = this.getPeriodo( this.state.inicioSegundo_cuatri?.getMonth ?? 1
+            , this.state.inicioSegundo_cuatri?.getFullYear ?? 2022 , 5)
+        this.state.recuperacion = this.getPeriodo( this.state.recuperacion?.getMonth ?? 8
+            ,this.state.recuperacion?.getFullYear ?? 2022 , 1)
 
         this.setState(() => ({}))
     }
@@ -70,23 +73,33 @@ class CalendarioGrado extends Component {
         this.setState({ ultModificacion: newValue})
     };
 
-    handleChangePrimerCuatri = (newValue) => {
-        this.setState({ inicioPrimer_cuatri: newValue})};
+    handleChangePrimerCuatri = (newValue) => { //TODO: SEGUIR AQUI
+        this.setState({ inicioPrimer_cuatri: newValue,
+            semestre1: this.getPeriodo(newValue?.getMonth() ?? 8,newValue?.getFullYear() ?? 2021, 5)
+        })};
 
     handleChangeSegundoCuatri = (newValue) => {
-        this.setState({ inicioSegundo_cuatri: newValue})
+        this.setState({ inicioSegundo_cuatri: newValue,
+            semestre2: this.getPeriodo(newValue?.getMonth() ?? 1,newValue?.getFullYear() ?? 2022, 5)
+        })
     };
 
     handleChangeSegundaConv = (newValue) => {
-        this.setState({ inicioSegundaConvocatoria: newValue})
+        this.setState({ inicioSegundaConvocatoria: newValue,
+            recuperacion: this.getPeriodo(newValue?.getMonth() ?? 8,newValue?.getFullYear() ?? 2022, 1)
+        })
     };
 
-     HandleChangeCurso = async () => {
-         [this.state.inicioPrimer_cuatri,
-             this.state.inicioSegundo_cuatri,
-             this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData(this.state.estadoCurso)
-         console.log("holaaaa" + this.state.estadoCurso)
-         this.setState(() => ({ }))
+     HandleChangeCurso = async (cursoSeleccionado) => {
+         console.log("holaaaa" + cursoSeleccionado.target.value)
+         this.setState({estadoCurso: cursoSeleccionado.target.value}, async () => {
+             [this.state.inicioPrimer_cuatri,
+                 this.state.inicioSegundo_cuatri,
+                 this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData(cursoSeleccionado.target.value)
+         })
+
+         console.log("holaaaa" + cursoSeleccionado.target.value)
+         this.setState(() => ({ estadoCurso: cursoSeleccionado.target.value }))
      };
 
 
@@ -456,7 +469,12 @@ class CalendarioGrado extends Component {
                         <p>EINA calendario académico <br/>
                             GRADOS <br/>
                             Curso {this.state.estadoCurso} <br/>
-                            Última modificación {this.state.ultModificacion?.day}</p>
+                            Última modificación {
+                                ((this.state.ultModificacion !== null) &&
+                                this.state.ultModificacion?.getDate() + "/"
+                                + (this.state.ultModificacion?.getMonth() + 1) + "/"
+                                + this.state.ultModificacion?.getFullYear())}
+                        </p>
                     </div>
                 <br/><br/><br/>
                 {this.htmlDialog()}
