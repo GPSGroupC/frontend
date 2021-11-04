@@ -25,14 +25,13 @@ class Api {
         return [dateIC1, dateIC2, dateIS1, ultMod]
     }
 
-    static putAllCalendarData = async(inicio1, inicio2, inicio3, course, lastUpdate) => {
+    static putAllCalendarData = async(inicio1, inicio2, inicio3, course) => {
         axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar",
             data: {
                 fecha_inicio_1: inicio1,
                 fecha_inicio_2: inicio2,
                 convSeptiembre: inicio3,
                 course: course,
-                lastUpdate: lastUpdate
             }})
             .then( () => {
                 console.log("Exito en el envio");

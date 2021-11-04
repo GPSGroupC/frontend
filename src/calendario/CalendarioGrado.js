@@ -58,6 +58,8 @@ class CalendarioGrado extends Component {
                 semestre2: this.getPeriodo( r[1]?.getMonth() ?? 1,r[1]?.getFullYear() ?? 2022 , 5),
                 recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8,r[2]?.getFullYear() ?? 2022, 1)
             })
+        }).catch(err => {
+            console.log("Error al actualizar el calendario: ",err)
         })
     }
 
@@ -65,8 +67,8 @@ class CalendarioGrado extends Component {
      * Al acceder por primera vez, se actualizan los formularios y el calendario
      * con el curso actual.
      */
-    async componentDidMount () {
-        await this.updateCalendario(this.state.course)
+     componentDidMount () {
+         this.updateCalendario(this.state.estadoCurso)
     }
 
     //METODOS PARA FORMULARIOS
@@ -492,8 +494,7 @@ class CalendarioGrado extends Component {
                     <button onClick={() => {Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
                         this.state.inicioSegundo_cuatri,
                         this.state.inicioSegundaConvocatoria,
-                        this.state.estadoCurso,
-                        this.state.ultModificacion)}} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                        this.state.estadoCurso)}} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
 
 
