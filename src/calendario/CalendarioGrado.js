@@ -55,21 +55,22 @@ class CalendarioGrado extends Component {
     async componentDidMount () {
         [this.state.inicioPrimer_cuatri,
             this.state.inicioSegundo_cuatri,
-            this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData("2021-2022")
+            this.state.inicioSegundaConvocatoria,
+            this.state.ultModificacion] = await Api.getAllCalendarData("2021-2022")
         //month 0 -> Enero, month 11 -> Diciembre
-        this.state.semestre1 = this.getPeriodo(this.state.inicioPrimer_cuatri?.getMonth ?? 8
-            ,this.state.inicioPrimer_cuatri?.getFullYear ?? 2021, 5)
-        this.state.semestre2 = this.getPeriodo( this.state.inicioSegundo_cuatri?.getMonth ?? 1
-            , this.state.inicioSegundo_cuatri?.getFullYear ?? 2022 , 5)
-        this.state.recuperacion = this.getPeriodo( this.state.recuperacion?.getMonth ?? 8
-            ,this.state.recuperacion?.getFullYear ?? 2022 , 1)
+        this.state.semestre1 = this.getPeriodo(this.state.inicioPrimer_cuatri?.getMonth() ?? 8
+            ,this.state.inicioPrimer_cuatri?.getFullYear() ?? 2021, 5)
+        this.state.semestre2 = this.getPeriodo( this.state.inicioSegundo_cuatri?.getMonth() ?? 1
+            , this.state.inicioSegundo_cuatri?.getFullYear() ?? 2022 , 5)
+        this.state.recuperacion = this.getPeriodo( this.state.inicioSegundaConvocatoria?.getMonth() ?? 8
+            ,this.state.inicioSegundaConvocatoria?.getFullYear() ?? 2022 , 1)
 
         this.setState(() => ({}))
     }
 
     //METODOS FORMULARIOS
     handleChangeUltModificacion = (newValue) => {
-        console.log(newValue)
+        console.log("handlechange:" + newValue)
         this.setState({ ultModificacion: newValue})
     };
 
@@ -95,7 +96,8 @@ class CalendarioGrado extends Component {
          this.setState({estadoCurso: cursoSeleccionado.target.value}, async () => {
              [this.state.inicioPrimer_cuatri,
                  this.state.inicioSegundo_cuatri,
-                 this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData(cursoSeleccionado.target.value)
+                 this.state.inicioSegundaConvocatoria,
+                 this.state.ultModificacion] = await Api.getAllCalendarData(cursoSeleccionado.target.value)
          })
 
          console.log("holaaaa" + cursoSeleccionado.target.value)
@@ -491,11 +493,11 @@ class CalendarioGrado extends Component {
                 </div>
 
                 <Link to="/">
-                    <button onClick={Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
+                    <button onClick={() => {Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
                         this.state.inicioSegundo_cuatri,
                         this.state.inicioSegundaConvocatoria,
                         this.state.estadoCurso,
-                        this.state.ultModificacion)} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                        this.state.ultModificacion)}} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
 
 
