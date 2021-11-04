@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Parser from "../utils/Parser";
 const { datesGenerator } = require('dates-generator');
 
 //Cabeceras
@@ -43,28 +44,12 @@ class Calendario extends Component {
         let monthNames = []
         for (let i = 0; i < numMonths; i++) {
             const { dates, nextMonth, nextYear } = datesGenerator(queryDate)
-            this.setFestivos(dates)
+            Parser.parseFestivos(dates)
             acumDates = [...acumDates,dates]
             monthNames = [...monthNames, MONTHS[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
         }
         return { dates: acumDates, year: year, monthNames: monthNames}
-    }
-
-    /**
-     * Actualiza los fines de semana como festivos
-     *
-     * @param {Object} dates  lista de fechas con formato: meses[ semanas[ {fecha} ] ]
-     */
-    setFestivos(dates) {
-        dates.map( (week) => {
-            week.map( (day, dayIndex) => {
-                if (dayIndex == 5 || dayIndex == 6) {
-                    //Caso es sabado o domingo
-                    day.type = "festivo"
-                }
-            })
-        })
     }
 
     /**
@@ -227,26 +212,6 @@ class Calendario extends Component {
     }
 
     /**
-     * Devuelve un string correspondiente a la fecha formateada segun su tipo
-     * @param {Object} date Fecha a formatear
-     * @param dayOfWeek     Letra correspondiente al dia de la semana de `date`
-     */
-    formatDate(date, dayOfWeek) {
-        if (date.type == TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado != undefined) {
-            //Fecha lectiva con semana a/b y horario cambiado
-            return date.date + " " + date.horarioCambiado + date.semanaAB
-        } else if (date.type == TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado == undefined) {
-            //Fecha lectiva con semana a/b
-             return  date.date + " " + dayOfWeek + date.semanaAB
-        } else if (date.type == TIPOFECHA.L && date.semanaAB == undefined && date.horarioCambiado != undefined) {
-            //Fecha lectiva con horario cambiado
-             return date.date + " " + date.horarioCambiado
-        } else {
-            //Fecha lectiva
-            return date.date
-        }
-    }
-    /**
      * Inicializa todos los periodos del calendario.
      * Este metodo se ejecuta solo la primera vez que el componente Calendario
      * se renderiza.
@@ -328,7 +293,7 @@ class Calendario extends Component {
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
                                     <div onClick={() => this.onSelectDate(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
-                                        {this.formatDate(day, DAYS[dayIndex])}
+                                        {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
                             ))}

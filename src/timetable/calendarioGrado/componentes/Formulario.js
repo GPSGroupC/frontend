@@ -1,6 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
 import eina from '../../../images/eina-logo.png'
-import calendar from '../../../images/calendar-logo.png'
 import { Link } from 'react-router-dom'
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -8,14 +7,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import Stack from '@mui/material/Stack';
 import isWeekend from 'date-fns/isWeekend';
-import axios from 'axios'
-
-
-
-
-
-const baseUrl = "http://localhost:8000"
-
+import Api from "../servicios/api";
 
 
 class Formulario extends React.Component {
@@ -31,42 +23,11 @@ class Formulario extends React.Component {
         }
     }
 
-    getAllCalendarData = async (curso) => {
-        axios({ method: 'GET', url: baseUrl + "/calendar/getCalendar", 
-        params: { 
-            course: curso,      
-        }})
-        .then( (response) => {
-            if(response.status !== 225){
-                let dateIC1 = this.parseDate(response.data[0].fechainicio1.split('-'))
-                let dateIC2 = this.parseDate(response.data[0].fechainicio2.split('-'))
-                let dateIS1 = this.parseDate(response.data[0].fechainiciosept.split('-'))
-                this.handleChangePrimerCuatri(dateIC1)
-                this.handleChangeSegundoCuatri(dateIC2)
-                this.handleChangeSegundaConv(dateIS1)
-            }else{
-                this.handleChangePrimerCuatri(null)
-                this.handleChangeSegundoCuatri(null)
-                this.handleChangeSegundaConv(null)
-            }
-        })
-        .catch(error => {
-                console.log(error);
-        })
-    }
-    /**
-     * 
-     * @param {String} date : Recibe un array con una fecha en formato DD-MM-YYYY
-     * , donde date[2] = AÑO , date[1] = MES, date[0] = dia
-     * @returns Devuelve una Date en formato YYYY-MM-DD
-     */
-    parseDate = (date) => {
-        //El mes se numera desde el 0, por eso (Mes=date[1]) - 1
-        return new Date(date[2], date[1] - 1,date[0])
-    }
-
-    componentDidMount = () => {
-        this.getAllCalendarData('2021-2022')
+    async componentDidMount () {
+        [this.state.inicioPrimer_cuatri,
+        this.state.inicioSegundo_cuatri,
+        this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData("2021-2022")
+        this.setState(() => ({}))
     }
     
     
@@ -85,29 +46,11 @@ class Formulario extends React.Component {
         this.setState({ inicioSegundaConvocatoria: newValue})
     };
 
-    HandleChangeCurso = (cursoSeleccionado) => {
-        this.setState({estadoCurso: cursoSeleccionado.target.value}, () =>{
-           this.getAllCalendarData(cursoSeleccionado.target.value)
-        })
-    
-    }
-
-    handleGuardarCambios =  () => {
-        console.log(this.state)
-        axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar", 
-        data: { 
-            fecha_inicio_1: this.state.inicioPrimer_cuatri, 
-            fecha_inicio_2: this.state.inicioSegundo_cuatri, 
-            convSeptiembre: this.state.inicioSegundaConvocatoria, 
-            course: this.state.estadoCurso, 
-            lastUpdate: this.state.ultModificacion 
-        }})
-            .then( () => {
-                console.log("Exito en el envio");
-            })
-            .catch(error => {
-                console.log(error);
-            })
+    async HandleChangeCurso (cursoSeleccionado) {
+            [this.state.inicioPrimer_cuatri,
+                this.state.inicioSegundo_cuatri,
+                this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData("2021-2022")
+            this.setState(() => ({}))
     }
 
 
@@ -123,20 +66,21 @@ class Formulario extends React.Component {
                     <hr size="5px" color="black" />
                 </div>
                 <br></br><br></br>
-        
+
                 <div className="filtro2">
-                <h4 className="titulo">CALENDARIO GRADOS</h4>
-                <div className="form-group" style={{"width":"35%"}}>
-                    <label for="exampleSelect1" className="form-label mt-4">Curso</label>
-                    <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select" id="exampleSelect1">
-                        <option value="2021-2022">2021-2022</option>
-                        <option value="2022-2023">2022-2023</option>
-                        <option value="2023-2024">2023-2024</option>
-                        <option value="2024-2025">2024-2025</option>
-                        <option value="2026-2027">2026-2027</option>
-                    </select>
-                </div>
-                <br></br>
+                    <h4 className="titulo">CALENDARIO GRADOS</h4>
+                    <div className="form-group" style={{"width": "35%"}}>
+                        <label htmlFor="exampleSelect1" className="form-label mt-4">Curso</label>
+                        <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select"
+                                id="exampleSelect1">
+                            <option value="2021-2022">2021-2022</option>
+                            <option value="2022-2023">2022-2023</option>
+                            <option value="2023-2024">2023-2024</option>
+                            <option value="2024-2025">2024-2025</option>
+                            <option value="2026-2027">2026-2027</option>
+                        </select>
+                    </div>
+                    <br></br>
                 </div>
 
 
@@ -154,6 +98,7 @@ class Formulario extends React.Component {
                     </Stack>
 
                     <br></br>
+
 
                     <h10 className="texto1">Inicio primer semestre</h10>
                     <div style={{"margin-top":"10px"}}>
@@ -215,7 +160,11 @@ class Formulario extends React.Component {
 
 
                 <Link to="/">
-                    <button onClick={this.handleGuardarCambios} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                    <button onClick={Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
+                        this.state.inicioSegundo_cuatri,
+                        this.state.inicioSegundaConvocatoria,
+                        this.state.estadoCurso,
+                        this.state.ultModificacion)} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
                 
                 
