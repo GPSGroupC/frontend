@@ -1,6 +1,17 @@
-import React, {Component} from 'react';
-import Parser from "../utils/Parser";
+import React, {Fragment, useState, useEffect, Component} from "react";
+import eina from '../images/eina-logo.png'
+import { Link } from 'react-router-dom'
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import Stack from '@mui/material/Stack';
+import isWeekend from 'date-fns/isWeekend';
+import Api from "./servicios/api";
+import Parser from "./utils/Parser";
+import Pdf from "./utils/Pdf";
 const { datesGenerator } = require('dates-generator');
+
 
 //Cabeceras
 const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -10,10 +21,17 @@ const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 const TIPOFECHA = {C: 'convocatoria', F: 'festivo', L: 'lectivo'};
 const TIPOFECHALECTIVO = {S: 'semanaAB', H: 'horarioCambiado'};
 
-class Calendario extends Component {
+class CalendarioGrado extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            //Estado formularios
+            ultModificacion: null,
+            inicioPrimer_cuatri:null,
+            inicioSegundo_cuatri:null,
+            inicioSegundaConvocatoria:null,
+            estadoCurso: "2021-2022",
+            //Estado calendario
             //Objetos periodo -> (semestre1, semestre2 y recuperacion)
             //  dates:      lista de fechas con formato: meses[ semanas[ {fecha} ] ]
             //  year:       Año mostrado en la interfaz
@@ -29,6 +47,50 @@ class Calendario extends Component {
         }
     }
 
+    /**
+     * Inicializa todos los periodos del calendario.
+     * Este metodo se ejecuta solo la primera vez que el componente Calendario
+     * se renderiza.
+     */
+    async componentDidMount () {
+        [this.state.inicioPrimer_cuatri,
+            this.state.inicioSegundo_cuatri,
+            this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData("2021-2022")
+        //month 0 -> Enero, month 11 -> Diciembre
+        this.state.semestre1 = this.getPeriodo(8, 2021, 5)
+        this.state.semestre2 = this.getPeriodo( 1, 2022 , 5)
+        this.state.recuperacion = this.getPeriodo( 8, 2022 , 1)
+
+        this.setState(() => ({}))
+    }
+
+    //METODOS FORMULARIOS
+    handleChangeUltModificacion = (newValue) => {
+        console.log(newValue)
+        this.setState({ ultModificacion: newValue})
+    };
+
+    handleChangePrimerCuatri = (newValue) => {
+        this.setState({ inicioPrimer_cuatri: newValue})};
+
+    handleChangeSegundoCuatri = (newValue) => {
+        this.setState({ inicioSegundo_cuatri: newValue})
+    };
+
+    handleChangeSegundaConv = (newValue) => {
+        this.setState({ inicioSegundaConvocatoria: newValue})
+    };
+
+     HandleChangeCurso = async () => {
+         [this.state.inicioPrimer_cuatri,
+             this.state.inicioSegundo_cuatri,
+             this.state.inicioSegundaConvocatoria] = await Api.getAllCalendarData(this.state.estadoCurso)
+         console.log("holaaaa" + this.state.estadoCurso)
+         this.setState(() => ({ }))
+     };
+
+
+    //METODOS CALENDARIO
     /**
      * Devuelve un objecto periodo inicializado {dates,year,monthNames}
      *
@@ -211,20 +273,6 @@ class Calendario extends Component {
         return { selectSemanaAB, selectHorarioCambiado }
     }
 
-    /**
-     * Inicializa todos los periodos del calendario.
-     * Este metodo se ejecuta solo la primera vez que el componente Calendario
-     * se renderiza.
-     */
-    componentDidMount() {
-        //month 0 -> Enero, month 11 -> Diciembre
-        this.state.semestre1 = this.getPeriodo(8, 2021, 5)
-        this.state.semestre2 = this.getPeriodo( 1, 2022 , 5)
-        this.state.recuperacion = this.getPeriodo( 8, 2022 , 1)
-
-        this.setState((state, props) => ({}))
-    }
-
     htmlDialog() {
         return (
             <dialog id="dialog" open={this.state.showDialog ? true : false}>
@@ -305,11 +353,112 @@ class Calendario extends Component {
         )
     }
 
-    render() {
-        return (<div style={{ width: '100%', paddingTop: 50 }}>
-                <div style={{ padding: 10 }}>
-                    Fecha seleccionada: {this.state.selectedDate.jsDate}
+
+    render () {
+        return (
+            <div className="filtro">
+
+                <div>
+                    <Link to="/"><img className="logoCab2" src={eina} /></Link>
+                    <Link to="/">
+                        <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
+                    </Link>
+                    <hr size="5px" color="black" />
                 </div>
+                <br></br><br></br>
+
+                <div className="filtro2">
+                    <h4 className="titulo">CALENDARIO GRADOS</h4>
+                    <div className="form-group" style={{"width": "35%"}}>
+                        <label htmlFor="exampleSelect1" className="form-label mt-4">Curso</label>
+                        <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select"
+                                id="exampleSelect1">
+                            <option value="2021-2022">2021-2022</option>
+                            <option value="2022-2023">2022-2023</option>
+                            <option value="2023-2024">2023-2024</option>
+                            <option value="2024-2025">2024-2025</option>
+                            <option value="2026-2027">2026-2027</option>
+                        </select>
+                    </div>
+                    <br></br>
+                </div>
+
+
+                <div className="filtro2">
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <h10 className="texto1">Fecha de ultima modificación</h10>
+                        <Stack spacing={3} style={{"margin-top":"5px", "width":"35%"}}>
+                            <DesktopDatePicker
+                                label="dd/mm/yyyy"
+                                inputFormat="dd/MM/yyyy"
+                                value={this.state.ultModificacion}
+                                onChange={this.handleChangeUltModificacion}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Stack>
+
+                        <br></br>
+
+
+                        <h10 className="texto1">Inicio primer semestre</h10>
+                        <div style={{"margin-top":"10px"}}>
+                            <Stack spacing={3} style={{"margin-top":"5px", "width":"35%"}}>
+                                <DesktopDatePicker
+                                    label="dd/mm/yyyy"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={this.state.inicioPrimer_cuatri}
+                                    onChange={this.handleChangePrimerCuatri}
+                                    defaultCalendarMonth={ new Date(this.state.estadoCurso.split('-')[0],8)}
+                                    minDate={new Date("9-1-" + this.state.estadoCurso.split('-')[0])}
+                                    maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[0])}
+                                    shouldDisableDate={isWeekend}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </div>
+
+                        <br></br>
+                        <h10 className="texto1">Inicio segundo semestre</h10>
+                        <Stack spacing={3} style={{"margin-top":"5px", "width":"35%"}}>
+                            <DesktopDatePicker
+                                label="dd/mm/yyyy"
+                                inputFormat="dd/MM/yyyy"
+                                value={this.state.inicioSegundo_cuatri}
+                                defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1],1)}
+                                minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
+                                maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
+                                onChange={this.handleChangeSegundoCuatri}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Stack>
+
+                        <br></br>
+                        <h10 className="texto1">Inicio período exámenes 2ª convocatoria</h10>
+                        <Stack spacing={3} style={{"margin-top":"5px", "width":"35%"}}>
+                            <DesktopDatePicker
+                                label="dd/mm/yyyy"
+                                inputFormat="dd/MM/yyyy"
+                                value={this.state.inicioSegundaConvocatoria}
+                                onChange={this.handleChangeSegundaConv}
+                                defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1],8)}
+                                minDate={new Date("9-1-" + this.state.estadoCurso.split('-')[1])}
+                                maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[1])}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </Stack>
+                    </LocalizationProvider>
+                </div>
+
+
+                <div id="divToPrint" className="divToPrint">
+                    <div className="pdfHeader">
+                        <img src={eina} alt="einaLogo" width="400" height="120"/>
+                        <p>EINA calendario académico <br/>
+                            GRADOS <br/>
+                            Curso {this.state.estadoCurso} <br/>
+                            Última modificación {this.state.ultModificacion?.day}</p>
+                    </div>
+                <br/><br/><br/>
                 {this.htmlDialog()}
                 <h1>Primer semestre</h1>
                 {this.htmlTable(this.state.semestre1)}
@@ -317,9 +466,25 @@ class Calendario extends Component {
                 {this.htmlTable(this.state.semestre2)}
                 <h1>Período exámenes 2ª convocatoria</h1>
                 {this.htmlTable(this.state.recuperacion)}
+                </div>
+
+                <div className="printButton">
+                    <button onClick={() => {Pdf.printDocument("divToPrint")}} className="btn btn-outline-info btn-lg" style={{"margin-left": "45%"}}>Descargar</button>
+                </div>
+
+                <Link to="/">
+                    <button onClick={Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
+                        this.state.inicioSegundo_cuatri,
+                        this.state.inicioSegundaConvocatoria,
+                        this.state.estadoCurso,
+                        this.state.ultModificacion)} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                </Link>
+
+
+
             </div>
         );
     }
 }
 
-export default Calendario;
+export default CalendarioGrado;

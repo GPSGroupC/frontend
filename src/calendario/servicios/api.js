@@ -5,7 +5,7 @@ const baseUrl = "http://localhost:8000"
 
 class Api {
     static getAllCalendarData = async (curso) => {
-        let dateIC1,dateIC2,dateIS1
+        let dateIC1 = null,dateIC2 = null,dateIS1 = null
         await axios({ method: 'GET', url: baseUrl + "/calendar/getCalendar",
             params: {
                 course: curso,
