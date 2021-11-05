@@ -9,7 +9,6 @@ test("los fines de semana se marcan como festivos", () =>{
     //render (<Calendario />);
     //const day = getByTestId("day");
 
-    const resultadoEsperado = "festivo";
    // const resultadoObtenido = day.getAttribute("name");
    // expect(resultadoObtenido).toBe("festivo");
 
@@ -22,6 +21,21 @@ test("los fines de semana se marcan como festivos", () =>{
     for (let i = 0; i < domingos.lenght; i++) {
         expect(domingos[i].className).toBe("festivo");
     }
+
+});
+
+
+test("formatDate devuelve correctamente el dia", () =>{
+
+
+    const { getByTestId } = render (<Calendario />);
+
+    const dias = document.getElementsByClassName("date-day");
+    for (let i = 0; i < dias.lenght; i++) {
+        expect(parseInt(dias[i].value)).toBeGreaterThanOrEqual(1);
+        expect(parseInt(dias[i].value)).toBeLessThanOrEqual(31);
+    }
+
 
 });
 
