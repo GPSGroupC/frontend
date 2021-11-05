@@ -206,14 +206,8 @@ class Formulario extends React.Component {
                 </LocalizationProvider>
                 </div>
 
-                
-
-                
-                <h3 style={{"margin-bottom":"30px","margin-top":"70px", "margin-left":"30%" }}>ESPACIO PARA LOS CALENDARIOS</h3>
-
-                
-
-
+    
+    
 
 
                 <Link to="/">

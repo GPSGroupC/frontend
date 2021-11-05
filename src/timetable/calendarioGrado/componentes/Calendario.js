@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
+import amarillo from '../../../images/amarillo.png'
+import verde from '../../../images/verde.png'
+import morado from '../../../images/morado.png'
+import blanco from '../../../images/blanco.png'
+
+
+import { Link } from 'react-router-dom'
 const { datesGenerator } = require('dates-generator');
+
 
 //Cabeceras
 const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio','Agosto','Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
@@ -302,10 +310,11 @@ class Calendario extends Component {
     //Tabla html para cada periodo del calendario
     htmlTable(periodo) {
         return (
-            <table style={{ width: '100%' }}>
-                <thead>
+
+            <table style={{ marginLeft: '20%', width: '50%'}}>
+                <thead style={{ fontWeight: 'bold' }}>
                 <tr>
-                    <td>{periodo.year}</td>
+                    <td style={{ fontWeight: 'bold' }}>{periodo.year}</td>
                     {DAYS.map((day) => (
                         <td key={day} style={{ padding: '5px 0' }}>
                             <div style={{ textAlign: 'center', padding: '5px 0' }}>
@@ -319,7 +328,98 @@ class Calendario extends Component {
 
                     <tbody>
                     <tr>
-                        <td rowSpan={month.length + 1} scope="rowgroup">
+                        <td  style={{ fontWeight: 'bold' }} rowSpan={month.length + 1} scope="rowgroup">
+                            {periodo.monthNames[monthIndex]}
+                        </td>
+                    </tr>
+                    {month.length > 0 && month.map((week) => (
+                        <tr key={JSON.stringify(week[0])}>
+                            {week.map((day, dayIndex) => (
+                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
+                                    <div onClick={() => this.onSelectDate(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                        {this.formatDate(day, DAYS[dayIndex])}
+                                    </div>
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                ))}
+            </table>
+        )
+    }
+
+
+
+
+
+    //Tabla html para cada periodo del calendario
+    htmlTable2(periodo) {
+        return (
+
+            <table style={{ width: '100%'}}>
+                <thead style={{ fontWeight: 'bold' }}>
+                <tr>
+                    <td style={{ fontWeight: 'bold' }}>{periodo.year}</td>
+                    {DAYS.map((day) => (
+                        <td key={day} style={{ padding: '5px 0' }}>
+                            <div style={{ textAlign: 'center', padding: '5px 0' }}>
+                                {day}
+                            </div>
+                        </td>
+                    ))}
+                </tr>
+                </thead>
+                {periodo.dates.length > 0 && periodo.dates.map((month,monthIndex) => (
+
+                    <tbody>
+                    <tr>
+                        <td  style={{ fontWeight: 'bold' }} rowSpan={month.length + 1} scope="rowgroup">
+                            {periodo.monthNames[monthIndex]}
+                        </td>
+                    </tr>
+                    {month.length > 0 && month.map((week) => (
+                        <tr key={JSON.stringify(week[0])}>
+                            {week.map((day, dayIndex) => (
+                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
+                                    <div onClick={() => this.onSelectDate(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                        {this.formatDate(day, DAYS[dayIndex])}
+                                    </div>
+                                </td>
+                            ))}
+                        </tr>
+                    ))}
+                    </tbody>
+                ))}
+            </table>
+        )
+    }
+
+
+
+
+    //Tabla html para cada periodo del calendario
+    htmlTable3(periodo) {
+        return (
+
+            <table style={{ width: '40%', marginLeft: '10%', height: '100%'}}>
+                <thead style={{ fontWeight: 'bold' }}>
+                <tr>
+                    <td style={{ fontWeight: 'bold' }}>{periodo.year}</td>
+                    {DAYS.map((day) => (
+                        <td key={day} style={{ padding: '5px 0' }}>
+                            <div style={{ textAlign: 'center', padding: '5px 0' }}>
+                                {day}
+                            </div>
+                        </td>
+                    ))}
+                </tr>
+                </thead>
+                {periodo.dates.length > 0 && periodo.dates.map((month,monthIndex) => (
+
+                    <tbody>
+                    <tr>
+                        <td  style={{ fontWeight: 'bold' }} rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
                         </td>
                     </tr>
@@ -341,18 +441,64 @@ class Calendario extends Component {
     }
 
     render() {
-        return (<div style={{ width: '100%', paddingTop: 50 }}>
-                <div style={{ padding: 10 }}>
+        return (
+        
+            <div style={{ width: '100%', paddingTop: 50 }}>
+                <div style={{ marginLeft: '10%' }}>
                     Fecha seleccionada: {this.state.selectedDate.jsDate}
                 </div>
+
+                
                 {this.htmlDialog()}
-                <h1>Primer semestre</h1>
-                {this.htmlTable(this.state.semestre1)}
-                <h1>Segundo semestre</h1>
-                {this.htmlTable(this.state.semestre2)}
-                <h1>Período exámenes 2ª convocatoria</h1>
-                {this.htmlTable(this.state.recuperacion)}
+                <table style={{"width":"80%"}}>
+                    <tbody>
+                        <tr>
+                            <td style={{"width":"70%", "height":"50%"}}>
+                                <h4 className="titulo" style={{ marginLeft: '17.5%' }}>Primer semestre</h4>
+                                {this.htmlTable(this.state.semestre1)}
+                            </td>
+
+                            <td style={{"width":"70%", "height":"50%"}}>
+                                <h4 className="titulo">Segundo semestre</h4>
+                                {this.htmlTable2(this.state.semestre2)}
+                            </td>
+
+                        </tr>
+
+     
+                    </tbody>
+
+                </table>
+
+            
+                <h4 className="titulo" style={{ marginTop: '5%', marginLeft: '10%' }}>Período exámenes 2ª convocatoria</h4>
+                {this.htmlTable3(this.state.recuperacion)}
+                <br></br> <br></br>
+
+                <div className="leyendaDiv">
+
+                    <img className="leyenda" src={blanco}/>
+                    <p id="textoLeyenda">Día lectivo</p>
+                    <br></br>
+
+                    <img className="leyenda" src={verde}/>
+                    <p id="textoLeyenda">Día festivo</p>
+                    <br></br>
+
+                    <img className="leyenda" src={amarillo}/>
+                    <p id="textoLeyenda">Día con horario de otro día de la semana</p>
+                    <br></br>
+
+                    <img className="leyenda" src={morado}/>
+                    <p id="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
+                    <br></br>
+
+                </div>
+
+                
             </div>
+
+    
         );
     }
 }

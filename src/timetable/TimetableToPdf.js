@@ -3,6 +3,8 @@ import jsPDF from 'jspdf';
 import eina from '../images/eina-logo.png'
 import html2canvas from 'html2canvas';
 import Calendario from "./calendarioGrado/componentes/Calendario";
+import { Link } from 'react-router-dom'
+
 
 
 export default class TimetableToPdf extends Component {
@@ -28,7 +30,8 @@ export default class TimetableToPdf extends Component {
             <div>
                 <div id="divToPrint" className="divToPrint" ref={this.ref}>
                     <div className="pdfHeader">
-                        <img src={eina} alt="einaLogo" width="400" height="120"/>
+
+                        <Link to="/"><img className="logoCab3" src={eina} alt="einaLogo" /></Link>
                         <p>EINA calendario académico <br/>
                             GRADOS <br/>
                             Curso 2021-2022 <br/>

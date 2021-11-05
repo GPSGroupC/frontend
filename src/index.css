@@ -41,8 +41,17 @@ hr {
   margin-left: 115px;
   height: 100px;
   width: 350px;
-
 }
+
+.logoCab3{
+  height: 100px;
+  width: 350px;
+}
+
+.logoCab3:hover{
+  transform: scale(1.05);
+}
+
 
 .logoCab2:hover{
   transform: scale(1.05);
@@ -104,6 +113,14 @@ hr {
   margin-left: 100px;
 }
 
+.leyenda {
+
+  height: 50px;
+  width: 60px;
+  border: 0.1px solid rgb(0, 0, 0);
+
+}
+
 .inicio2{
   left:25%;
   top:30%;
@@ -147,6 +164,11 @@ button {
   height: 100px;
 }
 
+.leyendaDiv{
+  margin-bottom: 10%;
+  margin-left: 10%;
+}
+
 #textoImg{
   display: inline-block;
   vertical-align: top;
@@ -154,6 +176,15 @@ button {
   margin-left: 10px;
   font-size: 200%;
   font-weight: bold;
+}
+
+#textoLeyenda{
+  display: inline-block;
+  vertical-align: top;
+  margin-top: 10px;
+  margin-left: 10px;
+  font-size: 100%;
+  font-style: italic;
 }
 
 .divToPrint{
