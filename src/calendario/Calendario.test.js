@@ -1,11 +1,10 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import Calendario from "./Calendario"
 
 test("los fines de semana se marcan como festivos", () =>{
 
 
-    const { getByTestId } = render (<Calendario />);
+    //const { getByTestId } = render (<Calendario />);
     //render (<Calendario />);
     //const day = getByTestId("day");
 
@@ -28,7 +27,7 @@ test("los fines de semana se marcan como festivos", () =>{
 test("formatDate devuelve correctamente el dia", () =>{
 
 
-    const { getByTestId } = render (<Calendario />);
+    //const { getByTestId } = render (<Calendario />);
 
     const dias = document.getElementsByClassName("date-day");
     for (let i = 0; i < dias.lenght; i++) {

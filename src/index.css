@@ -188,7 +188,6 @@ button {
 }
 
 .divToPrint{
-  position: absolute;
   left: 30%;
 }
 .pdfHeader{
@@ -202,11 +201,7 @@ button {
   color: dimgrey;
   padding: 14px;
 }
-.printButton {
-  position: absolute;
-  left: 45%;
-  top:80%
-}
+
 
 td.festivo {
   background-color: #a2f29f;
