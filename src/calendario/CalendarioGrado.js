@@ -618,11 +618,12 @@ class CalendarioGrado extends Component {
                     <button onClick={() => {Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
                         this.state.inicioSegundo_cuatri,
                         this.state.inicioSegundaConvocatoria,
-                        this.state.estadoCurso)}} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
+                        this.state.estadoCurso);
+                        Api.putSemester(this.state.course, "semestre1", this.state.semestre1)
+                        Api.putSemester(this.state.course, "semestre2", this.state.semestre2)
+                        Api.putSemester(this.state.course, "recuperacion", this.state.recuperacion)
+                    }} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
-
-
-
             </div>
         );
     }

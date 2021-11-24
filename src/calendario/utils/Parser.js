@@ -33,6 +33,7 @@ class Parser {
      * @param TIPOFECHA     Tipos de fechas posibles
      */
     static formatDate(date, dayOfWeek, TIPOFECHA) {
+        console.log(date)
         if (date.type === TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado != undefined) {
             //Fecha lectiva con semana a/b y horario cambiado
             return date.date + " " + date.horarioCambiado + date.semanaAB
@@ -46,6 +47,22 @@ class Parser {
             //Fecha lectiva
             return date.date
         }
+    }
+    static semesterToList(semester) {
+        var listDays = []
+        semester.dates.map((month) => {
+            month.map((week) => {
+                week.map((day) => {
+                    var dayFormatted = Object()
+                    dayFormatted.date = day.date + "/" + day.month + "/" +day.year
+                    dayFormatted.type = day.type ? day.type : "lectivo"
+                    dayFormatted.horarioCambiado = day.horarioCambiado ? day.horarioCambiado : null
+                    dayFormatted.semanaAB = day.semanaAB ? day.semanaAB : "c"
+                    listDays.push(JSON.stringify(dayFormatted));
+                })
+            })
+        })
+        return listDays;
     }
 }
 

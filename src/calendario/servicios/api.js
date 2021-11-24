@@ -40,6 +40,20 @@ class Api {
                 console.log(error);
             })
     }
+
+    static putSemester = async(course, semesterName, semester) => {
+        //console.log("putSemester",course," ", semesterName," ", semester)
+        var dayList = Parser.semesterToList(semester)
+        //TODO(diego): Add backend axios call
+        /*axios({ method: 'POST', url: baseUrl + "/calendar/updateSemester",
+            data: {
+                course: course,
+                semesterName: semesterName,
+                semester: dayList,
+            }
+        })*/
+        console.log(dayList)
+    }
 }
 
 export default Api
