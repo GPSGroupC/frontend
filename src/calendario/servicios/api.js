@@ -2,6 +2,7 @@ import axios from "axios";
 import Parser from "../utils/Parser";
 
 const baseUrl = "https://timetableeina-back.herokuapp.com"
+const localHostURL = "http://localhost:8000"
 
 class Api {
     static getAllCalendarData = async (curso) => {
@@ -45,13 +46,13 @@ class Api {
         //console.log("putSemester",course," ", semesterName," ", semester)
         var dayList = Parser.semesterToList(semester)
         //TODO(diego): Add backend axios call
-        /*axios({ method: 'POST', url: baseUrl + "/calendar/updateSemester",
+        axios({ method: 'PUT', url: localHostURL + "/calendar/updateSemester",
             data: {
                 course: course,
                 semesterName: semesterName,
                 semester: dayList,
             }
-        })*/
+        })
         console.log(dayList)
     }
 }
