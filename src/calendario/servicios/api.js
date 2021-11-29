@@ -44,16 +44,18 @@ class Api {
 
     static putSemester = async(course, semesterName, semester) => {
         //console.log("putSemester",course," ", semesterName," ", semester)
-        var dayList = Parser.semesterToList(semester)
-        //TODO(diego): Add backend axios call
-        axios({ method: 'PUT', url: localHostURL + "/calendar/updateSemester",
-            data: {
-                course: course,
-                semesterName: semesterName,
-                semester: dayList,
-            }
-        })
-        console.log(dayList)
+        if(semester.dates.length > 0) {
+            var dayList = Parser.semesterToListChangedDate(semester)
+            //PUT to backend ENDPOINT /calendar/updateSemester
+            axios({ method: 'PUT', url: localHostURL + "/calendar/updateSemester",
+                data: {
+                    course: course,
+                    semesterName: semesterName,
+                    semester: dayList,
+                }
+            })
+            console.log(dayList)
+        }
     }
 }
 

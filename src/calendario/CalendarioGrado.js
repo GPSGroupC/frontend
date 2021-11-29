@@ -44,6 +44,11 @@ class CalendarioGrado extends Component {
             showDialog: false,
             //FECHA SELECCIONADA
             selectedDate: new Date(),
+            semesterSelected: null,
+            //DIAS QUE HAN CAMBIADO
+            semestre1_changed:{dates: []},
+            semestre2_changed:{dates: []},
+            recuperacion_changed:{dates: []}
         }
     }
 
@@ -134,8 +139,8 @@ class CalendarioGrado extends Component {
      *
      * @param {Object} date     Fecha seleccionada
      */
-    onSelectDate = (date) => {
-        console.log(date.jsDate)
+    onSelectDate = (date,tipoSemestre) => {
+
         // Obtener checkboxs
         let checkboxs = this.getHTMLCheckboxs()
         // Obtener selects
@@ -166,8 +171,10 @@ class CalendarioGrado extends Component {
             checkboxs.horarioCambiado.checked = true
             date.horarioCambiado = selects.selectHorarioCambiado.value
         }
+        
         this.setState((state, props) => ({
             selectedDate: date, //Fecha seleccionada.
+            semesterSelected: tipoSemestre, //Tipo de semestre seleccionado según el día "semestre1,2 o recus"
             showDialog: true, //Mostrar dialogo con checkboxs inicializados
         }))
 
@@ -206,9 +213,26 @@ class CalendarioGrado extends Component {
         } else {
             this.state.selectedDate.horarioCambiado = null
         }
-        this.setState((state, props) => ({
-            showDialog: false, //Dejar de mostrar el dialogo de opciones
-        }))
+        
+       switch(this.state.semesterSelected){
+           case "semestre1":
+                this.state.semestre1_changed.dates.push(this.state.selectedDate)
+                break;
+            case "semestre2":
+                this.state.semestre2_changed.dates.push(this.state.selectedDate)
+                break;
+            case "recuperacion":
+                this.state.recuperacion_changed.dates.push(this.state.selectedDate)
+                break;
+       }
+        
+        this.setState({showDialog: false}, 
+        () => {
+            console.log(this.state.semestre1_changed)
+            console.log(this.state.semestre2_changed)
+            console.log(this.state.recuperacion_changed)
+            
+        });
     }
 
     /**
@@ -327,7 +351,7 @@ class CalendarioGrado extends Component {
     }
 
     /**
-     * Muestra una tabla con un periodo del calendario, como el primer semestre...
+     * Muestra una tabla con un periodo del calendario, para el primer semestre
      *
      * @param periodo   Objeto periodo que se quiere renderizar en una tabla
      */
@@ -357,7 +381,7 @@ class CalendarioGrado extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => this.onSelectDate(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                    <div onClick={() => this.onSelectDate(day,"semestre1")} style={{ textAlign: 'center', padding: '5px 0' }}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -399,7 +423,7 @@ class CalendarioGrado extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => this.onSelectDate(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                    <div onClick={() => this.onSelectDate(day,"semestre2")} style={{ textAlign: 'center', padding: '5px 0' }}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -441,7 +465,7 @@ class CalendarioGrado extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => this.onSelectDate(day)} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                    <div onClick={() => this.onSelectDate(day,"recuperacion")} style={{ textAlign: 'center', padding: '5px 0' }}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -619,9 +643,10 @@ class CalendarioGrado extends Component {
                         this.state.inicioSegundo_cuatri,
                         this.state.inicioSegundaConvocatoria,
                         this.state.estadoCurso);
-                        Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1)
-                        Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2)
-                        Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion)
+                        //Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1)
+                        Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed)
+                        Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2_changed)
+                        Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed)
                     }} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
             </div>
