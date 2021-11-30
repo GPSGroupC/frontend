@@ -30,7 +30,7 @@ function App() {
           <div className="inicioAux">
             <img className="imagenLogos" src={horario}/>
             <p id="textoImg">HORARIOS</p>
-            <Link to="/horario-grado">
+            <Link to="/seleccion-horario-grados">
               <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "200px"}}>VER CURSOS</button>
             </Link>
             <Link to="/">

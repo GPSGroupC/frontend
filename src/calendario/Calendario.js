@@ -28,7 +28,7 @@ const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 const TIPOFECHA = {C: 'convocatoria', F: 'festivo', L: 'lectivo'};
 const TIPOFECHALECTIVO = {S: 'semanaAB', H: 'horarioCambiado'};
 
-class CalendarioGrado extends Component {
+class Calendario extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -672,5 +672,5 @@ class CalendarioGrado extends Component {
     }
 }
 
-export default CalendarioGrado;
+export default Calendario;
 

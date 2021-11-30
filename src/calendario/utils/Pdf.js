@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import jsPDF from 'jspdf';
 import eina from '../../images/eina-logo.png'
 import html2canvas from 'html2canvas';
-import Calendario from "../CalendarioGrado";
+import Calendario from "../Calendario";
 
 
 class Pdf {

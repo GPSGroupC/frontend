@@ -1,10 +1,10 @@
 import React from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 import App from '../App'
-import CalendarioGrado from '../calendario/CalendarioGrado'
-import HorarioGrado from '../horario/HorarioGrado'
-import HorarioMaster from '../horario/HorarioMaster'
-import Pdf from "../calendario/utils/Pdf";
+import Calendario from '../calendario/Calendario'
+import SeleccionHorarioGrados from '../horario/SeleccionHorarioGrados'
+import Horario from "../horario/Horario";
+import SeleccionHorarioMasters from "../horario/SeleccionHorarioMasters";
 
 function Raiz(){
 
@@ -14,10 +14,10 @@ function Raiz(){
             <Route exact path="/" component={App} />
             <Route exact path="/inicio" component={App} />
             <Route exact path="/home" component={App} />
-            <Route exact path="/calendario-grado" component={CalendarioGrado}/>
-            <Route exact path="/horario-grado" component={HorarioGrado}/>
-            <Route exact path="/horario-master" component={HorarioMaster}/>
-            <Route exact path="/calendario-pdf" component={Pdf}/>
+            <Route exact path="/calendario-grado" component={Calendario}/>
+            <Route exact path="/seleccion-horario-grados" component={SeleccionHorarioGrados}/>
+            <Route exact path="/seleccion-horario-masters" component={SeleccionHorarioMasters}/>
+            <Route exact path="/editar-horario" component={Horario}/>
 
         </BrowserRouter>
 
