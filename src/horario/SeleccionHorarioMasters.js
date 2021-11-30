@@ -1,6 +1,5 @@
 import * as React from 'react';
 import eina from '../images/eina-logo.png'
-import calendar from '../images/calendar-logo.png'
 import { Link } from 'react-router-dom'
 
 import { styled, alpha } from '@mui/material/styles';
@@ -57,7 +56,7 @@ const StyledMenu = styled((props) => (
 
 
 
-function HorarioSeleccion() {
+function SeleccionHorarioMasters() {
 
 
     //Master Ingenieria Informatica
@@ -191,7 +190,7 @@ function HorarioSeleccion() {
           <br></br>
 
         <div style={{"margin-left": "37.5%"}} > 
-            <Link to="/horario-grado"><button type="button" class="btn btn-outline-info" style={{"margin-left": "70px"}}>GRADO</button></Link>
+            <Link to="/seleccion-horario-grados"><button type="button" class="btn btn-outline-info" style={{"margin-left": "70px"}}>GRADO</button></Link>
             <button type="button" class="btn btn-info btn-md">MASTER</button> 
     
         </div> <br></br>
@@ -388,5 +387,5 @@ function HorarioSeleccion() {
     );
   }
   
-  export default HorarioSeleccion;
+  export default SeleccionHorarioMasters;
   

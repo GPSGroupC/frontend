@@ -1,6 +1,5 @@
 import * as React from 'react';
 import eina from '../images/eina-logo.png'
-import calendar from '../images/calendar-logo.png'
 import { Link } from 'react-router-dom'
 
 import { styled, alpha } from '@mui/material/styles';
@@ -57,7 +56,7 @@ const StyledMenu = styled((props) => (
 
 
 
-function HorarioGrado() {
+function SeleccionHorarioGrados() {
 
     //Ingenieria Informatica
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -202,7 +201,7 @@ function HorarioGrado() {
 
         <div style={{"margin-left": "37.5%"}} >  
             <button type="button" class="btn btn-info btn-md" style={{"margin-left": "70px"}}>GRADO</button>
-            <Link to="/horario-master"><button type="button" class="btn btn-outline-info">MASTER</button></Link> 
+            <Link to="/seleccion-horario-masters"><button type="button" class="btn btn-outline-info">MASTER</button></Link>
         </div> <br></br>
 
 
@@ -217,25 +216,25 @@ function HorarioGrado() {
             'aria-labelledby': 'demo-customized-button',
             }} anchorEl={anchorEl} open={open} onClose={handleClose}
         >
-            <MenuItem onClick={handleClose} disableRipple> 411-S1 Grado en Ingeniería Informática. 1º (M) Otoño </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 411-S2 Grado en Ingeniería Informática. 1º (M) Primavera </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 412-S1 Grado en Ingeniería Informática. 1º (T) Otoño</MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 412-S2 Grado en Ingeniería Informática. 1º (T) Primavera </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 411-S1 Grado en Ingeniería Informática. 1º (M) Otoño </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 411-S2 Grado en Ingeniería Informática. 1º (M) Primavera </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 412-S1 Grado en Ingeniería Informática. 1º (T) Otoño</MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 412-S2 Grado en Ingeniería Informática. 1º (T) Primavera </MenuItem>
             <Divider sx={{ my: 0.5 }} />
 
-            <MenuItem onClick={handleClose} disableRipple> 421-S3 Grado en Ingeniería Informática. 2º (M) Otoño </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 421-S4 Grado en Ingeniería Informática. 2º (M) Primavera</MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 422-S3 Grado en Ingeniería Informática. 2º (T) Otoño </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 422-S4 Grado en Ingeniería Informática. 2º (T) Primavera</MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 421-S3 Grado en Ingeniería Informática. 2º (M) Otoño </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 421-S4 Grado en Ingeniería Informática. 2º (M) Primavera</MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 422-S3 Grado en Ingeniería Informática. 2º (T) Otoño </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 422-S4 Grado en Ingeniería Informática. 2º (T) Primavera</MenuItem>
             <Divider sx={{ my: 0.5 }} />
 
-            <MenuItem onClick={handleClose} disableRipple> 431-S5 Grado en Ingeniería Informática. 3º (T) Otoño </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 431-S6 Grado en Ingeniería Informática. 3º (T) Primavera</MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 431-S5 Grado en Ingeniería Informática. 3º (T) Otoño </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 431-S6 Grado en Ingeniería Informática. 3º (T) Primavera</MenuItem>
             <Divider sx={{ my: 0.5 }} />
 
-            <MenuItem onClick={handleClose} disableRipple> 441-S7 Grado en Ingeniería Informática. 4º (M) Otoño </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 441-S8 PRACTICAS Grado en Ingeniería Informática. 4º (M) Primavera </MenuItem>
-            <MenuItem onClick={handleClose} disableRipple> 441-S8 TEORIAS Grado en Ingeniería Informática. 4º (M) Primavera </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 441-S7 Grado en Ingeniería Informática. 4º (M) Otoño </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 441-S8 PRACTICAS Grado en Ingeniería Informática. 4º (M) Primavera </MenuItem>
+            <MenuItem component={Link} to="/editar-horario" disableRipple> 441-S8 TEORIAS Grado en Ingeniería Informática. 4º (M) Primavera </MenuItem>
 
         </StyledMenu>
     </div>
@@ -601,5 +600,5 @@ function HorarioGrado() {
     );
   }
   
-  export default HorarioGrado;
+  export default SeleccionHorarioGrados;
   
