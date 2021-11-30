@@ -73,12 +73,30 @@ class CalendarioGrado extends Component {
         })
     }
 
+     /**
+     * Actualiza el calendario
+     *
+     * @param curso {string}  Curso que se quiere actualizar.
+     * @param semestre {string} Semestre del que se quiere obtener la información de los calendarios.
+     */
+      async updateCalendarioSemesters(curso,semestre) {
+        await Api.getAllCalendarSemesterData(curso,semestre).then(r => {
+          
+        }).catch(err => {
+            console.log("Error al actualizar el calendario: ",err)
+        })
+    }
+
     /**
      * Al acceder por primera vez, se actualizan los formularios y el calendario
      * con el curso actual.
      */
      componentDidMount () {
          this.updateCalendario(this.state.estadoCurso)
+         this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1")
+         this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2")
+         this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion")
+
     }
 
     //METODOS PARA FORMULARIOS
@@ -116,12 +134,24 @@ class CalendarioGrado extends Component {
     getPeriodo = (month, year, numMonths) => {
         // startingDay es el dia asociado a la primera fecha de cada semana
         // startingDay 0 -> Domingo
+        
         let queryDate = {month: month, year: year, startingDay: 1}
         let acumDates = []
         let monthNames = []
+        var newDates
+
         for (let i = 0; i < numMonths; i++) {
             const { dates, nextMonth, nextYear } = datesGenerator(queryDate)
             Parser.parseFestivos(dates)
+            for(let i = 0; i <dates.length;i++){
+                for(let j = 0; j < dates[i].length;j++){
+                    if(dates[i][j].month !== queryDate.month){
+                        dates[i][j].date= ' '
+                    }
+                }
+            }
+            console.log(dates)
+            
             acumDates = [...acumDates,dates]
             monthNames = [...monthNames, MONTHS[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
@@ -381,7 +411,7 @@ class CalendarioGrado extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => this.onSelectDate(day,"semestre1")} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                    <div onClick={() => {if(day.date !== ' '){this.onSelectDate(day,"semestre1")}}} style={{ cursor: 'pointer', textAlign: 'center', padding: '5px 0' }}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -423,7 +453,7 @@ class CalendarioGrado extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => this.onSelectDate(day,"semestre2")} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                    <div onClick={() => {if(day.date !== ' '){this.onSelectDate(day,"semestre2")}}} style={{ textAlign: 'center', padding: '5px 0' }}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -465,7 +495,7 @@ class CalendarioGrado extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => this.onSelectDate(day,"recuperacion")} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                    <div onClick={() => {if(day.date !== ' '){this.onSelectDate(day,"recuperacion")}}} style={{ textAlign: 'center', padding: '5px 0' }}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>

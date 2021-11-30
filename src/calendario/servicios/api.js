@@ -26,6 +26,24 @@ class Api {
         return [dateIC1, dateIC2, dateIS1, ultMod]
     }
 
+    static getAllCalendarSemesterData = async (curso,semestre) => {
+        console.log("getAllCalendarData: " +  curso)
+        let respuesta = null
+        await axios({ method: 'GET', url: localHostURL + "/calendar/getDaysCalendar",
+            params: {
+                cursoCalendario: curso,
+                semesterName: semestre
+            }})
+            .then( (response) => {
+                respuesta = response.data.message
+               console.log(response.data.message)
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        return [respuesta]
+    }
+
     static putAllCalendarData = async(inicio1, inicio2, inicio3, course) => {
         axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar",
             data: {
