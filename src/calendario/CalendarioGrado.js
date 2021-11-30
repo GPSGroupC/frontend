@@ -14,6 +14,8 @@ import amarillo from '../images/amarillo.png'
 import verde from '../images/verde.png'
 import morado from '../images/morado.png'
 import blanco from '../images/blanco.png'
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const { datesGenerator } = require('dates-generator');
 
@@ -73,19 +75,20 @@ class CalendarioGrado extends Component {
         })
     }
 
-     /**
+    /**
      * Actualiza el calendario
      *
      * @param curso {string}  Curso que se quiere actualizar.
      * @param semestre {string} Semestre del que se quiere obtener la información de los calendarios.
      */
-      async updateCalendarioSemesters(curso,semestre) {
+    async updateCalendarioSemesters(curso,semestre) {
         await Api.getAllCalendarSemesterData(curso,semestre).then(r => {
           
         }).catch(err => {
             console.log("Error al actualizar el calendario: ",err)
         })
     }
+
 
     /**
      * Al acceder por primera vez, se actualizan los formularios y el calendario
@@ -334,6 +337,19 @@ class CalendarioGrado extends Component {
      *
      * Devuelve todos los objetos select de la interfaz html
      */
+    getHTMLCheckboxs() {
+        let convocatoria = document.getElementById(TIPOFECHA.C)
+        let festivo = document.getElementById(TIPOFECHA.F)
+        let lectivo = document.getElementById(TIPOFECHA.L)
+        let semanaAB = document.getElementById(TIPOFECHALECTIVO.S)
+        let horarioCambiado = document.getElementById(TIPOFECHALECTIVO.H)
+        return { convocatoria, festivo, lectivo, semanaAB, horarioCambiado }
+    }
+
+    /**
+     *
+     * Devuelve todos los objetos select de la interfaz html
+     */
     getHTMLSelects() {
         let selectSemanaAB = document.getElementById("selectSemanaAB")
         let selectHorarioCambiado = document.getElementById("selectHorarioCambiado")
@@ -386,13 +402,14 @@ class CalendarioGrado extends Component {
      * @param periodo   Objeto periodo que se quiere renderizar en una tabla
      */
     htmlTable(periodo) {
-        return (<table style={{ marginLeft: '20%', width: '50%'}}>
-                <thead style={{ fontWeight: 'bold' }}>
+        return (
+            <table style={{fontSize: 'small', marginLeft: '20px', marginRight: '20px'}}> 
+                <thead style={{ fontWeight: 'bold'}}>
                 <tr>
-                    <td style={{ fontWeight: 'bold' }}>{periodo.year}</td>
+                    <td style={{ fontWeight: 'bold'}}>{periodo.year}</td>
                     {DAYS.map((day) => (
-                        <td key={day} style={{ padding: '5px 0' }}>
-                            <div style={{ textAlign: 'center', padding: '5px 0' }}>
+                        <td key={day}>
+                            <div style={{ textAlign: 'center'}}>
                                 {day}
                             </div>
                         </td>
@@ -403,15 +420,16 @@ class CalendarioGrado extends Component {
 
                     <tbody>
                     <tr>
-                        <td  style={{ fontWeight: 'bold' }} rowSpan={month.length + 1} scope="rowgroup">
+                        <td  style={{ fontWeight: 'bold'}} rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
+                            
                         </td>
                     </tr>
                     {month.length > 0 && month.map((week) => (
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
-                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => {if(day.date !== ' '){this.onSelectDate(day,"semestre1")}}} style={{ cursor: 'pointer', textAlign: 'center', padding: '5px 0' }}>
+                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ marginLeft:"15px" }}>
+                                    <div onClick={() => this.onSelectDate(day,"semestre1")} style={{ textAlign: 'center', marginBottom: "5px", marginLeft:"15px"}}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -421,20 +439,22 @@ class CalendarioGrado extends Component {
                     </tbody>
                 ))}
             </table>
+    
         )
     }
+
 
     //Tabla html para cada periodo del calendario
     htmlTable2(periodo) {
         return (
 
-            <table style={{ width: '100%'}}>
+            <table style={{fontSize: 'small', marginLeft: '20px'}}>
                 <thead style={{ fontWeight: 'bold' }}>
                 <tr>
                     <td style={{ fontWeight: 'bold' }}>{periodo.year}</td>
                     {DAYS.map((day) => (
-                        <td key={day} style={{ padding: '5px 0' }}>
-                            <div style={{ textAlign: 'center', padding: '5px 0' }}>
+                        <td key={day}>
+                            <div style={{ textAlign: 'center'}}>
                                 {day}
                             </div>
                         </td>
@@ -452,8 +472,8 @@ class CalendarioGrado extends Component {
                     {month.length > 0 && month.map((week) => (
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
-                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => {if(day.date !== ' '){this.onSelectDate(day,"semestre2")}}} style={{ textAlign: 'center', padding: '5px 0' }}>
+                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ marginLeft:"15px" }}>
+                                    <div onClick={() => this.onSelectDate(day,"recuperacion")} style={{ textAlign: 'center', marginLeft:"15px"}}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -466,47 +486,8 @@ class CalendarioGrado extends Component {
         )
     }
 
-    //Tabla html para cada periodo del calendario
-    htmlTable3(periodo) {
-        return (
 
-            <table style={{ width: '40%', marginLeft: '10%', height: '100%'}}>
-                <thead style={{ fontWeight: 'bold' }}>
-                <tr>
-                    <td style={{ fontWeight: 'bold' }}>{periodo.year}</td>
-                    {DAYS.map((day) => (
-                        <td key={day} style={{ padding: '5px 0' }}>
-                            <div style={{ textAlign: 'center', padding: '5px 0' }}>
-                                {day}
-                            </div>
-                        </td>
-                    ))}
-                </tr>
-                </thead>
-                {periodo.dates.length > 0 && periodo.dates.map((month,monthIndex) => (
 
-                    <tbody>
-                    <tr>
-                        <td  style={{ fontWeight: 'bold' }} rowSpan={month.length + 1} scope="rowgroup">
-                            {periodo.monthNames[monthIndex]}
-                        </td>
-                    </tr>
-                    {month.length > 0 && month.map((week) => (
-                        <tr key={JSON.stringify(week[0])}>
-                            {week.map((day, dayIndex) => (
-                                <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ padding: '5px 0' }}>
-                                    <div onClick={() => {if(day.date !== ' '){this.onSelectDate(day,"recuperacion")}}} style={{ textAlign: 'center', padding: '5px 0' }}>
-                                        {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
-                                    </div>
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                ))}
-            </table>
-        )
-    }
 
     render () {
         return (
@@ -519,7 +500,7 @@ class CalendarioGrado extends Component {
                     </Link>
                     <hr size="5px" color="black" />
                 </div>
-                <br></br><br></br>
+                <br></br><br></br><br></br> 
 
                 <div className="filtro2">
                     <h4 className="titulo">CALENDARIO GRADOS</h4>
@@ -601,13 +582,15 @@ class CalendarioGrado extends Component {
                             />
                         </Stack>
                     </LocalizationProvider>
-                </div>
+                </div> <br></br>
 
 
-                <div id="divToPrint" className="divToPrint">
-                    <div className="pdfHeader">
-                        <img src={eina} alt="einaLogo" width="400" height="120"/>
-                        <p>EINA calendario académico <br/>
+                
+                <div id="divToPrintId" className="divToPrint" >
+
+                    <div className="pdfHeader"> 
+                        <img src={eina} alt="einaLogo" width="250" height="70" style={{ marginTop: '2%' }}/>
+                        <p style={{ marginTop: '2%' }}>EINA calendario académico <br/>
                             GRADOS <br/>
                             Curso {this.state.estadoCurso} <br/>
                             Última modificación {
@@ -617,55 +600,58 @@ class CalendarioGrado extends Component {
                                 + this.state.ultModificacion?.getFullYear())}
                         </p>
                     </div>
+
+
                     {this.htmlDialog()}
-                    <table style={{"width":"80%"}}>
+                    <table>
                         <tbody>
                         <tr>
-                            <td style={{"width":"70%", "height":"50%"}}>
-                                <h4 className="titulo" style={{ marginLeft: '17.5%' }}>Primer semestre</h4>
+                            <td style={{"width":"100%", "height":"10%"}}>
+                                <h7 className="titulo" style={{ marginLeft: '24%' }}>Primer semestre</h7>
                                 {this.htmlTable(this.state.semestre1)}
                             </td>
 
-                            <td style={{"width":"70%", "height":"50%"}}>
-                                <h4 className="titulo">Segundo semestre</h4>
-                                {this.htmlTable2(this.state.semestre2)}
+                            <td style={{"width":"100%", "height":"10%"}}>
+                                <h7 className="titulo" style={{ marginLeft: '26%' }}>Segundo semestre</h7>
+                                {this.htmlTable(this.state.semestre2)}
                             </td>
 
+                           
                         </tr>
-
-
                         </tbody>
 
                     </table>
 
+                    <br></br>
+                    <h7 className="titulo" style={{ marginTop: '5%', marginLeft: '13.5%' }}>Período exámenes 2ª convocatoria</h7>
+                    {this.htmlTable2(this.state.recuperacion)}
+                    <br></br>
+                    
+                    <div className="leyendaDiv">
+                        <span>
+                            <img className="leyenda" src={blanco}/>
+                            <p id="textoLeyenda">Día lectivo</p>
 
-                    <h4 className="titulo" style={{ marginTop: '5%', marginLeft: '10%' }}>Período exámenes 2ª convocatoria</h4>
-                    {this.htmlTable3(this.state.recuperacion)}
-                    <br></br> <br></br>
+                            <img className="leyenda" style={{marginLeft: '1%'}} src={amarillo}/>
+                            <p id="textoLeyenda">Día con horario de otro día de la semana</p>               
+                        </span>                    
+                    </div>
 
                     <div className="leyendaDiv">
+                        <span>
+                            <img className="leyenda" src={verde}/>
+                            <p id="textoLeyenda">Día festivo</p>  
 
-                        <img className="leyenda" src={blanco}/>
-                        <p id="textoLeyenda">Día lectivo</p>
-                        <br></br>
-
-                        <img className="leyenda" src={verde}/>
-                        <p id="textoLeyenda">Día festivo</p>
-                        <br></br>
-
-                        <img className="leyenda" src={amarillo}/>
-                        <p id="textoLeyenda">Día con horario de otro día de la semana</p>
-                        <br></br>
-
-                        <img className="leyenda" src={morado}/>
-                        <p id="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
-                        <br></br>
-
+                            <img className="leyenda" style={{marginLeft: '1%' }} src={morado}/>
+                            <p id="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
+                        </span>                    
                     </div>
-                </div>
 
-                <div className="printButton">
-                    <button onClick={() => {Pdf.printDocument("divToPrint")}} className="btn btn-outline-info btn-lg" style={{"margin-left": "45%"}}>Descargar</button>
+                </div>
+            
+
+                <div className="printButton" style={{marginTop:'20px'}}>
+                    <button onClick={() => {Pdf.printDocument("divToPrintId")}} className="btn btn-outline-info btn-lg" style={{"margin-left": "45%"}}>Descargar</button>
                 </div>
 
                 <Link to="/">
@@ -679,9 +665,12 @@ class CalendarioGrado extends Component {
                         Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed)
                     }} type="button" className="btn btn-info btn-lg" style={{"margin-left": "45%"}}>GUARDAR</button>
                 </Link>
+
+                
             </div>
         );
     }
 }
 
 export default CalendarioGrado;
+
