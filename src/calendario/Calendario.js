@@ -109,19 +109,19 @@ class Calendario extends Component {
      * Al acceder por primera vez, se actualizan los formularios y el calendario
      * con el curso actual.
      */
-     async componentDidMount () {
-         const response =  Promise.all(
-            [
-                this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
-                this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
-                this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
-            ]
-         )
-        response.then( _ =>{
-            this.updateCalendario(this.state.estadoCurso)
-        })
+    async componentDidMount () {
+        const response =  Promise.all(
+           [
+               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
+               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
+               this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
+           ]
+        )
+       response.then( _ =>{
+           this.updateCalendario(this.state.estadoCurso)
+       })
 
-    }
+   }
 
     //METODOS PARA FORMULARIOS
     handleChangePrimerCuatri = (newValue) => {
@@ -640,12 +640,12 @@ class Calendario extends Component {
                         <tr>
                             <td style={{"width":"100%", "height":"10%"}}>
                                 <h7 className="titulo" style={{ marginLeft: '24%' }}>Primer semestre</h7>
-                                {this.htmlTable(this.state.semestre1,"semestre1")}
+                                {this.htmlTable(this.state.semestre1)}
                             </td>
 
                             <td style={{"width":"100%", "height":"10%"}}>
                                 <h7 className="titulo" style={{ marginLeft: '26%' }}>Segundo semestre</h7>
-                                {this.htmlTable(this.state.semestre2,"semestre2")}
+                                {this.htmlTable(this.state.semestre2)}
                             </td>
 
                            

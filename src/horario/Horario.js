@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState, Fragment} from "react";
 import Select from 'react-select'
 import {LocalizationProvider, TimePicker} from "@mui/lab";
 import {TextField} from "@material-ui/core";
@@ -7,7 +7,10 @@ import {Alert} from "@material-ui/lab";
 import {Link} from "react-router-dom";
 import eina from "../images/eina-logo.png";
 
+
 class Horario extends Component {
+
+    
     constructor(props) {
         super(props)
         this.state = {
@@ -28,6 +31,7 @@ class Horario extends Component {
         }
     }
 
+    
     componentDidMount() {
         this.getAsignaturasOptions()
     }
@@ -144,13 +148,15 @@ class Horario extends Component {
 
         return (
             <div>
-                <div className="HorarioSeleccion">
-                    <Link to="/">
-                        <img className="logoCabAux" src={eina} style={{"margin-right": "1100px"}}/>
-                    </Link>
-                    <hr size="5px" color="black"/>
-                    <br></br>
-                </div>
+
+            <div>
+              <Link to="/"><img className="logoCab2" src={eina} /></Link>
+              <Link to="/">
+                  <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
+              </Link>
+              <hr size="5px" color="black" />
+            </div> <br></br>
+                
                 <div style={{
                     display: "block",
                     margin: "auto",
@@ -231,6 +237,7 @@ class Horario extends Component {
                             obligatorios!</Alert></div>)
                         : ''}
                 </div>
+
             </div>
 
         )
