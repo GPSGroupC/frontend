@@ -42,6 +42,9 @@ class Calendario extends Component {
             semestre1:{dates: [], year: -1, monthNames:[]},
             semestre2:{dates: [], year: -1, monthNames:[]},
             recuperacion:{dates: [], year: -1, monthNames:[]},
+            fechasSemestre1:{dates: []},
+            fechasSemestre2:{dates: []},
+            fechasRecuperacion:{dates: []},
             //VENTANA DE OPCIONES
             showDialog: false,
             //FECHA SELECCIONADA
@@ -66,9 +69,9 @@ class Calendario extends Component {
                 inicioSegundo_cuatri: r[1],
                 inicioSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
-                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8,r[0]?.getFullYear() ?? 2021, 5),
-                semestre2: this.getPeriodo( r[1]?.getMonth() ?? 1,r[1]?.getFullYear() ?? 2022 , 5),
-                recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8,r[2]?.getFullYear() ?? 2022, 1)
+                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8,r[0]?.getFullYear() ?? 2021, 5,this.state.fechasSemestre1),
+                semestre2: this.getPeriodo( r[1]?.getMonth() ?? 1,r[1]?.getFullYear() ?? 2022 , 5,this.state.fechasSemestre2),
+                recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8,r[2]?.getFullYear() ?? 2022, 1,this.state.fechasRecuperacion)
             })
         }).catch(err => {
             console.log("Error al actualizar el calendario: ",err)
@@ -82,7 +85,19 @@ class Calendario extends Component {
      * @param semestre {string} Semestre del que se quiere obtener la información de los calendarios.
      */
     async updateCalendarioSemesters(curso,semestre) {
-        await Api.getAllCalendarSemesterData(curso,semestre).then(r => {
+        await Api.getAllCalendarSemesterData(curso,semestre).then(response => {
+            
+           switch(semestre) {
+               case "semestre1":
+                   this.setState({fechasSemestre1: response})
+                   break;
+                case "semestre2":
+                    this.setState({fechasSemestre2: response})
+                    break;
+                case "recuperacion":
+                    this.setState({fechasRecuperacion: response})
+                    break;
+           }
           
         }).catch(err => {
             console.log("Error al actualizar el calendario: ",err)
@@ -94,11 +109,17 @@ class Calendario extends Component {
      * Al acceder por primera vez, se actualizan los formularios y el calendario
      * con el curso actual.
      */
-     componentDidMount () {
-         this.updateCalendario(this.state.estadoCurso)
-         this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1")
-         this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2")
-         this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion")
+     async componentDidMount () {
+         const response =  Promise.all(
+            [
+                this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
+                this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
+                this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
+            ]
+         )
+        response.then( _ =>{
+            this.updateCalendario(this.state.estadoCurso)
+        })
 
     }
 
@@ -134,18 +155,17 @@ class Calendario extends Component {
      * @param {number} year     El anho en el que empieza el periodo
      * @param {number} numMonths Duracion del periodo en meses
      */
-    getPeriodo = (month, year, numMonths) => {
+    getPeriodo = (month, year, numMonths,fechasCuatri) => {
         // startingDay es el dia asociado a la primera fecha de cada semana
         // startingDay 0 -> Domingo
         
         let queryDate = {month: month, year: year, startingDay: 1}
         let acumDates = []
         let monthNames = []
-        var newDates
 
         for (let i = 0; i < numMonths; i++) {
             const { dates, nextMonth, nextYear } = datesGenerator(queryDate)
-            Parser.parseFestivos(dates)
+
             for(let i = 0; i <dates.length;i++){
                 for(let j = 0; j < dates[i].length;j++){
                     if(dates[i][j].month !== queryDate.month){
@@ -153,8 +173,9 @@ class Calendario extends Component {
                     }
                 }
             }
-            console.log(dates)
-            
+            Parser.parseFestivos(dates)
+            Parser.ParseDate(dates,fechasCuatri)
+           
             acumDates = [...acumDates,dates]
             monthNames = [...monthNames, MONTHS[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
@@ -401,7 +422,7 @@ class Calendario extends Component {
      *
      * @param periodo   Objeto periodo que se quiere renderizar en una tabla
      */
-    htmlTable(periodo) {
+    htmlTable(periodo,semestre) {
         return (
             <table style={{fontSize: 'small', marginLeft: '20px', marginRight: '20px'}}> 
                 <thead style={{ fontWeight: 'bold'}}>
@@ -429,7 +450,7 @@ class Calendario extends Component {
                         <tr key={JSON.stringify(week[0])}>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)} class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type} style={{ marginLeft:"15px" }}>
-                                    <div onClick={() => this.onSelectDate(day,"semestre1")} style={{ textAlign: 'center', marginBottom: "5px", marginLeft:"15px"}}>
+                                    <div onClick={() => this.onSelectDate(day,semestre)} style={{ textAlign: 'center', marginBottom: "5px", marginLeft:"15px"}}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                 </td>
@@ -608,12 +629,12 @@ class Calendario extends Component {
                         <tr>
                             <td style={{"width":"100%", "height":"10%"}}>
                                 <h7 className="titulo" style={{ marginLeft: '24%' }}>Primer semestre</h7>
-                                {this.htmlTable(this.state.semestre1)}
+                                {this.htmlTable(this.state.semestre1,"semestre1")}
                             </td>
 
                             <td style={{"width":"100%", "height":"10%"}}>
                                 <h7 className="titulo" style={{ marginLeft: '26%' }}>Segundo semestre</h7>
-                                {this.htmlTable(this.state.semestre2)}
+                                {this.htmlTable(this.state.semestre2,"semestre2")}
                             </td>
 
                            

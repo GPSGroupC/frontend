@@ -27,7 +27,7 @@ class Api {
     }
 
     static getAllCalendarSemesterData = async (curso,semestre) => {
-        console.log("getAllCalendarData: " +  curso)
+       
         let respuesta = null
         await axios({ method: 'GET', url: localHostURL + "/calendar/getDaysCalendar",
             params: {
@@ -36,7 +36,6 @@ class Api {
             }})
             .then( (response) => {
                 respuesta = response.data.message
-               console.log(response.data.message)
             })
             .catch(error => {
                 console.log(error);

@@ -18,7 +18,23 @@ class Parser {
     static parseFestivos(dates) {
         dates.map( (week) => {
             week.map( (day, dayIndex) => {
-                if (dayIndex == 5 || dayIndex == 6) {
+                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== ' ') {
+                    //Caso es sabado o domingo
+                    day.type = "festivo"
+                }
+            })
+        })
+    }
+
+     /**
+     * Actualiza los fines de semana como festivos
+     *
+     * @param {Object} dates  lista de fechas con formato: meses[ semanas[ {fecha} ] ]
+     */
+    static parseFestivos(dates) {
+        dates.map( (week) => {
+            week.map( (day, dayIndex) => {
+                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== ' ') {
                     //Caso es sabado o domingo
                     day.type = "festivo"
                 }
@@ -67,13 +83,35 @@ class Parser {
         return listDays;
     }
 
+    static async ParseDate(semester,fechasCuatri) {
+        
+        semester.map( week => {
+            week.map((day) => {
+                const specificDay = day.jsDate.split(' ')[0]
+                for(let i = 0; i < fechasCuatri.length; i++) {
+                    let diaencontrado = fechasCuatri[i].find( dia =>
+                        dia.diafecha === specificDay
+                    )
+                    if(diaencontrado !== undefined){
+                        console.log("MATCH")
+                        day.type = diaencontrado.docencia
+                        day.horarioCambiado = diaencontrado.horariocambiado
+                        day.semanaAB = diaencontrado.semana_a_b
+                    }
+                }
+            })
+        })
+      
+       
+    }
+
     static semesterToListChangedDate(semester) {
         var listDays = []
       
         semester.dates.map((day) => {
-           
+           console.log(day)
             var dayFormatted = Object()
-            dayFormatted.date = day.date + "/" + day.month + "/" +day.year
+            dayFormatted.date = day.date + "/" + ((day.month) + 1) + "/" +day.year
             dayFormatted.type = day.type ? day.type : "lectivo"
             dayFormatted.horarioCambiado = day.horarioCambiado ? day.horarioCambiado : null
             dayFormatted.semanaAB = day.semanaAB ? day.semanaAB : "c"
