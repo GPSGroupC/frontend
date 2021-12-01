@@ -141,9 +141,20 @@ class Calendario extends Component {
         })
     };
 
-    HandleChangeCurso =  async (curso) => { //TODO: seguir aqui
-        this.setState({estadoCurso: curso.target.value,})
-        await this.updateCalendario(curso.target.value)
+    HandleChangeCurso =  async (curso) => { 
+        this.setState({estadoCurso: curso.target.value}, () => {
+            const response =  Promise.all(
+                [
+                    this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
+                    this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
+                    this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
+                ]
+             )
+            response.then( _ =>{
+                this.updateCalendario(this.state.estadoCurso)
+            })
+        })
+        
     }
 
 
