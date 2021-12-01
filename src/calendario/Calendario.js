@@ -281,13 +281,28 @@ class Calendario extends Component {
         
        switch(this.state.semesterSelected){
            case "semestre1":
-                this.state.semestre1_changed.dates.push(this.state.selectedDate)
+               const indiceS1 = this.state.semestre1_changed.dates.findIndex( fecha => fecha.jsDate === this.state.selectedDate.jsDate);
+                if(indiceS1 !== -1){
+                    this.state.semestre1_changed.dates[indiceS1] = this.state.selectedDate
+                }else{
+                    this.state.semestre1_changed.dates.push(this.state.selectedDate)
+                }
                 break;
             case "semestre2":
-                this.state.semestre2_changed.dates.push(this.state.selectedDate)
+                const indiceS2 = this.state.semestre2_changed.dates.findIndex( fecha => fecha.jsDate === this.state.selectedDate.jsDate);
+                if(indiceS2 !== -1){
+                    this.state.semestre2_changed.dates[indiceS2] = this.state.selectedDate
+                }else{
+                    this.state.semestre2_changed.dates.push(this.state.selectedDate)
+                }
                 break;
             case "recuperacion":
-                this.state.recuperacion_changed.dates.push(this.state.selectedDate)
+                const indiceS3 = this.state.recuperacion_changed.dates.findIndex( fecha => fecha.jsDate === this.state.selectedDate.jsDate);
+                if(indiceS3 !== -1){
+                    this.state.recuperacion_changed.dates[indiceS3] = this.state.selectedDate
+                }else{
+                    this.state.recuperacion_changed.dates.push(this.state.selectedDate)
+                }
                 break;
        }
         
