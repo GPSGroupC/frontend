@@ -640,12 +640,13 @@ class Calendario extends Component {
                         <tr>
                             <td style={{"width":"100%", "height":"10%"}}>
                                 <h7 className="titulo" style={{ marginLeft: '24%' }}>Primer semestre</h7>
-                                {this.htmlTable(this.state.semestre1)}
+                                {this.htmlTable(this.state.semestre1,"semestre1")}
                             </td>
-
+                           
                             <td style={{"width":"100%", "height":"10%"}}>
                                 <h7 className="titulo" style={{ marginLeft: '26%' }}>Segundo semestre</h7>
-                                {this.htmlTable(this.state.semestre2)}
+                                {//No quites lo de semestre1 y semestre2 sino en el backend va ir mal.
+                                this.htmlTable(this.state.semestre2,"semestre2")}
                             </td>
 
                            
