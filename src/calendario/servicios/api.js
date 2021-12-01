@@ -2,6 +2,7 @@ import axios from "axios";
 import Parser from "../utils/Parser";
 
 const baseUrl = "https://timetableeina-back.herokuapp.com"
+//No borreis esta URL por si hubiese que seguir testeando en el futuro con el localhost, en caso de encontrar Bugs.
 const localHostURL = "http://localhost:8000"
 
 class Api {
@@ -29,7 +30,7 @@ class Api {
     static getAllCalendarSemesterData = async (curso,semestre) => {
        
         let respuesta = null
-        await axios({ method: 'GET', url: localHostURL + "/calendar/getDaysCalendar",
+        await axios({ method: 'GET', url: baseUrl + "/calendar/getDaysCalendar",
             params: {
                 cursoCalendario: curso,
                 semesterName: semestre
@@ -64,7 +65,7 @@ class Api {
         if(semester.dates.length > 0) {
             var dayList = Parser.semesterToListChangedDate(semester)
             //PUT to backend ENDPOINT /calendar/updateSemester
-            axios({ method: 'PUT', url: localHostURL + "/calendar/updateSemester",
+            axios({ method: 'PUT', url: baseUrl + "/calendar/updateSemester",
                 data: {
                     course: course,
                     semesterName: semesterName,
