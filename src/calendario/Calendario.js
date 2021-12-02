@@ -329,12 +329,15 @@ class Calendario extends Component {
      * Gestiona que el checkbox `lectivo`se seleccione al seleccionar `semanaAB` o `horarioCambiado`.
      */
     onSelectedCheckBox = (id, checked) => {
-        this.cleanCheckboxs() //Desactivo todos los checkboxs
         switch (id) {
             case TIPOFECHA.C:
                 if (checked) {
                     this.setState((state, props) => ({
                         convocatoriaCheckBox: true,
+                        festivoCheckBox: false,
+                        lectivoCheckBox: false,
+                        semanaABcheckBox: false,
+                        horarioCambiadoCheckBox:false,
                     }))
                 }
                 break;
@@ -342,6 +345,10 @@ class Calendario extends Component {
                 if (checked) {
                     this.setState((state, props) => ({
                         festivoCheckBox: true,
+                        convocatoriaCheckBox: false,
+                        lectivoCheckBox: false,
+                        semanaABcheckBox: false,
+                        horarioCambiadoCheckBox:false,
                     }))
                 }
                 break;
@@ -349,6 +356,8 @@ class Calendario extends Component {
                 if (checked) {
                     this.setState((state, props) => ({
                         lectivoCheckBox: true,
+                        convocatoriaCheckBox: false,
+                        festivoCheckBox: false,
                     }))
 
                 }
@@ -358,6 +367,8 @@ class Calendario extends Component {
                     this.setState((state, props) => ({
                         semanaABcheckBox: true,
                         lectivoCheckBox: true,
+                        convocatoriaCheckBox: false,
+                        festivoCheckBox: false,
                     }))
                 }
                 break;
@@ -366,6 +377,8 @@ class Calendario extends Component {
                     this.setState((state, props) => ({
                         horarioCambiadoCheckBox:true,
                         lectivoCheckBox: true,
+                        convocatoriaCheckBox: false,
+                        festivoCheckBox: false,
                     }))
                 }
         }
