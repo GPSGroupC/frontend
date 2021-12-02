@@ -476,9 +476,9 @@ class Calendario extends Component {
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
-                                    style={{marginLeft: "15px"}}>
+                                    style={{marginLeft: "15px",marginRight:'10px'}}>
                                     <div onClick={() => this.onSelectDate(day, semestre)}
-                                         style={{textAlign: 'center', marginBottom: "5px", marginLeft: "15px"}}>
+                                         style={{cursor: 'pointer',textAlign: 'center',marginRight:'2px', marginBottom: "5px", marginLeft: "15px"}}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                     {(day === this.state.selectedDate)
@@ -529,7 +529,7 @@ class Calendario extends Component {
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
                                     style={{marginLeft: "15px"}}>
                                     <div onClick={() => this.onSelectDate(day, "recuperacion")}
-                                         style={{textAlign: 'center', marginLeft: "15px"}}>
+                                         style={{textAlign: 'center', marginLeft: "15px",marginBottom: "2px",marginRight:'2px'}}>
                                         {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
                                     </div>
                                     {(day === this.state.selectedDate)
