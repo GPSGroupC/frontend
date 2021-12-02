@@ -89,7 +89,7 @@ hr {
 }
 
 .filtro2{
-  margin-left: 10%;
+  margin-left: 5%;
 }
 
 .filtro3{
@@ -439,3 +439,33 @@ td.horarioCambiado {
   background-color: rgba(20, 53, 80, 0.038);
   border: 1px solid rgba(20, 53, 80, 0.05);
 }
+
+
+/* ------------------- */
+.bodyMargin {
+  margin:3% 25%;
+}
+@media only screen and (max-width: 600px) {
+  .bodyMargin {
+    margin: 3% 0%
+  }
+}
+.header {
+  display:flex; /* rows and columns style */
+  flex-direction:row;
+  justify-content:space-between; /* Horizontal alignment */
+  align-items:end; /* vertical alignment */
+  flex-wrap:wrap;
+  margin: 0% 5%;
+}
+@media only screen and (max-width: 600px) {
+  .header {
+    display:flex; /* rows and columns style */
+    flex-direction:column;
+    justify-content:center; /* Horizontal alignment */
+    align-items:center; /* vertical alignment */
+    flex-wrap:wrap;
+  }
+}
+
+/* ------------------- */
