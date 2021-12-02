@@ -27,16 +27,12 @@ function App() {
         </div>
 
         <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-left": "27%"}}>
-          <div className="inicioAux">
+        <div className="inicioAux">
             <img className="imagenLogos" src={horario}/>
             <p id="textoImg">HORARIOS</p>
-            <Link to="/seleccion-horario-grados">
-              <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "200px"}}>VER CURSOS</button>
+            <Link to="/listar-asignaturas">
+              <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "250px"}}>EDITAR</button>
             </Link>
-            <Link to="/">
-              <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "500px"}}>IMPORTAR</button>
-            </Link>
-
           </div>
         </div>
 

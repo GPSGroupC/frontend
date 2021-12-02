@@ -110,19 +110,19 @@ class Calendario extends Component {
      * Al acceder por primera vez, se actualizan los formularios y el calendario
      * con el curso actual.
      */
-    async componentDidMount() {
-        const response = Promise.all(
-            [
-                this.updateCalendarioSemesters(this.state.estadoCurso, "semestre1"),
-                this.updateCalendarioSemesters(this.state.estadoCurso, "semestre2"),
-                this.updateCalendarioSemesters(this.state.estadoCurso, "recuperacion"),
-            ]
+    async componentDidMount () {
+        const response =  Promise.all(
+           [
+               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
+               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
+               this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
+           ]
         )
-        response.then(_ => {
-            this.updateCalendario(this.state.estadoCurso)
-        })
+       response.then( _ =>{
+           this.updateCalendario(this.state.estadoCurso)
+       })
 
-    }
+   }
 
     //METODOS PARA FORMULARIOS
     handleChangePrimerCuatri = (newValue) => {
@@ -285,16 +285,30 @@ class Calendario extends Component {
         } else {
             this.state.selectedDate.horarioCambiado = null
         }
-
-        switch (this.state.semesterSelected) {
-            case "semestre1":
-                this.state.semestre1_changed.dates.push(this.state.selectedDate)
+       switch(this.state.semesterSelected){
+           case "semestre1":
+               const indiceS1 = this.state.semestre1_changed.dates.findIndex( fecha => fecha.jsDate === this.state.selectedDate.jsDate);
+                if(indiceS1 !== -1){
+                    this.state.semestre1_changed.dates[indiceS1] = this.state.selectedDate
+                }else{
+                    this.state.semestre1_changed.dates.push(this.state.selectedDate)
+                }
                 break;
             case "semestre2":
-                this.state.semestre2_changed.dates.push(this.state.selectedDate)
+                const indiceS2 = this.state.semestre2_changed.dates.findIndex( fecha => fecha.jsDate === this.state.selectedDate.jsDate);
+                if(indiceS2 !== -1){
+                    this.state.semestre2_changed.dates[indiceS2] = this.state.selectedDate
+                }else{
+                    this.state.semestre2_changed.dates.push(this.state.selectedDate)
+                }
                 break;
             case "recuperacion":
-                this.state.recuperacion_changed.dates.push(this.state.selectedDate)
+                const indiceS3 = this.state.recuperacion_changed.dates.findIndex( fecha => fecha.jsDate === this.state.selectedDate.jsDate);
+                if(indiceS3 !== -1){
+                    this.state.recuperacion_changed.dates[indiceS3] = this.state.selectedDate
+                }else{
+                    this.state.recuperacion_changed.dates.push(this.state.selectedDate)
+                }
                 break;
         }
 
@@ -642,22 +656,20 @@ class Calendario extends Component {
                                         + this.state.ultModificacion?.getFullYear())}
                             </p>
                         </div>
-
-
-                        {this.htmlDialog()}
-                        <table>
-                            <tbody>
-                            <tr>
-                                <td style={{"width": "100%", "height": "10%"}}>
-                                    <h7 className="titulo" style={{marginLeft: '24%'}}>Primer semestre</h7>
-                                    {this.htmlTable(this.state.semestre1, "semestre1")}
-                                </td>
-
-                                <td style={{"width": "100%", "height": "10%"}}>
-                                    <h7 className="titulo" style={{marginLeft: '26%'}}>Segundo semestre</h7>
-                                    {this.htmlTable(this.state.semestre2, "semestre2")}
-                                </td>
-
+                    {this.htmlDialog()}
+                    <table>
+                        <tbody>
+                        <tr>
+                            <td style={{"width":"100%", "height":"10%"}}>
+                                <h7 className="titulo" style={{ marginLeft: '24%' }}>Primer semestre</h7>
+                                {this.htmlTable(this.state.semestre1,"semestre1")}
+                            </td>
+                           
+                            <td style={{"width":"100%", "height":"10%"}}>
+                                <h7 className="titulo" style={{ marginLeft: '26%' }}>Segundo semestre</h7>
+                                {//No quites lo de semestre1 y semestre2 sino en el backend va ir mal.
+                                this.htmlTable(this.state.semestre2,"semestre2")}
+                            </td>
 
                             </tr>
                             </tbody>
