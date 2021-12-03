@@ -162,7 +162,7 @@ function ListarAsignaturas() {
             </div>
 
             <div style={{"margin-left": "30%", marginRight:'30%'}} >  
-                <Link to="/"><button type="button" class="btn btn-outline-info">IMPORTAR ASIGNATURAS</button></Link>
+                <Link to="/importar-asignaturas"><button type="button" class="btn btn-outline-info">IMPORTAR ASIGNATURAS</button></Link>
                 <Link to="/listar-asignaturas"><button type="button" class="btn btn-info btn-md">LISTAR ASIGNATURAS</button></Link>
                 <Link to="/seleccion-horario-grados"><button type="button" class="btn btn-outline-info">EDITAR HORARIOS</button></Link>
             </div> <br></br>
