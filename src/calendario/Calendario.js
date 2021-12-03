@@ -137,21 +137,18 @@ class Calendario extends Component {
     handleChangePrimerCuatri = (newValue) => {
         this.setState({
             inicioPrimer_cuatri: newValue,
-            semestre1: this.getPeriodo(newValue?.getMonth() ?? 8, newValue?.getFullYear() ?? 2021, 5)
         })
     };
 
     handleChangeSegundoCuatri = (newValue) => {
         this.setState({
             inicioSegundo_cuatri: newValue,
-            semestre2: this.getPeriodo(newValue?.getMonth() ?? 1, newValue?.getFullYear() ?? 2022, 5)
         })
     };
 
     handleChangeSegundaConv = (newValue) => {
         this.setState({
             inicioSegundaConvocatoria: newValue,
-            recuperacion: this.getPeriodo(newValue?.getMonth() ?? 8, newValue?.getFullYear() ?? 2022, 1)
         })
     };
 
