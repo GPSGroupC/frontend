@@ -91,7 +91,9 @@ hr {
 .filtro2{
   margin-left: 5%;
 }
-
+.select {
+  width: 300px;
+}
 .filtro3{
   margin-top: 7px;
 }
@@ -494,11 +496,25 @@ td.horarioCambiado {
   margin-left: 25%;
 }
 
+#calendarTable
+{
+  font-size: small;
+  margin-left: 20px;
+  margin-right: 20px;
+  border: 2px solid #476b6b;
+  overflow:hidden;
+}
+
 #calendarTable td
 {
   text-align: center;
   vertical-align: middle;
 }
+
+.dialog ul li{
+ text-align: start;
+}
+
 /* ------------------- */
 
 

@@ -17,6 +17,7 @@ import blanco from '../images/blanco.png'
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {Alert} from "@material-ui/lab";
+import Parse from "./utils/Parser";
 
 const {datesGenerator} = require('dates-generator');
 
@@ -401,7 +402,7 @@ class Calendario extends Component {
     }
     htmlDialog() {
         return (
-            <dialog id="dialog" open={this.state.showDialog ? true : false}>
+            <dialog className="dialog" open={this.state.showDialog ? true : false}>
                 <ul>
                     <li>
                         <label>
@@ -479,11 +480,7 @@ class Calendario extends Component {
     htmlTable(periodo, semestre) {
         var weekNum = 0
         return (
-            <table id="calendarTable" style={{fontSize: 'small',
-                marginLeft: '20px',
-                marginRight: '20px',
-                border: "2px solid #476b6b",
-                overflow:"hidden"}}>
+            <table id="calendarTable">
                 <thead style={{fontWeight: 'bold'}}>
                 <tr>
                     <td style={{fontWeight: 'bold',border: "2px solid #476b6b"}}>{periodo.year}</td>
@@ -501,14 +498,16 @@ class Calendario extends Component {
 
                     <tbody>
                     <tr>
-                        <td style={{fontWeight: 'bold', width:"50px"}} rowSpan={month.length + 1} scope="rowgroup">
+                        <td style={{fontWeight: 'bold', width:"50px", borderBottom: "1px solid #476b6b"}} rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
 
                         </td>
                     </tr>
                     {month.length > 0 && month.map((week, weekIndex) => (
-                        <tr key={JSON.stringify(week[0])}>
-                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>{weekNum= weekNum + 1}</td>
+                        (Parse.weekIsBlank(week))
+                            ? ''
+                            :(<tr key={JSON.stringify(week[0])} >
+                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>{weekNum= weekNum + 1} </td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
@@ -523,7 +522,7 @@ class Calendario extends Component {
                                     }
                                 </td>
                             ))}
-                        </tr>
+                        </tr>)
                     ))}
                     </tbody>
                 ))}
@@ -547,7 +546,7 @@ class Calendario extends Component {
                 <br/><br/>
                 <div className="filtro2">
                     <h5 className="titulo">Selecciona qué curso quieres editar</h5>
-                    <div className="form-group" style={{"width": "35%"}}>
+                    <div className="select">
                         <label htmlFor="exampleSelect1" className="form-label mt-4">Curso</label>
                         <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select"
                                 id="exampleSelect1">
@@ -560,16 +559,15 @@ class Calendario extends Component {
                         <br></br>
                     </div>
 
-                    <Alert severity="info">Última
+                    <Alert severity="info" style={{width:"300px"}}>Última
                         modificación: {Parser.dateToString(this.state.ultModificacion)}</Alert>
-                    <br></br>
+                    <br/><br/>
 
                     <h5 className="titulo">Selecciona el inicio de cada periodo del calendario</h5>
                     <h10 className="texto1">Inicio primer semestre</h10>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <div style={{"margin-top": "10px"}}>
-
-                            <Stack spacing={3} style={{"margin-top": "5px", "width": "35%"}}>
+                        <div>
+                            <Stack spacing={3} className="select">
                                 <DesktopDatePicker
                                     label="dd/mm/yyyy"
                                     inputFormat="dd/MM/yyyy"
@@ -586,7 +584,7 @@ class Calendario extends Component {
 
                         <br></br>
                         <h10 className="texto1">Inicio segundo semestre</h10>
-                        <Stack spacing={3} style={{"margin-top": "5px", "width": "35%"}}>
+                        <Stack spacing={3} className="select">
                             <DesktopDatePicker
                                 label="dd/mm/yyyy"
                                 inputFormat="dd/MM/yyyy"
@@ -601,7 +599,7 @@ class Calendario extends Component {
 
                         <br></br>
                         <h10 className="texto1">Inicio período exámenes 2ª convocatoria</h10>
-                        <Stack spacing={3} style={{"margin-top": "5px", "width": "35%"}}>
+                        <Stack spacing={3} className="select">
                             <DesktopDatePicker
                                 label="dd/mm/yyyy"
                                 inputFormat="dd/MM/yyyy"
