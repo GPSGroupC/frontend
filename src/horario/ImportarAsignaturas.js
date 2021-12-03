@@ -28,7 +28,6 @@ function ImportarAsignaturas() {
     <div>
 
             <div>
-              <Link to="/"><img className="logoCab2" src={eina} /></Link>
               <div className="filtro2" style={{textAlign:'center'}}><br></br><br></br>
               <h4 className="titulo">HORARIOS</h4>
               <Link to="/">

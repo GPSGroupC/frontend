@@ -458,7 +458,7 @@ td.horarioCambiado {
 
 /* ------------------- */
 .bodyMargin {
-  margin:3% 25%;
+  margin:3% 20%;
 }
 @media only screen and (max-width: 600px) {
   .bodyMargin {
