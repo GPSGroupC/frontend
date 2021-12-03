@@ -22,7 +22,7 @@ const {datesGenerator} = require('dates-generator');
 
 
 //Cabeceras del calendario
-const MONTHS = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic'];
 const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
 //Tipos internos de cada fecha del calendario
@@ -479,10 +479,14 @@ class Calendario extends Component {
     htmlTable(periodo, semestre) {
         var weekNum = 0
         return (
-            <table style={{fontSize: 'small', marginLeft: '20px', marginRight: '20px'}}>
+            <table id="calendarTable" style={{fontSize: 'small',
+                marginLeft: '20px',
+                marginRight: '20px',
+                border: "2px solid #476b6b",
+                overflow:"hidden"}}>
                 <thead style={{fontWeight: 'bold'}}>
                 <tr>
-                    <td style={{fontWeight: 'bold'}}>{periodo.year}</td>
+                    <td style={{fontWeight: 'bold',border: "2px solid #476b6b"}}>{periodo.year}</td>
                     <td style={{backgroundColor: "#476b6b",color:"white"}}>Sem</td>
                     {DAYS.map((day) => (
                         <td style={{backgroundColor: "#476b6b", color:"white"}} key={day} >
@@ -497,14 +501,14 @@ class Calendario extends Component {
 
                     <tbody>
                     <tr>
-                        <td style={{fontWeight: 'bold'}} rowSpan={month.length + 1} scope="rowgroup">
+                        <td style={{fontWeight: 'bold', width:"50px"}} rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
 
                         </td>
                     </tr>
                     {month.length > 0 && month.map((week, weekIndex) => (
                         <tr key={JSON.stringify(week[0])}>
-                            <td>{weekNum= weekNum + 1}</td>
+                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>{weekNum= weekNum + 1}</td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}

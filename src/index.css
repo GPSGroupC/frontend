@@ -494,6 +494,11 @@ td.horarioCambiado {
   margin-left: 25%;
 }
 
+#calendarTable td
+{
+  text-align: center;
+  vertical-align: middle;
+}
 /* ------------------- */
 
 
