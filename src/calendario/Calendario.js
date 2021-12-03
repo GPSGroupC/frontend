@@ -529,56 +529,6 @@ class Calendario extends Component {
     }
 
 
-    //Tabla html para cada periodo del calendario
-    htmlTable2(periodo) {
-        return (
-
-            <table style={{fontSize: 'small', marginLeft: '20px'}}>
-                <thead style={{fontWeight: 'bold'}}>
-                <tr>
-                    <td style={{fontWeight: 'bold'}}>{periodo.year}</td>
-                    {DAYS.map((day) => (
-                        <td key={day}>
-                            <div style={{textAlign: 'center'}}>
-                                {day}
-                            </div>
-                        </td>
-                    ))}
-                </tr>
-                </thead>
-                {periodo.dates.length > 0 && periodo.dates.map((month, monthIndex) => (
-
-                    <tbody>
-                    <tr>
-                        <td style={{fontWeight: 'bold'}} rowSpan={month.length + 1} scope="rowgroup">
-                            {periodo.monthNames[monthIndex]}
-                        </td>
-                    </tr>
-                    {month.length > 0 && month.map((week) => (
-                        <tr key={JSON.stringify(week[0])}>
-                            {week.map((day, dayIndex) => (
-                                <td key={JSON.stringify(day)}
-                                    class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
-                                    style={{marginLeft: "15px"}}>
-                                    <div onClick={() => this.onSelectDate(day, "recuperacion")}
-                                         style={{textAlign: 'center', marginLeft: "15px",marginBottom: "2px",marginRight:'2px'}}>
-                                        {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
-                                    </div>
-                                    {(day === this.state.selectedDate)
-                                        ?this.htmlDialog()
-                                        :''
-                                    }
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                ))}
-            </table>
-        )
-    }
-
-
     render() {
         return (
             <div className="bodyMargin">
@@ -679,32 +629,21 @@ class Calendario extends Component {
                                         + this.state.ultModificacion?.getFullYear())}
                             </p>
                         </div>
-                    <table>
-                        <tbody>
-                        <tr>
-                            <td style={{"width":"100%", "height":"10%"}}>
-                                <h7 className="titulo" style={{ marginLeft: '24%' }}>Primer semestre</h7>
+
+                        <div className="calendarTable">
+                            <div>
+                                <h7 className="titulo">Primer semestre</h7>
                                 {this.htmlTable(this.state.semestre1,"semestre1")}
-                            </td>
-                           
-                            <td style={{"width":"100%", "height":"10%"}}>
-                                <h7 className="titulo" style={{ marginLeft: '0%' }}>Segundo semestre</h7>
+                                <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
+                                {this.htmlTable(this.state.recuperacion)}
+                            </div>
+                            <div>
+                                <h7 className="titulo">Segundo semestre</h7>
                                 {//No quites lo de semestre1 y semestre2 sino en el backend va ir mal.
-                                this.htmlTable(this.state.semestre2,"semestre2")}
-                            </td>
-
-                            </tr>
-                            </tbody>
-
-                        </table>
-
-
-                        <h7 className="titulo" style={{marginTop: '5%', marginLeft: '13.5%'}}>Período exámenes 2ª
-                            convocatoria
-                        </h7>
-                        {this.htmlTable2(this.state.recuperacion)}
+                                    this.htmlTable(this.state.semestre2,"semestre2")}
+                            </div>
+                        </div>
                         <br/>
-
                         <div className="leyendaDiv">
                         <span>
                             <img className="leyenda" src={blanco}/>

@@ -483,6 +483,17 @@ td.horarioCambiado {
   }
 }
 
+.calendarTable {
+  display:flex; /* rows and columns style */
+  flex-direction:row;
+  justify-content:center; /* Horizontal alignment */
+  align-items:start; /* vertical alignment */
+  flex-wrap:wrap;
+}
+.calendarTable div h7 {
+  margin-left: 25%;
+}
+
 /* ------------------- */
 
 
