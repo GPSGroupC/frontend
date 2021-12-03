@@ -9,7 +9,7 @@ class Pdf {
      static printDocument(id) {
          
         const input = document.getElementById(id);
-        html2canvas(input)
+        html2canvas(input,{scale:3})
             .then((canvas) => {
                 const imgData = canvas.toDataURL('image/png');
                 const pdf = new jsPDF("p", "pt", "a4");
