@@ -477,13 +477,15 @@ class Calendario extends Component {
      * @param periodo   Objeto periodo que se quiere renderizar en una tabla
      */
     htmlTable(periodo, semestre) {
+        var weekNum = 0
         return (
             <table style={{fontSize: 'small', marginLeft: '20px', marginRight: '20px'}}>
                 <thead style={{fontWeight: 'bold'}}>
                 <tr>
                     <td style={{fontWeight: 'bold'}}>{periodo.year}</td>
+                    <td style={{backgroundColor: "#476b6b",color:"white"}}>Sem</td>
                     {DAYS.map((day) => (
-                        <td key={day}>
+                        <td style={{backgroundColor: "#476b6b", color:"white"}} key={day} >
                             <div style={{textAlign: 'center'}}>
                                 {day}
                             </div>
@@ -500,8 +502,9 @@ class Calendario extends Component {
 
                         </td>
                     </tr>
-                    {month.length > 0 && month.map((week) => (
+                    {month.length > 0 && month.map((week, weekIndex) => (
                         <tr key={JSON.stringify(week[0])}>
+                            <td>{weekNum= weekNum + 1}</td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
