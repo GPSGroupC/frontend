@@ -1,4 +1,5 @@
 class Parser {
+    static BLANK_DATE = ' ';
     /**
      *
      * @param {String} date : Recibe un array con una fecha en formato DD-MM-YYYY
@@ -18,7 +19,7 @@ class Parser {
     static parseFestivos(dates) {
         dates.map( (week) => {
             week.map( (day, dayIndex) => {
-                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== ' ') {
+                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== this.BLANK_DATE) {
                     //Caso es sabado o domingo
                     day.type = "festivo"
                 }
@@ -34,7 +35,7 @@ class Parser {
     static parseFestivos(dates) {
         dates.map( (week) => {
             week.map( (day, dayIndex) => {
-                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== ' ') {
+                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== this.BLANK_DATE) {
                     //Caso es sabado o domingo
                     day.type = "festivo"
                 }
@@ -94,7 +95,7 @@ class Parser {
 
     static ParseDaysBeforeSemester1Beginning(startDateSemester1,currentDate,diaSemestre){
         if(this.isPreviousDate(startDateSemester1,currentDate)){
-            diaSemestre.date = ' '
+            diaSemestre.date = this.BLANK_DATE
             diaSemestre.type = undefined
         }
     }
@@ -103,7 +104,7 @@ class Parser {
         semester.map( week => {
             week.map((day) => {
                // console.log(day,inicioPrimerCuatri)
-                const specificDay = day.jsDate.split(' ')[0]
+                const specificDay = day.jsDate.split(this.BLANK_DATE)[0]
                 if( !isNaN(inicioPrimerCuatri)){
                   this.ParseDaysBeforeSemester1Beginning(this.dateToString(new Date(inicioPrimerCuatri)),specificDay,day)
                 }
@@ -112,7 +113,7 @@ class Parser {
                     let diaencontrado = fechasCuatri[i].find( dia =>
                         dia.diafecha === specificDay
                     )
-                    if(diaencontrado !== undefined && day.date !== ' '){
+                    if(diaencontrado !== undefined && day.date !== this.BLANK_DATE){
                         day.type = diaencontrado.docencia
                         day.horarioCambiado = diaencontrado.horariocambiado
                         if(diaencontrado.semana_a_b !== 'c'){
@@ -155,6 +156,19 @@ class Parser {
             return `${day}${separator}${month}${separator}${year}`
         }
         return ''
+    }
+
+    /**
+     * Devuelve true sii week es una semana vacia
+     */
+    static weekIsBlank(week) {
+        var result = true //Por defecto es vacia
+        week.map((day) => {
+            if (day.date !== this.BLANK_DATE) {
+                result = false
+            }
+        })
+        return result
     }
 }
 

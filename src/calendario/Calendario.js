@@ -17,6 +17,7 @@ import blanco from '../images/blanco.png'
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {Alert} from "@material-ui/lab";
+import Parse from "./utils/Parser";
 
 const {datesGenerator} = require('dates-generator');
 
@@ -503,8 +504,10 @@ class Calendario extends Component {
                         </td>
                     </tr>
                     {month.length > 0 && month.map((week, weekIndex) => (
-                        <tr key={JSON.stringify(week[0])} >
-                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>{weekNum= weekNum + 1}</td>
+                        (Parse.weekIsBlank(week))
+                            ? ''
+                            :(<tr key={JSON.stringify(week[0])} >
+                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>{weekNum= weekNum + 1} </td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
@@ -519,7 +522,7 @@ class Calendario extends Component {
                                     }
                                 </td>
                             ))}
-                        </tr>
+                        </tr>)
                     ))}
                     </tbody>
                 ))}
