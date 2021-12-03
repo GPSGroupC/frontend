@@ -84,7 +84,6 @@ class Parser {
     }
 
     static async ParseDate(semester,fechasCuatri) {
-        
         semester.map( week => {
             week.map((day) => {
                 const specificDay = day.jsDate.split(' ')[0]
