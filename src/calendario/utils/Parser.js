@@ -83,19 +83,41 @@ class Parser {
         return listDays;
     }
 
-    static async ParseDate(semester,fechasCuatri) {
+    static isPreviousDate(startSemester1, currentDate){
+        const splittedSemester1 = startSemester1.split('/')
+        const splittedCurrentDate = currentDate.split('/')
+   
+        return (parseInt(splittedCurrentDate[2]) <= parseInt(splittedSemester1[2])
+        &&  parseInt(splittedCurrentDate[1]) <= parseInt(splittedSemester1[1]) 
+        && parseInt(splittedCurrentDate[0]) < parseInt(splittedSemester1[0]));
+    }
+
+    static ParseDaysBeforeSemester1Beginning(startDateSemester1,currentDate,diaSemestre){
+        if(this.isPreviousDate(startDateSemester1,currentDate)){
+            diaSemestre.date = ' '
+            diaSemestre.type = undefined
+        }
+    }
+
+    static async ParseDate(semester,fechasCuatri,inicioPrimerCuatri) {
         semester.map( week => {
             week.map((day) => {
+               // console.log(day,inicioPrimerCuatri)
                 const specificDay = day.jsDate.split(' ')[0]
+                if( !isNaN(inicioPrimerCuatri)){
+                  this.ParseDaysBeforeSemester1Beginning(this.dateToString(new Date(inicioPrimerCuatri)),specificDay,day)
+                }
+
                 for(let i = 0; i < fechasCuatri.length; i++) {
                     let diaencontrado = fechasCuatri[i].find( dia =>
                         dia.diafecha === specificDay
                     )
-                    if(diaencontrado !== undefined){
-                        console.log("MATCH")
+                    if(diaencontrado !== undefined && day.date !== ' '){
                         day.type = diaencontrado.docencia
                         day.horarioCambiado = diaencontrado.horariocambiado
-                        day.semanaAB = diaencontrado.semana_a_b
+                        if(diaencontrado.semana_a_b !== 'c'){
+                            day.semanaAB = diaencontrado.semana_a_b
+                        }
                     }
                 }
             })

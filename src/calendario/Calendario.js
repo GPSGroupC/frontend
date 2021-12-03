@@ -79,7 +79,7 @@ class Calendario extends Component {
                 inicioSegundo_cuatri: r[1],
                 inicioSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
-                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1),
+                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
                 semestre2: this.getPeriodo(r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
                 recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
             })
@@ -137,6 +137,10 @@ class Calendario extends Component {
     handleChangePrimerCuatri = (newValue) => {
         this.setState({
             inicioPrimer_cuatri: newValue,
+        }, () => {
+            this.setState({
+                semestre1: this.getPeriodo( 8,  2021, 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
+            })
         })
     };
 
@@ -177,7 +181,7 @@ class Calendario extends Component {
      * @param {number} year     El anho en el que empieza el periodo
      * @param {number} numMonths Duracion del periodo en meses
      */
-    getPeriodo = (month, year, numMonths, fechasCuatri) => {
+    getPeriodo = (month, year, numMonths, fechasCuatri, inicioPrimerCuatri) => {
         // startingDay es el dia asociado a la primera fecha de cada semana
         // startingDay 0 -> Domingo
 
@@ -195,8 +199,9 @@ class Calendario extends Component {
                     }
                 }
             }
+            
+            Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
-            Parser.ParseDate(dates, fechasCuatri)
 
             acumDates = [...acumDates, dates]
             monthNames = [...monthNames, MONTHS[queryDate.month]]
@@ -234,6 +239,7 @@ class Calendario extends Component {
                 this.state.lectivoCheckBox = true
                 break;
         }
+        
         if (date.semanaAB != undefined) {
             // El dia pertenece a semana a/b
             this.state.semanaABcheckBox = true
@@ -310,13 +316,7 @@ class Calendario extends Component {
                 break;
         }
 
-        this.setState({showDialog: false},
-            () => {
-                //console.log(this.state.semestre1_changed)
-                //console.log(this.state.semestre2_changed)
-                //console.log(this.state.recuperacion_changed)
-
-            });
+        this.setState({showDialog: false});
     }
 
     /**
@@ -634,11 +634,11 @@ class Calendario extends Component {
                                 <h7 className="titulo">Primer semestre</h7>
                                 {this.htmlTable(this.state.semestre1,"semestre1")}
                                 <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
-                                {this.htmlTable(this.state.recuperacion)}
+                                {this.htmlTable(this.state.recuperacion,"recuperacion")}
                             </div>
                             <div>
                                 <h7 className="titulo">Segundo semestre</h7>
-                                {//No quites lo de semestre1 y semestre2 sino en el backend va ir mal.
+                                {//No quiteis los string de semestre1 y semestre2 y recuperacion sino en el backend va ir mal.
                                     this.htmlTable(this.state.semestre2,"semestre2")}
                             </div>
                         </div>
