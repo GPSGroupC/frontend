@@ -197,7 +197,7 @@ function SeleccionHorarioMasters() {
         </div>  
 
         <div style={{"margin-left": "30%", marginRight:'30%'}} >  
-            <Link to="/"><button type="button" class="btn btn-outline-info">IMPORTAR ASIGNATURAS</button></Link>
+            <Link to="/importar-asignaturas"><button type="button" class="btn btn-outline-info">IMPORTAR ASIGNATURAS</button></Link>
             <Link to="/listar-asignaturas"><button type="button" class="btn btn-outline-info">LISTAR ASIGNATURAS</button></Link>
             <Link to="/seleccion-horario-masters"><button type="button" class="btn btn-info btn-md">EDITAR HORARIOS</button></Link>
         </div> <br></br> 

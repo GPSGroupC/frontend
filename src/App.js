@@ -30,7 +30,7 @@ function App() {
         <div className="inicioAux">
             <img className="imagenLogos" src={horario}/>
             <p id="textoImg">HORARIOS</p>
-            <Link to="/listar-asignaturas">
+            <Link to="/pantalla-horarios">
               <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "250px"}}>EDITAR</button>
             </Link>
           </div>
