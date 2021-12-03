@@ -1,65 +1,72 @@
 import React, {Component} from "react";
-import { Link } from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import eina from '../images/eina-logo.png'
 import '../PantallaHorarios.css';
-import ButtonGroup from 'react-bootstrap/Button';
+import ImportarAsignaturas from "./ImportarAsignaturas";
+import ListarAsignaturas from "./ListarAsignaturas";
+import SeleccionHorarioGrados from "./SeleccionHorarioGrados";
 
 /**
- * Interfaz Home para la parte de los horarios.
+ * Menu de pantallas de horarios.
+ *
+ * Este componente permite fijar el menu de horarios al navegar
+ * entre las distintas pantallas de la parte de horarios.
  */
 class PantallaHorarios extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-        listButtons: [
-            { id:1, name: "IMPORTAR ASIGNATURAS", render: <p>IMPORTAR</p>},
-            { id:2, name: "LISTAR ASIGNATURAS", render: <p>LISTAR AS</p>},
-            { id:3, name: "LISTAR HORARIOS", render: <p>LISTAR HO</p>}
-        ],
-        selectedButton: 1
+    constructor(props) {
+        super(props);
+        this.state = {
+            menu: [
+                {id: 1, name: "IMPORTAR ASIGNATURAS", component: <ImportarAsignaturas/>},
+                {id: 2, name: "LISTAR ASIGNATURAS", component: <ListarAsignaturas/>},
+                {id: 3, name: "LISTAR HORARIOS", component: <SeleccionHorarioGrados/>}
+            ],
+            menuItemSelected: <ImportarAsignaturas/>
+        }
     }
-  }
 
-  handleClick = (event) => {
-      this.setState({
-          selectedButton: event
-      })
-  }
-  render() {
-    return (
-        <div className="bodyMargin">
-          <div className="header">
-            <Link to="/"><img className="einaImg" src={eina} /></Link>
-            <h4 className="titulo">HORARIOS</h4>
-            <Link to="/">
-              <button type="button" className="btn btn-info btn-lg">INICIO</button>
-            </Link>
-          </div>
-          <br/>
-          <hr size="5px" color="black"/>
-          <br/><br/>
+    handleClick = (event) => {
+        var menuItem= this.state.menu.find((menuItem) => menuItem.id == event.target.value)
+        this.setState({
+            menuItemSelected: menuItem.component
+        })
+    }
 
+    renderHeader() {
+        return (<div>
+                <div className="header">
+                    <Link to="/"><img className="einaImg" src={eina}/></Link>
+                    <h4 className="titulo">HORARIOS</h4>
+                    <Link to="/">
+                        <button type="button" className="btn btn-info btn-lg">INICIO</button>
+                    </Link>
+                </div><br/>
+                <hr size="5px" color="black"/>
+            </div>
+        )
+    }
 
-          <ButtonGroup vertical id="buttongroup">
-            <Link to="/importar-asignaturas">
-              <button id="buttonselect" type="button">IMPORTAR ASIGNATURAS</button>
-            </Link>
-            <Link to="/listar-asignaturas">
-              <button id="buttonselect" type="button">LISTAR ASIGNATURAS</button>
-            </Link>
-            <Link to="/seleccion-horario-grados">
-              <button id="buttonselect" type="button">EDITAR HORARIOS</button>
-            </Link>
-              {
-                  this.state.listButtons.map((button) => (
-                      <button id="buttonselect" type="button" value={button.id}
-                              onClick={this.handleClick}>{button.name}</button>
-                  ))
-              }
-          </ButtonGroup>
-        </div>
-    );
-  };
+    renderMenu() {
+        return (
+            <div className="menuHorarios">
+                {this.state.menu.map((menuItem) => (
+                <button id="buttonselect" type="button" value={menuItem.id}
+                        onClick={this.handleClick}>{menuItem.name}</button>
+                ))}
+            </div>
+        )
+    }
+
+    render() {
+        return (
+            <div className="bodyMargin">
+                {this.renderHeader()}<br/><br/>
+                {this.renderMenu()}<br/><br/>
+                {this.state.menuItemSelected}
+            </div>
+        );
+    };
 }
+
 export default PantallaHorarios;

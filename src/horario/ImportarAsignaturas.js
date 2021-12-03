@@ -26,26 +26,7 @@ function ImportarAsignaturas() {
   return (
       
     <div>
-
-            <div>
-              <div className="filtro2" style={{textAlign:'center'}}><br></br><br></br>
-              <h4 className="titulo">HORARIOS</h4>
-              <Link to="/">
-                  <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>INICIO</button>
-              </Link>
-              </div>
-              <hr size="5px" color="black" />
-            </div> <br></br>
-
-
-
-            <ButtonGroup vertical id="buttongroup">
-                <Link to="/importar-asignaturas"><button id="buttonselect" class="selected" type="button" >IMPORTAR ASIGNATURAS</button></Link>
-                <Link to="/listar-asignaturas"><button id="buttonselect" type="button" >LISTAR ASIGNATURAS</button></Link>
-                <Link to="/seleccion-horario-grados"><button id="buttonselect" type="button">EDITAR HORARIOS</button></Link>
-            </ButtonGroup>
-
-            <div id="import-box">
+        <div id="import-box">
                 <h3>
                     Importar Asignatura
                 </h3><br></br><br></br>

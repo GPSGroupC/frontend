@@ -194,28 +194,9 @@ function SeleccionHorarioGrados() {
   
         <div className="HorarioSeleccion">
           
-
-          <div>
-              <Link to="/"><img className="logoCab2" src={eina} /></Link>
-              <Link to="/">
-                  <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
-              </Link>
-              <hr size="5px" color="black" />
-            </div> <br></br>
-
-        <div className="filtro2">
-            <h4 className="titulo">EDITAR HORARIOS</h4>
-        </div>  
-
-        <div style={{"margin-left": "30%", marginRight:'30%'}} >  
-            <Link to="/importar-asignaturas"><button type="button" class="btn btn-outline-info">IMPORTAR ASIGNATURAS</button></Link>
-            <Link to="/listar-asignaturas"><button type="button" class="btn btn-outline-info">LISTAR ASIGNATURAS</button></Link>
-            <Link to="/seleccion-horario-grados"><button type="button" class="btn btn-info btn-md">EDITAR HORARIOS</button></Link>
-        </div> <br></br>
-          
         <div style={{"margin-left": "37.5%"}} >  
             <button type="button" class="btn btn-info btn-md" style={{"margin-left": "70px"}}>GRADO</button>
-            <Link to="/seleccion-horario-masters"><button type="button" class="btn btn-outline-info">MASTER</button></Link>
+            <Link to=""><button type="button" class="btn btn-outline-info">MASTER</button></Link>
         </div> <br></br>
 
 
