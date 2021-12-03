@@ -6,7 +6,16 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {Alert} from "@material-ui/lab";
 import {Link} from "react-router-dom";
 import eina from "../images/eina-logo.png";
+import Timetable from 'react-scheduler-table'
 
+const settings = {
+    cellHeight: 50,
+    startDay: "08:00",
+    endDay: "21:00",
+    is12hours: false,
+    hourSplit: 1, // 1 hour / 0.25 = 15 min - each row
+    columnCnt: 5
+};
 
 class Horario extends Component {
 
@@ -147,16 +156,16 @@ class Horario extends Component {
     render() {
 
         return (
-            <div>
+            <><><div>
 
-            <div>
-              <Link to="/"><img className="logoCab2" src={eina} /></Link>
-              <Link to="/">
-                  <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
-              </Link>
-              <hr size="5px" color="black" />
-            </div> <br></br>
-                
+                <div>
+                    <Link to="/"><img className="logoCab2" src={eina} /></Link>
+                    <Link to="/">
+                        <button type="button" className="btn btn-info btn-lg" style={{ "margin-left": "750px", "margin-top": "15px" }}>SALIR SIN GUARDAR</button>
+                    </Link>
+                    <hr size="5px" color="black" />
+                </div> <br></br>
+
                 <div style={{
                     display: "block",
                     margin: "auto",
@@ -174,71 +183,87 @@ class Horario extends Component {
                         justifyContent: "center",
                         flexWrap: "wrap"
                     }}>
-                        <div style={{margin: "6px"}}>
+                        <div style={{ margin: "6px" }}>
                             <Select
                                 options={this.state.asignaturasOptions}
                                 placeholder={<div>Asignatura</div>}
                                 onChange={(a) => {
-                                    this.setState(this.state.claseSelected.asignatura = a)
-                                }}
-                                value={this.state.claseSelected.asignatura}
-                            />
+                                    this.setState(this.state.claseSelected.asignatura = a);
+                                } }
+                                value={this.state.claseSelected.asignatura} />
                         </div>
-                        <div style={{margin: "6px"}}>
+                        <div style={{ margin: "6px" }}>
                             <Select
                                 options={this.getDiasOptions()}
                                 placeholder={<div>Día</div>}
                                 onChange={(d) => {
-                                    this.setState(this.state.claseSelected.dia = d)
-                                }}
-                                value={this.state.claseSelected.dia}
-                            />
+                                    this.setState(this.state.claseSelected.dia = d);
+                                } }
+                                value={this.state.claseSelected.dia} />
                         </div>
-                        <div style={{margin: "6px"}}>
+                        <div style={{ margin: "6px" }}>
                             <LocalizationProvider dateAdapter={AdapterDateFns}>
-                                <TimePicker style={{boxSizing: "border-box"}}
-                                            placeholder="Hora"
-                                            minutesStep={30}
-                                            minTime={new Date(0, 0, 0, 8)}
-                                            maxTime={new Date(0, 0, 0, 20, 30)}
-                                            onChange={(h) => {
-                                                this.setState(this.state.claseSelected.hora = h)
-                                            }}
-                                            value={this.state.claseSelected.hora}
-                                            renderInput={(params) => <TextField {...params} />}
-                                />
+                                <TimePicker style={{ boxSizing: "border-box" }}
+                                    placeholder="Hora"
+                                    minutesStep={30}
+                                    minTime={new Date(0, 0, 0, 8)}
+                                    maxTime={new Date(0, 0, 0, 20, 30)}
+                                    onChange={(h) => {
+                                        this.setState(this.state.claseSelected.hora = h);
+                                    } }
+                                    value={this.state.claseSelected.hora}
+                                    renderInput={(params) => <TextField {...params} />} />
                             </LocalizationProvider>
                         </div>
-                        <div style={{margin: "6px"}}>
+                        <div style={{ margin: "6px" }}>
                             <Select
                                 options={this.getDuracionOptions()}
                                 placeholder={<div>Duración</div>}
                                 onChange={(d) => {
-                                    this.setState(this.state.claseSelected.duracion = d)
-                                }}
-                                value={this.state.claseSelected.duracion}
-                            />
+                                    this.setState(this.state.claseSelected.duracion = d);
+                                } }
+                                value={this.state.claseSelected.duracion} />
                         </div>
-                        <div style={{margin: "6px"}}>
+                        <div style={{ margin: "6px" }}>
                             <Select
                                 options={this.getTipoOptions()}
                                 placeholder={<div>Tipo</div>}
                                 onChange={(t) => {
-                                    this.setState(this.state.claseSelected.tipo = t)
-                                }}
-                                value={this.state.claseSelected.tipo}
-                            />
+                                    this.setState(this.state.claseSelected.tipo = t);
+                                } }
+                                value={this.state.claseSelected.tipo} />
                         </div>
                     </div>
                     <button className="btn btn-info" id="closeDialog" onClick={() => this.addClase()}>Añadir
                     </button>
                     {this.state.formError
-                        ? (<div style={{marginTop: "6px"}}><Alert severity="error">Algún campo está vacío — ¡Todos son
+                        ? (<div style={{ marginTop: "6px" }}><Alert severity="error">Algún campo está vacío — ¡Todos son
                             obligatorios!</Alert></div>)
                         : ''}
                 </div>
 
             </div>
+                <div class="timetable" style={{
+                    marginTop: "20px", 
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginBottom: "auto",
+                    display: "block",
+                    width: "75%",
+                    border: "1px solid #b8b894",
+                    borderRadius: "8px",
+                    padding: "10px",
+                    boxShadow: "4px 5px 4px -3px rgba(97,97,97,1)"
+                }} >
+                    <Timetable settings={settings} />
+                </div>
+            </><script>
+                    document.getElementById("1").textContent="Lunes";
+                    document.getElementById("2").textContent="Martes";
+                    document.getElementById("3").textContent="Miercoles";
+                    document.getElementById("4").textContent="Jueves";
+                    document.getElementById("5").textContent="Viernes";
+                </script></>
 
         )
 

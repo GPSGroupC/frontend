@@ -148,27 +148,6 @@ function ListarAsignaturas() {
   return (
 
     <div>
-
-            <div>
-              <Link to="/"><img className="logoCab2" src={eina} /></Link>
-              <Link to="/">
-                  <button type="button" className="btn btn-info btn-lg" style={{"margin-left": "750px", "margin-top":"15px"}}>SALIR SIN GUARDAR</button>
-              </Link>
-              <hr size="5px" color="black" />
-            </div> <br></br>
-
-            <div className="filtro2">
-                <h4 className="titulo">LISTAR ASIGNATURAS</h4>
-            </div>
-
-            <div style={{"margin-left": "30%", marginRight:'30%'}} >  
-                <Link to="/"><button type="button" class="btn btn-outline-info">IMPORTAR ASIGNATURAS</button></Link>
-                <Link to="/listar-asignaturas"><button type="button" class="btn btn-info btn-md">LISTAR ASIGNATURAS</button></Link>
-                <Link to="/seleccion-horario-grados"><button type="button" class="btn btn-outline-info">EDITAR HORARIOS</button></Link>
-            </div> <br></br>
-
-
-        
             <div style={{
                     display: "block",
                     margin: "auto",

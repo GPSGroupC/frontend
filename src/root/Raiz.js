@@ -6,6 +6,8 @@ import SeleccionHorarioGrados from '../horario/SeleccionHorarioGrados'
 import Horario from "../horario/Horario";
 import SeleccionHorarioMasters from "../horario/SeleccionHorarioMasters";
 import ListarAsignaturas from "../horario/ListarAsignaturas";
+import PantallaHorarios from "../horario/PantallaHorarios";
+import ImportarAsignaturas from "../horario/ImportarAsignaturas";
 
 
 function Raiz(){
@@ -21,6 +23,8 @@ function Raiz(){
             <Route exact path="/seleccion-horario-masters" component={SeleccionHorarioMasters}/>
             <Route exact path="/editar-horario" component={Horario}/>
             <Route exact path="/listar-asignaturas" component={ListarAsignaturas}/>
+            <Route exact path="/pantalla-horarios" component={PantallaHorarios}/>
+            <Route exact path="/importar-asignaturas" component={ImportarAsignaturas}/>
 
         </BrowserRouter>
 
