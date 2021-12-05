@@ -49,10 +49,13 @@ class Calendario extends Component {
             //CHECKBOX SELECTS
             selectSemanaAB: "a",
             selectHorarioCambiado: "L",
-            //CALENDARIO
+            //CALENDAR WEEK AB SELECTOR
+            selectS1GlobalSemanaAB:[],
+            //DIAS RECUPERADOS DE LA LIBRERIA DATES GENERATOR
             semestre1: {dates: [], year: -1, monthNames: []},
             semestre2: {dates: [], year: -1, monthNames: []},
             recuperacion: {dates: [], year: -1, monthNames: []},
+            //DIAS RECUPERADOS DE BACKEND
             fechasSemestre1: {dates: []},
             fechasSemestre2: {dates: []},
             fechasRecuperacion: {dates: []},
@@ -61,7 +64,7 @@ class Calendario extends Component {
             //FECHA SELECCIONADA
             selectedDate: new Date(),
             semesterSelected: null,
-            //DIAS QUE HAN CAMBIADO
+            //DIAS QUE HAN CAMBIADO EN FRONTEND
             semestre1_changed: {dates: []},
             semestre2_changed: {dates: []},
             recuperacion_changed: {dates: []}
@@ -171,6 +174,89 @@ class Calendario extends Component {
             })
         })
 
+    }
+
+    /**
+     * weekIndexSelected -> Es el indice de semana en la estructura 'semestre1', 'semestre2' o 'recuperacion'
+     * Recibe el evento, pulsar en el select global de semana AB en cada semana del calendario
+     */
+    handleGlobalWeekAB = (event, semestreSelected,monthIndexSelected, weekIndexSelected) => {
+        //Si se ha seleccionado el valor c, no hacemos nada
+        console.log(event.target.value)
+        if (event.target.value !== 'c') {
+            //Cambiamos el valor de todos los selects con valor superior al seleccionado
+            var weeksList = document.getElementsByClassName(`globalWeekSelectorAB-${semestreSelected}`);
+            if (weeksList) {
+                //'nextValue' es el siguiente valor a asignar en base al evento recibido 'event'
+                var nextValue = event.target.value
+                //Iteramos sobre todas las semanas de un semestre (sobre sus selectores de semana)
+                for (var i = 0; i < weeksList.length; i++) {
+                    var monthIndex = Parse.getNumMonthFromId(weeksList[i].id)
+                    var weekIndex = Parse.getNumWeekFromId(weeksList[i].id)
+                    //console.log( "numWeek:" + numWeek + " weekNumSelected:" + weekNumInMonth)
+                    if (monthIndex > monthIndexSelected || (monthIndex === monthIndexSelected && weekIndex >= weekIndexSelected)) {
+                        //Caso es una semana superior a la semana seleccionada
+                        //Asignamos un valor 'a' o 'b'
+                        this.state.selectS1GlobalSemanaAB[semestreSelected + "-" + monthIndex + "-" + weekIndex] = nextValue
+                        //console.log("numWeek >= weekNumSelected: " + numWeek + " >= " + weekNumInMonth)
+                        this.updateWeek(semestreSelected,monthIndex,weekIndex, nextValue)
+                        nextValue = (nextValue == 'a') ? 'b' : 'a'
+                    }
+                }
+            }
+        } else {
+            this.updateWeek(semestreSelected,monthIndexSelected,weekIndexSelected, null)
+        }
+        this.setState((state, props) => ({
+        }))
+    }
+
+    updateWeek(semester, monthIndex, weekIndex, value) {
+        console.log(semester)
+        switch(semester) {
+            case "semestre1":
+                for(let i=0; i < 5; i++){
+                    if (this.state.semestre1.dates[monthIndex][weekIndex][i].date != ' ') {
+                        this.state.semestre1.dates[monthIndex][weekIndex][i].semanaAB = value
+                        this.state.semestre1.dates[monthIndex][weekIndex][i].type = "lectivo"
+                        const indiceS1 = this.state.semestre1_changed.dates.findIndex( fecha => fecha.jsDate === this.state.semestre1.dates[monthIndex][weekIndex][i].jsDate);
+                        if(indiceS1 !== -1){
+                            this.state.semestre1_changed.dates[indiceS1] = this.state.semestre1.dates[monthIndex][weekIndex][i]
+                        }else{
+                            this.state.semestre1_changed.dates.push(this.state.semestre1.dates[monthIndex][weekIndex][i])
+                        }
+                    }
+                }
+                break;
+            case "semestre2":
+                for(let i=0; i < 5; i++){
+                    if (this.state.semestre2.dates[monthIndex][weekIndex][i].date != ' ') {
+                        this.state.semestre2.dates[monthIndex][weekIndex][i].semanaAB = value
+                        this.state.semestre2.dates[monthIndex][weekIndex][i].type = "lectivo"
+                        const indiceS1 = this.state.semestre2_changed.dates.findIndex( fecha => fecha.jsDate === this.state.semestre2.dates[monthIndex][weekIndex][i].jsDate);
+                        if(indiceS1 !== -1){
+                            this.state.semestre2_changed.dates[indiceS1] = this.state.semestre2.dates[monthIndex][weekIndex][i]
+                        }else{
+                            this.state.semestre2_changed.dates.push(this.state.semestre2.dates[monthIndex][weekIndex][i])
+                        }
+                    }
+                }
+                break;
+            default:
+                //recuperacion
+                for(let i=0; i < 5; i++){
+                    if (this.state.recuperacion.dates[monthIndex][weekIndex][i].date != ' ') {
+                        this.state.recuperacion.dates[monthIndex][weekIndex][i].semanaAB = value
+                        this.state.recuperacion.dates[monthIndex][weekIndex][i].type = "lectivo"
+                        const indiceS1 = this.state.recuperacion_changed.dates.findIndex( fecha => fecha.jsDate === this.state.recuperacion.dates[monthIndex][weekIndex][i].jsDate);
+                        if(indiceS1 !== -1){
+                            this.state.recuperacion_changed.dates[indiceS1] = this.state.recuperacion.dates[monthIndex][weekIndex][i]
+                        }else{
+                            this.state.recuperacion_changed.dates.push(this.state.recuperacion.dates[monthIndex][weekIndex][i])
+                        }
+                    }
+                }
+        }
     }
 
 
@@ -285,7 +371,6 @@ class Calendario extends Component {
         }
         if (this.state.horarioCambiadoCheckBox) {
             //Fecha seleccionada marcada como horario cambiado
-            console.log(this.state.selectHorarioCambiado)
             this.state.selectedDate.horarioCambiado = this.state.selectHorarioCambiado
         } else {
             this.state.selectedDate.horarioCambiado = null
@@ -507,7 +592,9 @@ class Calendario extends Component {
                         (Parse.weekIsBlank(week))
                             ? ''
                             :(<tr key={JSON.stringify(week[0])} >
-                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>{weekNum= weekNum + 1} </td>
+                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>
+                                {weekNum= weekNum + 1}
+                            </td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
@@ -522,6 +609,12 @@ class Calendario extends Component {
                                     }
                                 </td>
                             ))}
+                                <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
+                                        onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
+                                    <option value="c">-</option>
+                                    <option value="a">a</option>
+                                    <option value="b">b</option>
+                                </select>
                         </tr>)
                     ))}
                     </tbody>
@@ -686,7 +779,7 @@ class Calendario extends Component {
 
                 <div className="printButton" style={{marginTop: '20px'}}>
                     <button onClick={() => {
-                        Pdf.printDocument("divToPrintId")
+                        Pdf.download("divToPrintId")
                     }} className="btn btn-outline-info btn-lg">DESCARGAR COMO PDF
                     </button>
                 </div>

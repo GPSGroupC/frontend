@@ -50,7 +50,6 @@ class Parser {
      * @param TIPOFECHA     Tipos de fechas posibles
      */
     static formatDate(date, dayOfWeek, TIPOFECHA) {
-       
         if (date.type === TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado != undefined) {
             //Fecha lectiva con semana a/b y horario cambiado
             return date.date + " " + date.horarioCambiado + date.semanaAB
@@ -67,8 +66,7 @@ class Parser {
     }
     static semesterToList(semester) {
         var listDays = []
-        console.log(semester)
-        
+
         semester.dates.map((month) => {
             month.map((week) => {
                 week.map((day) => {
@@ -131,7 +129,6 @@ class Parser {
         var listDays = []
       
         semester.dates.map((day) => {
-           console.log(day)
             var dayFormatted = Object()
             dayFormatted.date = day.date + "/" + ((day.month) + 1) + "/" +day.year
             dayFormatted.type = day.type ? day.type : "lectivo"
@@ -169,6 +166,28 @@ class Parser {
             }
         })
         return result
+    }
+
+    /**
+     * Parsea un string de tipo 'globalWeekSelectorAB-semestre-numWeek'
+     * siendo numWeek un numero y devuelve numWeek.
+     */
+    static getNumWeekFromId(id) {
+        var parts = id.split('-')
+        var numWeek =  parts[2]
+        if (!isNaN(numWeek)) {
+            return parseInt(numWeek,10)
+        }
+        return -1
+    }
+
+    static getNumMonthFromId(id) {
+        var parts = id.split('-')
+        var numMonth =  parts[1]
+        if (!isNaN(numMonth)) {
+            return parseInt(numMonth,10)
+        }
+        return -1
     }
 }
 
