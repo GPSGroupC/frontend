@@ -1,26 +1,13 @@
 class Parser {
     static BLANK_DATE = ' ';
     /**
-     *
-     * @param {String} date : Recibe un array con una fecha en formato DD-MM-YYYY
-     * , donde date[2] = AÑO , date[1] = MES, date[0] = dia
-     * @returns Devuelve una Date en formato YYYY-MM-DD
+     * Recibe una lista de semanas con formato: [ semana[ dia {} ] ]
+     * Asigna el tipo 'festivo' a los Sabados y Domingos
      */
-    static parseDate = (date) => {
-        //El mes se numera desde el 0, por eso (Mes=date[1]) - 1
-        return new Date(date[2], date[1] - 1,date[0])
-    }
-
-    /**
-     * Actualiza los fines de semana como festivos
-     *
-     * @param {Object} dates  lista de fechas con formato: meses[ semanas[ {fecha} ] ]
-     */
-    static parseFestivos(dates) {
-        dates.map( (week) => {
+    static parseFestivos(month) {
+        month.map( (week) => {
             week.map( (day, dayIndex) => {
                 if ( (dayIndex == 5 || dayIndex == 6) && day.date !== this.BLANK_DATE) {
-                    //Caso es sabado o domingo
                     day.type = "festivo"
                 }
             })

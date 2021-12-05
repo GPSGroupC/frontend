@@ -286,7 +286,7 @@ class Calendario extends Component {
                     }
                 }
             }
-            
+            console.log(dates)
             Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
 
