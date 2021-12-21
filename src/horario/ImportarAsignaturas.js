@@ -12,6 +12,19 @@ import Api from "./servicios/api";
 
 function ImportarAsignaturas() {
 
+  async function importarAsignaturas(formdata) {
+    await Api.importarAsignaturas(formdata).then(r => {
+      console.log(r.status);
+      if (r.status === 200) {
+        window.alert("Asignaturas importadas con éxito");
+      } else {
+        window.alert("Ha ocurrido un error al importar las asignaturas");
+      }
+    }).catch(err => {
+      console.log("Error al importar asignaturas: ", err)
+    })
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e.target[0].files[0]);
@@ -20,16 +33,7 @@ function ImportarAsignaturas() {
       const formdata = new FormData()
       formdata.append('file', e.target[0].files[0]);
       formdata.append('conservarNoImportadas', document.getElementById("conservarAsignaturas").checked);
-      Api.importarAsignaturas(formdata).then(r => {
-        console.log(r.status);
-        if (r.status === 200) {
-          window.alert("Asignaturas importadas con éxito");
-        } else {
-          window.alert("Ha ocurrido un error al importar las asignaturas");
-        }
-      }).catch(err => {
-        console.log("Error al importar asignaturas: ", err)
-      })
+      importarAsignaturas(formdata);
     } else {
 
 
@@ -60,20 +64,8 @@ function ImportarAsignaturas() {
             Conservar asignaturas que se habían añadido manualmente
           </label>
         </div>
-
-
-
-
       </div>
-
-
-
-
-
-
-
     </div>
-
   );
 };
 

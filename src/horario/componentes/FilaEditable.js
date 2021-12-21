@@ -6,30 +6,30 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       <td>
         <input style={{width:'80px'}}
           type="text"
-          name="plan"
+          name="codplan"
           required="required"
           placeholder="Plan"
-          value={editFormData.plan}
+          value={editFormData.codplan}
           onChange={handleEditFormChange}
         />
       </td>
       <td>
         <input style={{width:'80px'}}
           type="text"
-          name="area"
+          name="codarea"
           required="required"
           placeholder="Área"
-          value={editFormData.area}
+          value={editFormData.codarea}
           onChange={handleEditFormChange}
         />
       </td>
       <td>
         <input style={{width:'80px'}}
           type="text"
-          name="codigo"
+          name="codasig"
           required="required"
           placeholder="Código"
-          value={editFormData.codigo}
+          value={editFormData.codasig}
           onChange={handleEditFormChange}
         />
       </td>
@@ -69,10 +69,10 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       <td>
         <input
           type="text"
-          name="horas_estud1"
+          name="horasestteoria"
           required="required"
           placeholder="Horas estud1"
-          value={editFormData.horas_estud1}
+          value={editFormData.horasestteoria}
           onChange={handleEditFormChange}
         />
       </td>
@@ -80,10 +80,10 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       <td>
         <input
           type="text"
-          name="horas_estud2"
+          name="horasestproblemas"
           required="required"
           placeholder="Horas estud2"
-          value={editFormData.horas_estud2}
+          value={editFormData.horasestproblemas}
           onChange={handleEditFormChange}
         />
       </td>
@@ -91,10 +91,10 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       <td>
         <input
           type="text"
-          name="horas_estud3"
+          name="horasestpracticas"
           required="required"
           placeholder="Horas estud3"
-          value={editFormData.horas_estud3}
+          value={editFormData.horasestpracticas}
           onChange={handleEditFormChange}
         />
       </td>

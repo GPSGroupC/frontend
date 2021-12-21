@@ -1,42 +1,111 @@
-import React, { useState, Fragment } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { nanoid } from "nanoid";
 import data from "../mock-data.json";
 import FilaReadOnly from "./componentes/FilaReadOnly";
 import FilaEditable from "./componentes/FilaEditable";
 import { Link } from 'react-router-dom'
 import eina from '../images/eina-logo.png'
+import Api from "./servicios/api";
 
 function ListarAsignaturas() {
 
   const [asignaturas, setAsignaturas] = useState(data);
   const [addFormData, setAddFormData] = useState({
-    plan: "",
-    area: "",
-    codigo: "",
+    codplan: "",
+    codarea: "",
+    codasig: "",
     nombre: "",
     curso: "",
     periodo: "",
-    horas_estud1: "",
-    horas_estud2: "",
-    horas_estud3: "",
+    horasestteoria: "",
+    horasestproblemas: "",
+    horasestpracticas: "",
   });
 
   const [editFormData, setEditFormData] = useState({
-    plan: "",
-    area: "",
-    codigo: "",
+    codplan: "",
+    codarea: "",
+    codasig: "",
     nombre: "",
     curso: "",
     periodo: "",
-    horas_estud1: "",
-    horas_estud2: "",
-    horas_estud3: "",
+    horasestteoria: "",
+    horasestproblemas: "",
+    horasestpracticas: "",
   });
 
   const [editAsignaturaId, setEditAsignaturaId] = useState(null);
 
+  async function obtenerAsignaturas() {
+    await Api.obtenerAsignaturas().then(r => {
+      console.log(r);
+      if(!r.data.message) {
+        setAsignaturas(r.data);
+      } else {
+        setAsignaturas([]);
+      }
+    }).catch(err => {
+      console.log("Error al obtener asignaturas: ", err)
+    })
+  }
 
+  async function añadirAsignatura(asiganturaObj) {
+    await Api.añadirAsignatura(asiganturaObj).then(r => {
+      console.log(r);
+      obtenerAsignaturas();
+    }).catch(err => {
+      console.log("Error al añadir asignatura: ", err)
+    })
+  }
 
+  async function añadirAsignaturas(formdata) {
+    await Api.añadirAsignaturas(formdata).then(r => {
+      console.log(r);
+      if (r.status === 200) {
+        window.alert("Asignaturas añadidas con éxito");
+      } else {
+        window.alert("Ha ocurrido un error al añadir las asignaturas");
+      }
+      obtenerAsignaturas();
+    }).catch(err => {
+      console.log("Error al añadir asignaturas: ", err)
+    })
+  }
+
+  async function eliminarAsignatura(idasig) {
+    await Api.eliminarAsignatura(idasig).then(r => {
+      console.log(r);
+      obtenerAsignaturas();
+    }).catch(err => {
+      console.log("Error al eliminar asignatura: ", err)
+    })
+  }
+
+  async function editarAsignatura(asignaturaObj) {
+    await Api.editarAsignatura(asignaturaObj).then(r => {
+      console.log(r);
+      obtenerAsignaturas();
+    }).catch(err => {
+      console.log("Error al editar asignatura: ", err)
+    })
+  }
+
+  useEffect(() => {
+    obtenerAsignaturas();
+  }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(e.target[0].files[0]);
+    const answer = window.confirm("No te preocupes, no perderás ninguna de las asignaturas almacenadas previamente ¿Añadir asignaturas?");
+    if (answer) {
+      const formdata = new FormData()
+      formdata.append('file', e.target[0].files[0]);
+      añadirAsignaturas(formdata);
+    } else {
+
+    }
+  };
 
   const handleAddFormChange = (event) => {
     event.preventDefault();
@@ -68,37 +137,68 @@ function ListarAsignaturas() {
   const handleAddFormSubmit = (event) => {
     event.preventDefault();
 
-    const newAsignatura = {
-      id: nanoid(),
-      plan: addFormData.plan,
-      area: addFormData.area,
-      codigo: addFormData.codigo,
+    const asiganturaObj = {
+      codplan: addFormData.codplan,
+      codarea: addFormData.codarea,
+      codasig: addFormData.codasig,
       nombre: addFormData.nombre,
       curso: addFormData.curso,
       periodo: addFormData.periodo,
-      horas_estud1: addFormData.horas_estud1,
-      horas_estud2: addFormData.horas_estud2,
-      horas_estud3: addFormData.horas_estud3,
+      horasestteoria: addFormData.horasestteoria,
+      horasestproblemas: addFormData.horasestproblemas,
+      horasestpracticas: addFormData.horasestpracticas
+    };
+
+    añadirAsignatura(asiganturaObj);
+
+    /*const newAsignatura = {
+      id: nanoid(),
+      codplan: addFormData.codplan,
+      codarea: addFormData.codarea,
+      codasig: addFormData.codasig,
+      nombre: addFormData.nombre,
+      curso: addFormData.curso,
+      periodo: addFormData.periodo,
+      horasestteoria: addFormData.horasestteoria,
+      horasestproblemas: addFormData.horasestproblemas,
+      horasestpracticas: addFormData.horasestpracticas,
     };
 
     const newAsignaturas = [...asignaturas, newAsignatura];
-    setAsignaturas(newAsignaturas);
+    setAsignaturas(newAsignaturas);*/
   };
 
   const handleEditFormSubmit = (event) => {
     event.preventDefault();
 
-    const editedAsignatura = {
+    const asiganturaObj = {
       id: editAsignaturaId,
-      plan: editFormData.plan,
-      area: editFormData.area,
-      codigo: editFormData.codigo,
+      codplan: editFormData.codplan,
+      codarea: editFormData.codarea,
+      codasig: editFormData.codasig,
       nombre: editFormData.nombre,
       curso: editFormData.curso,
       periodo: editFormData.periodo,
-      horas_estud1: editFormData.horas_estud1,
-      horas_estud2: editFormData.horas_estud2,
-      horas_estud3: editFormData.horas_estud3,
+      horasestteoria: editFormData.horasestteoria,
+      horasestproblemas: editFormData.horasestproblemas,
+      horasestpracticas: editFormData.horasestpracticas,
+     
+    };
+    
+    setEditAsignaturaId(null);
+    editarAsignatura(asiganturaObj);
+
+    /*const editedAsignatura = {
+      id: editAsignaturaId,
+      codplan: editFormData.codplan,
+      codarea: editFormData.codarea,
+      codasig: editFormData.codasig,
+      nombre: editFormData.nombre,
+      curso: editFormData.curso,
+      periodo: editFormData.periodo,
+      horasestteoria: editFormData.horasestteoria,
+      horasestproblemas: editFormData.horasestproblemas,
+      horasestpracticas: editFormData.horasestpracticas,
      
     };
 
@@ -109,7 +209,7 @@ function ListarAsignaturas() {
     newAsignaturas[index] = editedAsignatura;
 
     setAsignaturas(newAsignaturas);
-    setEditAsignaturaId(null);
+    setEditAsignaturaId(null);*/
   };
 
   const handleEditClick = (event, asignatura) => {
@@ -117,15 +217,15 @@ function ListarAsignaturas() {
     setEditAsignaturaId(asignatura.id);
 
     const formValues = {
-      plan: asignatura.plan,
-      area: asignatura.area,
-      codigo: asignatura.codigo,
+      codplan: asignatura.codplan,
+      codarea: asignatura.codarea,
+      codasig: asignatura.codasig,
       nombre: asignatura.nombre,
       curso: asignatura.curso,
       periodo: asignatura.periodo,
-      horas_estud1: asignatura.horas_estud1,
-      horas_estud2: asignatura.horas_estud2,
-      horas_estud3: asignatura.horas_estud3,
+      horasestteoria: asignatura.horasestteoria,
+      horasestproblemas: asignatura.horasestproblemas,
+      horasestpracticas: asignatura.horasestpracticas,
     };
 
     setEditFormData(formValues);
@@ -136,13 +236,15 @@ function ListarAsignaturas() {
   };
 
   const handleDeleteClick = (asignaturaId) => {
-    const newAsignaturas = [...asignaturas];
-
+    //const newAsignaturas = [...asignaturas];
+    eliminarAsignatura(asignaturaId);
+    /*console.log(asignaturaId);
     const index = asignaturas.findIndex((asignatura) => asignatura.id === asignaturaId);
+    console.log(index);
 
-    newAsignaturas.splice(index, 1);
+    newAsignaturas.splice(index, 1);*/
 
-    setAsignaturas(newAsignaturas);
+    //setAsignaturas(newAsignaturas);
   };
 
   return (
@@ -162,21 +264,21 @@ function ListarAsignaturas() {
           <form onSubmit={handleAddFormSubmit}>
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="plan"
+              name="codplan"
               required="required"
               placeholder="Plan"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="area"
+              name="codarea"
               required="required"
               placeholder="Área"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="codigo"
+              name="codasig"
               required="required"
               placeholder="Código"
               onChange={handleAddFormChange}
@@ -204,34 +306,45 @@ function ListarAsignaturas() {
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="horas_estud1"
+              name="horasestteoria"
               required="required"
               placeholder="Horas estud1"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="horas_estud2"
+              name="horasestproblemas"
               required="required"
               placeholder="Horas estud2"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="horas_estud3"
+              name="horasestpracticas"
               required="required"
-              placeholder="Horas estud2"
+              placeholder="Horas estud3"
               onChange={handleAddFormChange}
               />
               
               <br></br>
               <button type="submit" class="btn btn-info btn-md" style={{width: "150px", marginTop:'5px', marginLeft:'40%'}}>Añadir </button>
           </form>
+        <div>
+          <br></br><br></br>
+          <p style={{fontWeight:'bold'}}>Añadir asignaturas desde un archivo excel</p>
+          <div id="fileform">
+            <form onSubmit={handleSubmit}>
+              <label>
+                <input type="file" name="file" />
+              </label>
+              <input class="btn btn-info btn-md" style={{marginLeft:'2%'}} id="añadirButton" type="submit" value="Añadir" />
+            </form>
+          </div>
+        </div>
 
         </div>
 
-
-        
+      
 
         <div className="horarioTabla">
 
@@ -253,6 +366,7 @@ function ListarAsignaturas() {
             </thead>
 
             <tbody>
+                {console.log(asignaturas)}
                 {asignaturas.map((asignatura) => (
                 <Fragment>
                     {editAsignaturaId === asignatura.id ? (

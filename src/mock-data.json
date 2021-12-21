@@ -1,14 +1,1 @@
-[
-  {
-    "id": 1,
-    "plan": "Plan ejemplo",
-    "area": "Area ejemplo",
-    "codigo": "Codigo ejemplo",
-    "nombre": "Nombre ejemplo",
-    "curso": "Curso ejemplo",
-    "periodo": "Periodo ejemplo",
-    "horas_estud1": "Horas estud1 ejemplo",
-    "horas_estud2": "Horas estud2 ejemplo",
-    "horas_estud3": "Horas estud3 ejemplo"
-  }
-]
+[]
