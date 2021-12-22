@@ -5,10 +5,11 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
     <tr>
       <td>
         <input style={{width:'80px'}}
-          type="text"
+          type="number"
+          min="0"
           name="codplan"
           required="required"
-          placeholder="Plan"
+          placeholder="Código Plan"
           value={editFormData.codplan}
           onChange={handleEditFormChange}
         />
@@ -16,16 +17,27 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       <td>
         <input style={{width:'80px'}}
           type="text"
-          name="codarea"
+          name="plan"
           required="required"
-          placeholder="Área"
-          value={editFormData.codarea}
+          placeholder="Plan"
+          value={editFormData.plan}
           onChange={handleEditFormChange}
         />
       </td>
       <td>
         <input style={{width:'80px'}}
           type="text"
+          name="area"
+          required="required"
+          placeholder="Área"
+          value={editFormData.area}
+          onChange={handleEditFormChange}
+        />
+      </td>
+      <td>
+        <input style={{width:'80px'}}
+          type="number"
+          min="0"
           name="codasig"
           required="required"
           placeholder="Código"
@@ -46,7 +58,8 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
 
       <td>
         <input style={{width:'80px'}}
-          type="text"
+          type="number"
+          min="0"
           name="curso"
           required="required"
           placeholder="Curso"
@@ -68,10 +81,12 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
 
       <td>
         <input
-          type="text"
+          type="number"
+          step=".001"
+          min="0"
           name="horasestteoria"
           required="required"
-          placeholder="Horas estud1"
+          placeholder="Horas Estud Teoría"
           value={editFormData.horasestteoria}
           onChange={handleEditFormChange}
         />
@@ -79,10 +94,12 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
 
       <td>
         <input
-          type="text"
+          type="number"
+          step=".001"
+          min="0"
           name="horasestproblemas"
           required="required"
-          placeholder="Horas estud2"
+          placeholder="Horas Estud Problemas"
           value={editFormData.horasestproblemas}
           onChange={handleEditFormChange}
         />
@@ -90,11 +107,25 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
 
       <td>
         <input
-          type="text"
+          type="number"
+          step=".001"
+          min="0"
           name="horasestpracticas"
           required="required"
-          placeholder="Horas estud3"
+          placeholder="Horas Estud Prácticas"
           value={editFormData.horasestpracticas}
+          onChange={handleEditFormChange}
+        />
+      </td>
+
+      <td>
+        <input
+          type="number"
+          min="0"
+          name="destvinculo"
+          required="required"
+          placeholder="Destino Vínculo"
+          value={editFormData.destvinculo}
           onChange={handleEditFormChange}
         />
       </td>

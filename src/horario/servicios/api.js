@@ -42,13 +42,15 @@ class Api {
     await axios.post(baseUrl + "/anyadirAsignatura", { 
       codasig: asignaturaObj.codasig,
       nombre: asignaturaObj.nombre,
-      codarea: asignaturaObj.codarea,
+      area: asignaturaObj.area,
       codplan: asignaturaObj.codplan,
+      plan: asignaturaObj.plan,
       curso: asignaturaObj.curso,
       periodo: asignaturaObj.periodo,
       horasestteoria: asignaturaObj.horasestteoria,
       horasestproblemas: asignaturaObj.horasestproblemas,
-      horasestpracticas: asignaturaObj.horasestpracticas })
+      horasestpracticas: asignaturaObj.horasestpracticas,
+      destvinculo: asignaturaObj.destvinculo })
       .then(response => {
         result = response;
       })
@@ -93,13 +95,15 @@ class Api {
     await axios.put(baseUrl + "/editarAsignatura/" + asignaturaObj.id, { 
       codasig: asignaturaObj.codasig,
       nombre: asignaturaObj.nombre,
-      codarea: asignaturaObj.codarea,
+      area: asignaturaObj.area,
       codplan: asignaturaObj.codplan,
+      plan: asignaturaObj.plan,
       curso: asignaturaObj.curso,
       periodo: asignaturaObj.periodo,
       horasestteoria: asignaturaObj.horasestteoria,
       horasestproblemas: asignaturaObj.horasestproblemas,
-      horasestpracticas: asignaturaObj.horasestpracticas })
+      horasestpracticas: asignaturaObj.horasestpracticas,
+      destvinculo: asignaturaObj.destvinculo })
       .then(response => {
         result = response;
       })

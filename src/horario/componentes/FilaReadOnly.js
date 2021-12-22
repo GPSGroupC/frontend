@@ -4,7 +4,8 @@ const FilaReadOnly = ({ asignatura, handleEditClick, handleDeleteClick }) => {
   return (
     <tr>
       <td>{asignatura.codplan}</td>
-      <td>{asignatura.codarea}</td>
+      <td>{asignatura.plan}</td>
+      <td>{asignatura.area}</td>
       <td>{asignatura.codasig}</td>
       <td>{asignatura.nombre}</td>
       <td>{asignatura.curso}</td>
@@ -12,6 +13,7 @@ const FilaReadOnly = ({ asignatura, handleEditClick, handleDeleteClick }) => {
       <td>{asignatura.horasestteoria}</td>
       <td>{asignatura.horasestproblemas}</td>
       <td>{asignatura.horasestpracticas}</td>
+      <td>{asignatura.destvinculo}</td>
       <td>
         <button type="button" class="btn btn-outline-info" onClick={(event) => handleEditClick(event, asignatura)}>
           Edit

@@ -12,7 +12,8 @@ function ListarAsignaturas() {
   const [asignaturas, setAsignaturas] = useState(data);
   const [addFormData, setAddFormData] = useState({
     codplan: "",
-    codarea: "",
+    plan: "",
+    area: "",
     codasig: "",
     nombre: "",
     curso: "",
@@ -20,11 +21,13 @@ function ListarAsignaturas() {
     horasestteoria: "",
     horasestproblemas: "",
     horasestpracticas: "",
+    destvinculo: ""
   });
 
   const [editFormData, setEditFormData] = useState({
     codplan: "",
-    codarea: "",
+    plan: "",
+    area: "",
     codasig: "",
     nombre: "",
     curso: "",
@@ -32,6 +35,7 @@ function ListarAsignaturas() {
     horasestteoria: "",
     horasestproblemas: "",
     horasestpracticas: "",
+    destvinculo: ""
   });
 
   const [editAsignaturaId, setEditAsignaturaId] = useState(null);
@@ -139,14 +143,16 @@ function ListarAsignaturas() {
 
     const asiganturaObj = {
       codplan: addFormData.codplan,
-      codarea: addFormData.codarea,
+      plan: addFormData.plan,
+      area: addFormData.area,
       codasig: addFormData.codasig,
       nombre: addFormData.nombre,
       curso: addFormData.curso,
       periodo: addFormData.periodo,
       horasestteoria: addFormData.horasestteoria,
       horasestproblemas: addFormData.horasestproblemas,
-      horasestpracticas: addFormData.horasestpracticas
+      horasestpracticas: addFormData.horasestpracticas,
+      destvinculo: addFormData.destvinculo
     };
 
     añadirAsignatura(asiganturaObj);
@@ -174,7 +180,8 @@ function ListarAsignaturas() {
     const asiganturaObj = {
       id: editAsignaturaId,
       codplan: editFormData.codplan,
-      codarea: editFormData.codarea,
+      plan: editFormData.plan,
+      area: editFormData.area,
       codasig: editFormData.codasig,
       nombre: editFormData.nombre,
       curso: editFormData.curso,
@@ -182,7 +189,7 @@ function ListarAsignaturas() {
       horasestteoria: editFormData.horasestteoria,
       horasestproblemas: editFormData.horasestproblemas,
       horasestpracticas: editFormData.horasestpracticas,
-     
+      destvinculo: editFormData.destvinculo
     };
     
     setEditAsignaturaId(null);
@@ -218,7 +225,8 @@ function ListarAsignaturas() {
 
     const formValues = {
       codplan: asignatura.codplan,
-      codarea: asignatura.codarea,
+      plan: asignatura.plan,
+      area: asignatura.area,
       codasig: asignatura.codasig,
       nombre: asignatura.nombre,
       curso: asignatura.curso,
@@ -226,6 +234,7 @@ function ListarAsignaturas() {
       horasestteoria: asignatura.horasestteoria,
       horasestproblemas: asignatura.horasestproblemas,
       horasestpracticas: asignatura.horasestpracticas,
+      destvinculo: asignatura.destvinculo,
     };
 
     setEditFormData(formValues);
@@ -263,21 +272,30 @@ function ListarAsignaturas() {
           <p style={{fontWeight:'bold'}}>Añadir Asignatura</p>
           <form onSubmit={handleAddFormSubmit}>
               <input style={{marginLeft: '1px', marginRight: '1px'}}
-              type="text"
+              type="number"
+              min="0"
               name="codplan"
+              required="required"
+              placeholder="Código Plan"
+              onChange={handleAddFormChange}
+              />
+              <input style={{marginLeft: '1px', marginRight: '1px'}}
+              type="text"
+              name="plan"
               required="required"
               placeholder="Plan"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
-              name="codarea"
+              name="area"
               required="required"
               placeholder="Área"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
-              type="text"
+              type="number"
+              min="0"
               name="codasig"
               required="required"
               placeholder="Código"
@@ -291,7 +309,8 @@ function ListarAsignaturas() {
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
-              type="text"
+              type="number"
+              min="0"
               name="curso"
               required="required"
               placeholder="Curso"
@@ -305,24 +324,38 @@ function ListarAsignaturas() {
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
-              type="text"
+              type="number"
+              step=".001"
+              min="0"
               name="horasestteoria"
               required="required"
-              placeholder="Horas estud1"
+              placeholder="Horas Estud Teoría"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
-              type="text"
+              type="number"
+              step=".001"
+              min="0"
               name="horasestproblemas"
               required="required"
-              placeholder="Horas estud2"
+              placeholder="Horas Estud Problemas"
               onChange={handleAddFormChange}
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
-              type="text"
+              type="number"
+              step=".001"
+              min="0"
               name="horasestpracticas"
               required="required"
-              placeholder="Horas estud3"
+              placeholder="Horas Estud Prácticas"
+              onChange={handleAddFormChange}
+              />
+              <input style={{marginLeft: '1px', marginRight: '1px'}}
+              type="number"
+              min="0"
+              name="destvinculo"
+              required="required"
+              placeholder="Destino Vínculo"
               onChange={handleAddFormChange}
               />
               
@@ -352,15 +385,17 @@ function ListarAsignaturas() {
         <table class="table table-hover">
             <thead>
                 <tr class="table-light">
+                    <th scope="col">Código Plan</th>
                     <th scope="col">Plan</th>
                     <th scope="col">Área</th>
                     <th scope="col">Código</th>
                     <th scope="col">Nombre</th>
                     <th scope="col">Curso</th>
                     <th scope="col">Período</th>
-                    <th scope="col">Horas estud1</th>
-                    <th scope="col">Horas estud2</th>
-                    <th scope="col">Horas estud3</th>
+                    <th scope="col">Horas Estud Teoría</th>
+                    <th scope="col">Horas Estud Problemas</th>
+                    <th scope="col">Horas Estud Prácticas</th>
+                    <th scope="col">Destino Vínculo</th>
                     <th scope="col">Acciones</th>
                 </tr>              
             </thead>
