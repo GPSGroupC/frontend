@@ -1,15 +1,18 @@
 import axios from "axios";
 import Parser from "../utils/Parser";
+import constants from '../utils/Constants'
 
-const baseUrl = "https://timetableeina-back.herokuapp.com"
-//No borreis esta URL por si hubiese que seguir testeando en el futuro con el localhost, en caso de encontrar Bugs.
-const localHostURL = "http://localhost:8000"
 
+/**
+ * Contiene los métodos para encapsular las llamadas al backend de la Aplicación
+ * 
+ * @Module API
+ */
 class Api {
     static getAllCalendarData = async (curso) => {
         console.log("getAllCalendarData: " +  curso)
         let dateIC1 = null,dateIC2 = null,dateIS1 = null, ultMod = null
-        await axios({ method: 'GET', url: baseUrl + "/calendar/getCalendar",
+        await axios({ method: 'GET', url: constants.BASE_SERVER_URL + "/calendar/getCalendar",
             params: {
                 course: curso,
             }})
@@ -30,7 +33,7 @@ class Api {
     static getAllCalendarSemesterData = async (curso,semestre) => {
        
         let respuesta = null
-        await axios({ method: 'GET', url: baseUrl + "/calendar/getDaysCalendar",
+        await axios({ method: 'GET', url: constants.BASE_SERVER_URL + "/calendar/getDaysCalendar",
             params: {
                 cursoCalendario: curso,
                 semesterName: semestre
@@ -45,7 +48,7 @@ class Api {
     }
 
     static putAllCalendarData = async(inicio1, inicio2, inicio3, course) => {
-        axios({ method: 'POST', url: baseUrl + "/calendar/updateCalendar",
+        axios({ method: 'POST', url: constants.BASE_SERVER_URL + "/calendar/updateCalendar",
             data: {
                 fecha_inicio_1: inicio1,
                 fecha_inicio_2: inicio2,
@@ -65,7 +68,7 @@ class Api {
         if(semester.dates.length > 0) {
             var dayList = Parser.semesterToListChangedDate(semester)
             //PUT to backend ENDPOINT /calendar/updateSemester
-            axios({ method: 'PUT', url: baseUrl + "/calendar/updateSemester",
+            axios({ method: 'PUT', url: constants.BASE_SERVER_URL + "/calendar/updateSemester",
                 data: {
                     course: course,
                     semesterName: semesterName,
