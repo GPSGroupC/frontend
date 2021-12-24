@@ -69,3 +69,9 @@ it('Transforma un semestre a JSON', () => {
     ]
     expect(Parser.semesterToJSON(semester)).toEqual(semesterJSON)
 });
+
+it('Convierte un objeto fecha a string', () => {
+
+    var date = new Date("January 1, 2021")
+    expect(Parser.dateToString(date)).toEqual("1/1/2021")
+});
