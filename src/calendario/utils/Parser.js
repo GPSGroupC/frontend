@@ -1,3 +1,5 @@
+import constants from "./Constants";
+
 class Parser {
     static BLANK_DATE = ' ';
     /**
@@ -14,36 +16,21 @@ class Parser {
         })
     }
 
-     /**
-     * Actualiza los fines de semana como festivos
-     *
-     * @param {Object} dates  lista de fechas con formato: meses[ semanas[ {fecha} ] ]
-     */
-    static parseFestivos(dates) {
-        dates.map( (week) => {
-            week.map( (day, dayIndex) => {
-                if ( (dayIndex == 5 || dayIndex == 6) && day.date !== this.BLANK_DATE) {
-                    //Caso es sabado o domingo
-                    day.type = "festivo"
-                }
-            })
-        })
-    }
-
     /**
-     * Devuelve un string correspondiente a la fecha formateada segun su tipo
+     * Devuelve un string correspondiente a la fecha formateada segun su tipo para
+     * ser mostrada en la interfaz del calendario.
      * @param {Object} date Fecha a formatear
      * @param dayOfWeek     Letra correspondiente al dia de la semana de `date`
      * @param TIPOFECHA     Tipos de fechas posibles
      */
-    static formatDate(date, dayOfWeek, TIPOFECHA) {
-        if (date.type === TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado != undefined) {
+    static showCalendarDate(date, dayOfWeek) {
+        if (date.type === constants.TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado != undefined) {
             //Fecha lectiva con semana a/b y horario cambiado
             return date.date + " " + date.horarioCambiado + date.semanaAB
-        } else if (date.type === TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado == undefined) {
+        } else if (date.type === constants.TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado == undefined) {
             //Fecha lectiva con semana a/b
             return  date.date + " " + dayOfWeek + date.semanaAB
-        } else if (date.type === TIPOFECHA.L && date.semanaAB == undefined && date.horarioCambiado != undefined) {
+        } else if (date.type === constants.TIPOFECHA.L && date.semanaAB == undefined && date.horarioCambiado != undefined) {
             //Fecha lectiva con horario cambiado
             return date.date + " " + date.horarioCambiado
         } else {
