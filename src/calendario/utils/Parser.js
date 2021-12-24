@@ -34,26 +34,9 @@ class Parser {
             //Fecha lectiva con horario cambiado
             return date.date + " " + date.horarioCambiado
         } else {
-            //Fecha lectiva
+            //Fecha lectiva/convocatoria/festiva
             return date.date
         }
-    }
-    static semesterToList(semester) {
-        var listDays = []
-
-        semester.dates.map((month) => {
-            month.map((week) => {
-                week.map((day) => {
-                    var dayFormatted = Object()
-                    dayFormatted.date = day.date + "/" + day.month + "/" +day.year
-                    dayFormatted.type = day.type ? day.type : "lectivo"
-                    dayFormatted.horarioCambiado = day.horarioCambiado ? day.horarioCambiado : null
-                    dayFormatted.semanaAB = day.semanaAB ? day.semanaAB : "c"
-                    listDays.push(JSON.stringify(dayFormatted));
-                })
-            })
-        })
-        return listDays;
     }
 
     /**
@@ -107,7 +90,12 @@ class Parser {
        
     }
 
-    static semesterToListChangedDate(semester) {
+    /**
+     *
+     * Recibe una lista de meses con formato: [ mes[ semana[ dia {} ] ]
+     * Devuelve una lista de fechas en formato JSON
+     */
+    static semesterToJSON(semester) {
         var listDays = []
       
         semester.dates.map((day) => {

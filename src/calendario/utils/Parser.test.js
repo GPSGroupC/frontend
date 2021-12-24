@@ -1,5 +1,5 @@
 import Parser from './Parser';
-import * as constants from "constants";
+import constants from "./Constants";
 
 // ParseFestivos
 it('Dada una lista de semanas, actualiza como festivos los Sabados y Domingos', () => {
@@ -40,25 +40,32 @@ it('Dada una lista de semanas, no actualiza festivos con fechas incorrectas', ()
     expect(dates[0][5].type).not.toEqual("festivo") // Domingo
 });
 
-it('Muestra las fechas del calendario correctamente segun su tipo', () => {
-    //Dia lectivo
-    var date = { date: "1", type: "lectivo" }
-    var showDate = Parser.showCalendarDate(date, 'L' )
-    expect(showDate).toEqual("1")
+it('Los objetos fecha se formatean correctamente para mostrarlos en el calendario', () => {
+    var festivo = { date: "1", type: constants.TIPOFECHA.F} // Dia festivo
+    var convocatoria = { date: "1", type: constants.TIPOFECHA.C} // Dia convocatoria
+    var lectivo = { date: "1", type: constants.TIPOFECHA.L} // Dia lectivo
+    var lectivoSemA = { date: 1, type: constants.TIPOFECHA.L, semanaAB: 'a' } // Dia lectivo en semana a
+    var lectivoSemAhorarioCambiado = { date: 1, type: "lectivo", semanaAB: 'a', horarioCambiado:'M' } //Dia lectivo en semana a con horario cambiado
+    var lectivoHorarioCambiado = { date: 1, type: "lectivo", horarioCambiado:'M' } //Dia lectivo con horario cambiado
 
-    //Dia lectivo son semana a/b y horario cambiado
-    date = { date: 1, type: "lectivo", semanaAB: 'a', horarioCambiado:'M' }
-    showDate = Parser.showCalendarDate(date, 'L' )
-    expect(showDate).toEqual("1 Ma")
+    expect(Parser.showCalendarDate(festivo, 'L' )).toEqual("1")
+    expect(Parser.showCalendarDate(convocatoria, 'L' )).toEqual("1")
+    expect(Parser.showCalendarDate(lectivo, 'L' )).toEqual("1")
+    expect(Parser.showCalendarDate(lectivoSemA, 'L' )).toEqual("1 La")
+    expect(Parser.showCalendarDate(lectivoSemAhorarioCambiado, 'L' )).toEqual("1 Ma")
+    expect(Parser.showCalendarDate(lectivoHorarioCambiado, 'L' )).toEqual("1 M")
+});
 
-    //Dia lectivo son semana a/b
-    date = { date: 1, type: "lectivo", semanaAB: 'a' }
-    showDate = Parser.showCalendarDate(date, 'L' )
-    expect(showDate).toEqual("1 La")
+it('Transforma un semestre a JSON', () => {
 
-    //Dia lectivo con horario cambiado
-    date = { date: 1, type: "lectivo", horarioCambiado:'M' }
-    showDate = Parser.showCalendarDate(date, 'L' )
-    expect(showDate).toEqual("1 M")
+    var semester = {
+        dates: [ //Lista de objetos fecha
+                        {date: 1, month: 0, year: 2021, type: constants.TIPOFECHA.L}, // Lunes
 
+                ],
+    }
+    var semesterJSON = [ //Lista de fechas en formato JSON
+        JSON.stringify({date:"1/1/2021", type: constants.TIPOFECHA.L, horarioCambiado: null, semanaAB: "c"})
+    ]
+    expect(Parser.semesterToJSON(semester)).toEqual(semesterJSON)
 });

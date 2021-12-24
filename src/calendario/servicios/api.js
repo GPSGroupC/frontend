@@ -66,7 +66,7 @@ class Api {
     static putSemester = async(course, semesterName, semester) => {
         //console.log("putSemester",course," ", semesterName," ", semester)
         if(semester.dates.length > 0) {
-            var dayList = Parser.semesterToListChangedDate(semester)
+            var dayList = Parser.semesterToJSON(semester)
             //PUT to backend ENDPOINT /calendar/updateSemester
             axios({ method: 'PUT', url: constants.BASE_SERVER_URL + "/calendar/updateSemester",
                 data: {
