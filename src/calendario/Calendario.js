@@ -18,6 +18,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import {Alert} from "@material-ui/lab";
 import Parse from "./utils/Parser";
+import constants from './utils/Constants'
 
 const {datesGenerator} = require('dates-generator');
 
@@ -564,6 +565,7 @@ class Calendario extends Component {
      */
     htmlTable(periodo, semestre) {
         var weekNum = 0
+        var d
         return (
             <table id="calendarTable">
                 <thead style={{fontWeight: 'bold'}}>
@@ -593,7 +595,12 @@ class Calendario extends Component {
                             ? ''
                             :(<tr key={JSON.stringify(week[0])} >
                             <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>
-                                {weekNum= weekNum + 1}
+                                {  /*Solo aumentamos el número de semana si empieza en Lunes, para evitar que el calendario que corta las semanas
+                                    cuente algunas semanas dos veces seguidas.
+                                    */
+                                    Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES 
+                                    ? weekNum= weekNum + 1 : void(0)
+                                }
                             </td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
