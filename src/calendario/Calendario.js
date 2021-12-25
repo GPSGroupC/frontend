@@ -28,7 +28,6 @@ const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 
 const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
 //Tipos internos de cada fecha del calendario
-const TIPOFECHA = {C: 'convocatoria', F: 'festivo', L: 'lectivo'};
 const TIPOFECHALECTIVO = {S: 'semanaAB', H: 'horarioCambiado'};
 
 class Calendario extends Component {
@@ -287,7 +286,7 @@ class Calendario extends Component {
                     }
                 }
             }
-            
+            console.log(dates)
             Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
 
@@ -314,11 +313,11 @@ class Calendario extends Component {
         // Deseleccionamos todos los checkbox
         this.cleanCheckboxs()
         switch (date.type) {
-            case TIPOFECHA.C:
+            case constants.TIPOFECHA.C:
                 // El dia es de tipo convocatoria
                 this.state.convocatoriaCheckBox = true
                 break;
-            case TIPOFECHA.F:
+            case constants.TIPOFECHA.F:
                 // El dia es de tipo festivo
                 this.state.festivoCheckBox = true
                 break;
@@ -354,13 +353,13 @@ class Calendario extends Component {
      */
     onCloseDialog = () => {
         //Por defecto fecha seleccionada marcada como lectivo
-        let newDateType = TIPOFECHA.L
+        let newDateType = constants.TIPOFECHA.L
         if (this.state.convocatoriaCheckBox) {
             //Fecha seleccionada marcada como convocatoria
-            newDateType = TIPOFECHA.C
+            newDateType = constants.TIPOFECHA.C
         } else if (this.state.festivoCheckBox) {
             //Fecha seleccionada marcada como festivo
-            newDateType = TIPOFECHA.F
+            newDateType = constants.TIPOFECHA.F
         }
         this.state.selectedDate.type = newDateType
 
@@ -414,7 +413,7 @@ class Calendario extends Component {
      */
     onSelectedCheckBox = (id, checked) => {
         switch (id) {
-            case TIPOFECHA.C:
+            case constants.TIPOFECHA.C:
                 if (checked) {
                     this.setState((state, props) => ({
                         convocatoriaCheckBox: true,
@@ -425,7 +424,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case TIPOFECHA.F:
+            case constants.TIPOFECHA.F:
                 if (checked) {
                     this.setState((state, props) => ({
                         festivoCheckBox: true,
@@ -436,7 +435,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case TIPOFECHA.L:
+            case constants.TIPOFECHA.L:
                 if (checked) {
                     this.setState((state, props) => ({
                         lectivoCheckBox: true,
@@ -492,8 +491,8 @@ class Calendario extends Component {
                 <ul>
                     <li>
                         <label>
-                            <input type="checkbox" id={TIPOFECHA.C} checked={this.state.convocatoriaCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(TIPOFECHA.C, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOFECHA.C} checked={this.state.convocatoriaCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.C, e.target.checked)}}>
                             </input>
                             Convocatoria
                         </label>
@@ -501,8 +500,8 @@ class Calendario extends Component {
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id={TIPOFECHA.F} checked={this.state.festivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(TIPOFECHA.F, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOFECHA.F} checked={this.state.festivoCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.F, e.target.checked)}}>
                             </input>
                             Festivo
                         </label>
@@ -510,8 +509,8 @@ class Calendario extends Component {
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id={TIPOFECHA.L} checked={this.state.lectivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(TIPOFECHA.L, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOFECHA.L} checked={this.state.lectivoCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.L, e.target.checked)}}>
                             </input>
                             Lectivo
                         </label>
@@ -608,7 +607,7 @@ class Calendario extends Component {
                                     style={{marginLeft: "15px",marginRight:'10px'}}>
                                     <div onClick={() => this.onSelectDate(day, semestre)}
                                          style={{cursor: 'pointer',textAlign: 'center',marginRight:'2px', marginBottom: "5px", marginLeft: "15px"}}>
-                                        {Parser.formatDate(day, DAYS[dayIndex], TIPOFECHA)}
+                                        {Parser.showCalendarDate(day, DAYS[dayIndex])}
                                     </div>
                                     {(day === this.state.selectedDate)
                                         ?this.htmlDialog()

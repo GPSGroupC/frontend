@@ -19,7 +19,11 @@
         VIERNES:   5,
         SABADO:    6,
     },
-    
+
+    //Tipos de cada fecha mostrada en el calendario
+    TIPOFECHA : {C: 'convocatoria', F: 'festivo', L: 'lectivo'},
+
+
     //URL donde se encuentra la API desplegada
     BASE_SERVER_URL : "https://timetableeina-back.herokuapp.com",
     //URL para probar con la API en localhost
