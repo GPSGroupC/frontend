@@ -22,11 +22,6 @@ import constants from './utils/Constants'
 
 const {datesGenerator} = require('dates-generator');
 
-
-
-
-//Tipos internos de cada fecha del calendario
-
 class Calendario extends Component {
     constructor(props) {
         super(props)
@@ -69,17 +64,21 @@ class Calendario extends Component {
     }
 
     /**
-     * Actualiza los formularios y el calendario
+     * Actualiza las fechas de inicio de cada periodo.
+     * Actualiza la fecha de ultima modificacion del calendario.
+     * Actualiza los dias recuperados de la libreria dates generator
      *
-     * @param curso {string}  Curso que se quiere actualizar
+     * @param curso {string}  Formato: "2021-2022"
      */
-    async updateCalendario(curso) {
-        await Api.getAllCalendarData(curso).then(r => {
+    async updateMetadata(curso) {
+        await Api.getMetadataCalendar(curso).then(r => {
             this.setState({
+                //Calendar metadata
                 inicioPrimer_cuatri: r[0],
                 inicioSegundo_cuatri: r[1],
                 inicioSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
+                //Dias recuperados de la libreria dates generator
                 semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
                 semestre2: this.getPeriodo(r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
                 recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
@@ -90,13 +89,13 @@ class Calendario extends Component {
     }
 
     /**
-     * Actualiza el calendario
+     * Actualiza los dias recuperados de backend correspondientes a un curso y un semestre concreto.
      *
-     * @param curso {string}  Curso que se quiere actualizar.
-     * @param semestre {string} Semestre del que se quiere obtener la información de los calendarios.
+     * @param curso {string}  Formato: "2021-2022"
+     * @param semestre {string}
      */
-    async updateCalendarioSemesters(curso, semestre) {
-        await Api.getAllCalendarSemesterData(curso, semestre).then(response => {
+    async updateDaysCalendar(curso, semestre) {
+        await Api.getDaysCalendar(curso, semestre).then(response => {
 
             switch (semestre) {
                 case "semestre1":
@@ -123,18 +122,17 @@ class Calendario extends Component {
     async componentDidMount () {
         const response =  Promise.all(
            [
-               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
-               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
-               this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
+               this.updateDaysCalendar(this.state.estadoCurso,"semestre1"),
+               this.updateDaysCalendar(this.state.estadoCurso,"semestre2"),
+               this.updateDaysCalendar(this.state.estadoCurso,"recuperacion"),
            ]
         )
        response.then( _ =>{
-           this.updateCalendario(this.state.estadoCurso)
+           this.updateMetadata(this.state.estadoCurso)
        })
 
    }
 
-    //METODOS PARA FORMULARIOS
     handleChangePrimerCuatri = (newValue) => {
         this.setState({
             inicioPrimer_cuatri: newValue,
@@ -161,13 +159,13 @@ class Calendario extends Component {
         this.setState({estadoCurso: curso.target.value}, () => {
             const response = Promise.all(
                 [
-                    this.updateCalendarioSemesters(this.state.estadoCurso, "semestre1"),
-                    this.updateCalendarioSemesters(this.state.estadoCurso, "semestre2"),
-                    this.updateCalendarioSemesters(this.state.estadoCurso, "recuperacion"),
+                    this.updateDaysCalendar(this.state.estadoCurso, "semestre1"),
+                    this.updateDaysCalendar(this.state.estadoCurso, "semestre2"),
+                    this.updateDaysCalendar(this.state.estadoCurso, "recuperacion"),
                 ]
             )
             response.then(_ => {
-                this.updateCalendario(this.state.estadoCurso)
+                this.updateMetadata(this.state.estadoCurso)
             })
         })
 
@@ -257,7 +255,6 @@ class Calendario extends Component {
     }
 
 
-    //METODOS PARA CALENDARIO
     /**
      * Devuelve un objecto periodo inicializado {dates,year,monthNames}
      *
@@ -482,6 +479,7 @@ class Calendario extends Component {
         this.state.semanaABcheckBox = false
         this.state.horarioCambiadoCheckBox = false
     }
+
     htmlDialog() {
         return (
             <dialog className="dialog" open={this.state.showDialog ? true : false}>

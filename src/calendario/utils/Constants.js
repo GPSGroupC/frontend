@@ -9,6 +9,12 @@
  * @public
  */
  const constants = {
+
+    //URL donde se encuentra la API desplegada
+    BASE_SERVER_URL : "https://timetableeina-back.herokuapp.com",
+    //URL para probar con la API en localhost
+    LOCAL_HOST_URL  : "http://localhost:8000",
+
 	// Número de día de la semana de acuerdo a la clase JavaScript Date
     DIAS_SEMANA_ENUMERADOS : {
         DOMINGO:   0,
@@ -31,8 +37,8 @@
 
     //Rango de valores de una fecha de tipo semanaAB
     SEMANAAB_VALORES : {
-        A : "a", // Semana A
-        B : "b", // Semana B
+        A : "a",
+        B : "b",
         C : "c", // Semana sin letra asignada
     },
 
@@ -51,12 +57,6 @@
     //Cabeceras del calendario
      MONTHS : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic'],
      DAYS : ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
-
-    //URL donde se encuentra la API desplegada
-    BASE_SERVER_URL : "https://timetableeina-back.herokuapp.com",
-    //URL para probar con la API en localhost
-    LOCAL_HOST_URL  : "http://localhost:8000",
-	
 }
 
 export default constants

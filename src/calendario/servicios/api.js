@@ -9,7 +9,11 @@ import constants from '../utils/Constants'
  * @Module API
  */
 class Api {
-    static getAllCalendarData = async (curso) => {
+    /**
+     * Obtiene del backend las fechas de inicio de los tres periodos del calendario y la fecha de ultima modificacion.
+     * @param curso Formato: "2021-2022"
+     */
+    static getMetadataCalendar = async (curso) => {
         console.log("getAllCalendarData: " +  curso)
         let dateIC1 = null,dateIC2 = null,dateIS1 = null, ultMod = null
         await axios({ method: 'GET', url: constants.BASE_SERVER_URL + "/calendar/getCalendar",
@@ -30,7 +34,13 @@ class Api {
         return [dateIC1, dateIC2, dateIS1, ultMod]
     }
 
-    static getAllCalendarSemesterData = async (curso,semestre) => {
+    /**
+     * Obtiene del backend todas las fechas correspondientes a un curso y un semestre concreto.
+     * @param curso Formato: "2021-2022"
+     * @param semestre [ "semestre1" | "semestre2" | "recuperacion" ]
+     * @returns {Promise<*[]>}
+     */
+    static getDaysCalendar = async (curso, semestre) => {
        
         let respuesta = null
         await axios({ method: 'GET', url: constants.BASE_SERVER_URL + "/calendar/getDaysCalendar",
