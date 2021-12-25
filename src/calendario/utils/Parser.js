@@ -167,8 +167,10 @@ class Parser {
     }
 
     /**
-     * Parsea un string de tipo 'globalWeekSelectorAB-semestre-numWeek'
-     * siendo numWeek un numero y devuelve numWeek.
+     * Cada semana del calendario tiene un id con formato:
+     *      "globalWeekSelectorAB-${semestre}-${numWeek}"
+     *
+     * Parsea este id devolviendo la parte numerica ${numWeek}
      */
     static getNumWeekFromId(id) {
         var parts = id.split('-')

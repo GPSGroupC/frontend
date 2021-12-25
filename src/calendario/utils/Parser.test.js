@@ -84,3 +84,34 @@ it('Devuelve el numero de dia correspondiente al dia de la semana', () => {
     expect(Parser.devolverDiaSemana(Parser.BLANK_DATE,11,2021)).toEqual(undefined)
 
 });
+
+it('Devuelve true cuando una semana es vacia', () => {
+    var emptyWeek = [
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: Parser.BLANK_DATE, month: 2, year: 2021}
+    ]
+
+    var nonEmptyWeek = [
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: Parser.BLANK_DATE, month: 2, year: 2021},
+        {date: 5, month: 2, year: 2021},
+        {date: 6, month: 2, year: 2021},
+        {date: 7, month: 2, year: 2021},
+        {date: 8, month: 2, year: 2021}
+    ]
+
+    expect(Parser.weekIsBlank(emptyWeek)).toEqual(true)
+    expect(Parser.weekIsBlank(nonEmptyWeek)).toEqual(false)
+
+});
+
+it('Parsea el identificador de un selector de semana A/B devolviendo el numero de semana', () => {
+    //Selector de semana A/B de la segunda semana del primer semestre
+    expect(Parser.getNumWeekFromId("globalWeekSelectorAB-semestre1-2")).toEqual(2)
+    //Selector con id incorrecto
+    expect(Parser.getNumWeekFromId("globalWeekSelectorAB-semestre1-DOS")).toEqual(-1)
+});
