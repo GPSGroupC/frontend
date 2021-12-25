@@ -21,16 +21,16 @@ class Parser {
      * ser mostrada en la interfaz del calendario.
      * @param {Object} date Fecha a formatear
      * @param dayOfWeek     Letra correspondiente al dia de la semana de `date`
-     * @param TIPOFECHA     Tipos de fechas posibles
+     * @param TIPOS_FECHA     Tipos de fechas posibles
      */
     static showCalendarDate(date, dayOfWeek) {
-        if (date.type === constants.TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado != undefined) {
+        if (date.type === constants.TIPOS_FECHA.LECTIVO && date.semanaAB != undefined && date.horarioCambiado != undefined) {
             //Fecha lectiva con semana a/b y horario cambiado
             return date.date + " " + date.horarioCambiado + date.semanaAB
-        } else if (date.type === constants.TIPOFECHA.L && date.semanaAB != undefined && date.horarioCambiado == undefined) {
+        } else if (date.type === constants.TIPOS_FECHA.LECTIVO && date.semanaAB != undefined && date.horarioCambiado == undefined) {
             //Fecha lectiva con semana a/b
             return  date.date + " " + dayOfWeek + date.semanaAB
-        } else if (date.type === constants.TIPOFECHA.L && date.semanaAB == undefined && date.horarioCambiado != undefined) {
+        } else if (date.type === constants.TIPOS_FECHA.LECTIVO && date.semanaAB == undefined && date.horarioCambiado != undefined) {
             //Fecha lectiva con horario cambiado
             return date.date + " " + date.horarioCambiado
         } else {

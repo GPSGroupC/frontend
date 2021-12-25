@@ -9,6 +9,12 @@
  * @public
  */
  const constants = {
+
+    //URL donde se encuentra la API desplegada
+    BASE_SERVER_URL : "https://timetableeina-back.herokuapp.com",
+    //URL para probar con la API en localhost
+    LOCAL_HOST_URL  : "http://localhost:8000",
+
 	// Número de día de la semana de acuerdo a la clase JavaScript Date
     DIAS_SEMANA_ENUMERADOS : {
         DOMINGO:   0,
@@ -20,15 +26,37 @@
         SABADO:    6,
     },
 
-    //Tipos de cada fecha mostrada en el calendario
-    TIPOFECHA : {C: 'convocatoria', F: 'festivo', L: 'lectivo'},
+    //Tipos de fecha mostradas en el calendario
+    TIPOS_FECHA : {
+        CONVOCATORIA: "convocatoria",
+        FESTIVO: "festivo",
+        LECTIVO: "lectivo",
+        SEMANAAB: "semanaAB",
+        HORARIOCAMBIADO: "horarioCambiado"
+    },
 
+    //Rango de valores de una fecha de tipo semanaAB
+    SEMANAAB_VALORES : {
+        A : "a",
+        B : "b",
+        C : "c", // Semana sin letra asignada
+    },
 
-    //URL donde se encuentra la API desplegada
-    BASE_SERVER_URL : "https://timetableeina-back.herokuapp.com",
-    //URL para probar con la API en localhost
-    LOCAL_HOST_URL  : "http://localhost:8000",
-	
+    //Rango de valores de una fecha de tipo horarioCambiado
+    HORARIOCAMBIADO_VALORES: {
+        DOMINGO : "D",
+        LUNES : "L",
+        MARTES : "M",
+        MIERCOLES : "X",
+        JUEVES : "J",
+        VIERNES : "V",
+        SABADO : "S",
+        UNDEFINED: undefined //Dia no definido
+    },
+
+    //Cabeceras del calendario
+     MONTHS : ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic'],
+     DAYS : ['L', 'M', 'X', 'J', 'V', 'S', 'D'],
 }
 
 export default constants

@@ -22,14 +22,6 @@ import constants from './utils/Constants'
 
 const {datesGenerator} = require('dates-generator');
 
-
-//Cabeceras del calendario
-const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic'];
-const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
-
-//Tipos internos de cada fecha del calendario
-const TIPOFECHALECTIVO = {S: 'semanaAB', H: 'horarioCambiado'};
-
 class Calendario extends Component {
     constructor(props) {
         super(props)
@@ -47,8 +39,8 @@ class Calendario extends Component {
             semanaABcheckBox: false,
             horarioCambiadoCheckBox: false,
             //CHECKBOX SELECTS
-            selectSemanaAB: "a",
-            selectHorarioCambiado: "L",
+            selectSemanaAB: constants.SEMANAAB_VALORES.A,
+            selectHorarioCambiado: constants.HORARIOCAMBIADO_VALORES.LUNES,
             //CALENDAR WEEK AB SELECTOR
             selectS1GlobalSemanaAB:[],
             //DIAS RECUPERADOS DE LA LIBRERIA DATES GENERATOR
@@ -72,17 +64,21 @@ class Calendario extends Component {
     }
 
     /**
-     * Actualiza los formularios y el calendario
+     * Actualiza las fechas de inicio de cada periodo.
+     * Actualiza la fecha de ultima modificacion del calendario.
+     * Actualiza los dias recuperados de la libreria dates generator
      *
-     * @param curso {string}  Curso que se quiere actualizar
+     * @param curso {string}  Formato: "2021-2022"
      */
-    async updateCalendario(curso) {
-        await Api.getAllCalendarData(curso).then(r => {
+    async updateMetadata(curso) {
+        await Api.getMetadataCalendar(curso).then(r => {
             this.setState({
+                //Calendar metadata
                 inicioPrimer_cuatri: r[0],
                 inicioSegundo_cuatri: r[1],
                 inicioSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
+                //Dias recuperados de la libreria dates generator
                 semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
                 semestre2: this.getPeriodo(r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
                 recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
@@ -93,13 +89,13 @@ class Calendario extends Component {
     }
 
     /**
-     * Actualiza el calendario
+     * Actualiza los dias recuperados de backend correspondientes a un curso y un semestre concreto.
      *
-     * @param curso {string}  Curso que se quiere actualizar.
-     * @param semestre {string} Semestre del que se quiere obtener la información de los calendarios.
+     * @param curso {string}  Formato: "2021-2022"
+     * @param semestre {string}
      */
-    async updateCalendarioSemesters(curso, semestre) {
-        await Api.getAllCalendarSemesterData(curso, semestre).then(response => {
+    async updateDaysCalendar(curso, semestre) {
+        await Api.getDaysCalendar(curso, semestre).then(response => {
 
             switch (semestre) {
                 case "semestre1":
@@ -126,18 +122,17 @@ class Calendario extends Component {
     async componentDidMount () {
         const response =  Promise.all(
            [
-               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre1"),
-               this.updateCalendarioSemesters(this.state.estadoCurso,"semestre2"),
-               this.updateCalendarioSemesters(this.state.estadoCurso,"recuperacion"),
+               this.updateDaysCalendar(this.state.estadoCurso,"semestre1"),
+               this.updateDaysCalendar(this.state.estadoCurso,"semestre2"),
+               this.updateDaysCalendar(this.state.estadoCurso,"recuperacion"),
            ]
         )
        response.then( _ =>{
-           this.updateCalendario(this.state.estadoCurso)
+           this.updateMetadata(this.state.estadoCurso)
        })
 
    }
 
-    //METODOS PARA FORMULARIOS
     handleChangePrimerCuatri = (newValue) => {
         this.setState({
             inicioPrimer_cuatri: newValue,
@@ -164,13 +159,13 @@ class Calendario extends Component {
         this.setState({estadoCurso: curso.target.value}, () => {
             const response = Promise.all(
                 [
-                    this.updateCalendarioSemesters(this.state.estadoCurso, "semestre1"),
-                    this.updateCalendarioSemesters(this.state.estadoCurso, "semestre2"),
-                    this.updateCalendarioSemesters(this.state.estadoCurso, "recuperacion"),
+                    this.updateDaysCalendar(this.state.estadoCurso, "semestre1"),
+                    this.updateDaysCalendar(this.state.estadoCurso, "semestre2"),
+                    this.updateDaysCalendar(this.state.estadoCurso, "recuperacion"),
                 ]
             )
             response.then(_ => {
-                this.updateCalendario(this.state.estadoCurso)
+                this.updateMetadata(this.state.estadoCurso)
             })
         })
 
@@ -260,7 +255,6 @@ class Calendario extends Component {
     }
 
 
-    //METODOS PARA CALENDARIO
     /**
      * Devuelve un objecto periodo inicializado {dates,year,monthNames}
      *
@@ -291,7 +285,7 @@ class Calendario extends Component {
             Parser.parseFestivos(dates)
 
             acumDates = [...acumDates, dates]
-            monthNames = [...monthNames, MONTHS[queryDate.month]]
+            monthNames = [...monthNames, constants.MONTHS[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
         }
         //  dates:      lista de fechas con formato: meses[ semanas[ {fecha} ] ]
@@ -313,11 +307,11 @@ class Calendario extends Component {
         // Deseleccionamos todos los checkbox
         this.cleanCheckboxs()
         switch (date.type) {
-            case constants.TIPOFECHA.C:
+            case constants.TIPOS_FECHA.CONVOCATORIA:
                 // El dia es de tipo convocatoria
                 this.state.convocatoriaCheckBox = true
                 break;
-            case constants.TIPOFECHA.F:
+            case constants.TIPOS_FECHA.FESTIVO:
                 // El dia es de tipo festivo
                 this.state.festivoCheckBox = true
                 break;
@@ -353,13 +347,13 @@ class Calendario extends Component {
      */
     onCloseDialog = () => {
         //Por defecto fecha seleccionada marcada como lectivo
-        let newDateType = constants.TIPOFECHA.L
+        let newDateType = constants.TIPOS_FECHA.LECTIVO
         if (this.state.convocatoriaCheckBox) {
             //Fecha seleccionada marcada como convocatoria
-            newDateType = constants.TIPOFECHA.C
+            newDateType = constants.TIPOS_FECHA.CONVOCATORIA
         } else if (this.state.festivoCheckBox) {
             //Fecha seleccionada marcada como festivo
-            newDateType = constants.TIPOFECHA.F
+            newDateType = constants.TIPOS_FECHA.FESTIVO
         }
         this.state.selectedDate.type = newDateType
 
@@ -413,7 +407,7 @@ class Calendario extends Component {
      */
     onSelectedCheckBox = (id, checked) => {
         switch (id) {
-            case constants.TIPOFECHA.C:
+            case constants.TIPOS_FECHA.CONVOCATORIA:
                 if (checked) {
                     this.setState((state, props) => ({
                         convocatoriaCheckBox: true,
@@ -424,7 +418,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case constants.TIPOFECHA.F:
+            case constants.TIPOS_FECHA.FESTIVO:
                 if (checked) {
                     this.setState((state, props) => ({
                         festivoCheckBox: true,
@@ -435,7 +429,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case constants.TIPOFECHA.L:
+            case constants.TIPOS_FECHA.LECTIVO:
                 if (checked) {
                     this.setState((state, props) => ({
                         lectivoCheckBox: true,
@@ -445,7 +439,7 @@ class Calendario extends Component {
 
                 }
                 break;
-            case TIPOFECHALECTIVO.S:
+            case constants.TIPOS_FECHA.SEMANAAB:
                 if (checked) {
                     this.setState((state, props) => ({
                         semanaABcheckBox: true,
@@ -459,7 +453,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case TIPOFECHALECTIVO.H:
+            case constants.TIPOS_FECHA.HORARIOCAMBIADO:
                 if (checked) {
                     this.setState((state, props) => ({
                         horarioCambiadoCheckBox:true,
@@ -485,14 +479,15 @@ class Calendario extends Component {
         this.state.semanaABcheckBox = false
         this.state.horarioCambiadoCheckBox = false
     }
+
     htmlDialog() {
         return (
             <dialog className="dialog" open={this.state.showDialog ? true : false}>
                 <ul>
                     <li>
                         <label>
-                            <input type="checkbox" id={constants.TIPOFECHA.C} checked={this.state.convocatoriaCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.C, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOS_FECHA.CONVOCATORIA} checked={this.state.convocatoriaCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.CONVOCATORIA, e.target.checked)}}>
                             </input>
                             Convocatoria
                         </label>
@@ -500,8 +495,8 @@ class Calendario extends Component {
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id={constants.TIPOFECHA.F} checked={this.state.festivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.F, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
                             </input>
                             Festivo
                         </label>
@@ -509,8 +504,8 @@ class Calendario extends Component {
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id={constants.TIPOFECHA.L} checked={this.state.lectivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.L, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.LECTIVO, e.target.checked)}}>
                             </input>
                             Lectivo
                         </label>
@@ -518,35 +513,35 @@ class Calendario extends Component {
                         <ul>
                             <li>
                                 <label>
-                                    <input type="checkbox" id={TIPOFECHALECTIVO.S} checked={this.state.semanaABcheckBox}
-                                           onChange={(e) => {this.onSelectedCheckBox(TIPOFECHALECTIVO.S, e.target.checked)}}>
+                                    <input type="checkbox" id={constants.TIPOS_FECHA.SEMANAAB} checked={this.state.semanaABcheckBox}
+                                           onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.SEMANAAB, e.target.checked)}}>
                                     </input>
                                     Semana
                                 </label>
                                 <select value={this.state.selectSemanaAB}
                                         onChange={(e) => {this.setState({selectSemanaAB: e.target.value})}}>
-                                    <option value="a">a</option>
-                                    <option value="b">b</option>
+                                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
                                 </select>
                             </li>
                             <li>
                                 <label>
-                                    <input type="checkbox" id={TIPOFECHALECTIVO.H}
+                                    <input type="checkbox" id={constants.TIPOS_FECHA.HORARIOCAMBIADO}
                                            checked={this.state.horarioCambiadoCheckBox}
-                                           onChange={(e) => {this.onSelectedCheckBox(TIPOFECHALECTIVO.H, e.target.checked)}}>
+                                           onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.HORARIOCAMBIADO, e.target.checked)}}>
                                     </input>
                                     Dia con horario cambiado a
                                 </label>
                                 <br/>
                                 <select value={this.state.selectHorarioCambiado}
                                         onChange={(e) => {this.setState({selectHorarioCambiado: e.target.value})}}>
-                                    <option value="L">L</option>
-                                    <option value="M">M</option>
-                                    <option value="X">X</option>
-                                    <option value="J">J</option>
-                                    <option value="V">V</option>
-                                    <option value="S">S</option>
-                                    <option value="D">D</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.LUNES}>L</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.MARTES}>M</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.MIERCOLES}>X</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.JUEVES}>J</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.VIERNES}>V</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.SABADO}>S</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.DOMINGO}>D</option>
                                 </select>
                             </li>
                         </ul>
@@ -570,7 +565,7 @@ class Calendario extends Component {
                 <tr>
                     <td style={{fontWeight: 'bold',border: "2px solid #476b6b"}}>{periodo.year}</td>
                     <td style={{backgroundColor: "#476b6b",color:"white"}}>Sem</td>
-                    {DAYS.map((day) => (
+                    {constants.DAYS.map((day) => (
                         <td style={{backgroundColor: "#476b6b", color:"white"}} key={day} >
                             <div style={{textAlign: 'center'}}>
                                 {day}
@@ -610,7 +605,7 @@ class Calendario extends Component {
                                     style={{marginLeft: "15px",marginRight:'10px'}}>
                                     <div onClick={() => this.onSelectDate(day, semestre)}
                                          style={{cursor: 'pointer',textAlign: 'center',marginRight:'2px', marginBottom: "5px", marginLeft: "15px"}}>
-                                        {Parser.showCalendarDate(day, DAYS[dayIndex])}
+                                        {Parser.showCalendarDate(day, constants.DAYS[dayIndex])}
                                     </div>
                                     {(day === this.state.selectedDate)
                                         ?this.htmlDialog()
@@ -620,9 +615,9 @@ class Calendario extends Component {
                             ))}
                                 <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
                                         onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
-                                    <option value="c">-</option>
-                                    <option value="a">a</option>
-                                    <option value="b">b</option>
+                                    <option value={constants.SEMANAAB_VALORES.C}>-</option>
+                                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
                                 </select>
                         </tr>)
                     ))}

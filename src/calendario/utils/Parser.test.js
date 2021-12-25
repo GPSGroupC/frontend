@@ -41,10 +41,10 @@ it('Dada una lista de semanas, no actualiza festivos con fechas incorrectas', ()
 });
 
 it('Los objetos fecha se formatean correctamente para mostrarlos en el calendario', () => {
-    var festivo = { date: "1", type: constants.TIPOFECHA.F} // Dia festivo
-    var convocatoria = { date: "1", type: constants.TIPOFECHA.C} // Dia convocatoria
-    var lectivo = { date: "1", type: constants.TIPOFECHA.L} // Dia lectivo
-    var lectivoSemA = { date: 1, type: constants.TIPOFECHA.L, semanaAB: 'a' } // Dia lectivo en semana a
+    var festivo = { date: "1", type: constants.TIPOS_FECHA.FESTIVO} // Dia festivo
+    var convocatoria = { date: "1", type: constants.TIPOS_FECHA.CONVOCATORIA} // Dia convocatoria
+    var lectivo = { date: "1", type: constants.TIPOS_FECHA.LECTIVO} // Dia lectivo
+    var lectivoSemA = { date: 1, type: constants.TIPOS_FECHA.LECTIVO, semanaAB: 'a' } // Dia lectivo en semana a
     var lectivoSemAhorarioCambiado = { date: 1, type: "lectivo", semanaAB: 'a', horarioCambiado:'M' } //Dia lectivo en semana a con horario cambiado
     var lectivoHorarioCambiado = { date: 1, type: "lectivo", horarioCambiado:'M' } //Dia lectivo con horario cambiado
 
