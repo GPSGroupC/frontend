@@ -140,7 +140,7 @@ class Parser {
      * }
      * 
      * @param {Dia proporcionado} dia 
-     * @param {Mes proporcionado} mes 
+     * @param {Mes proporcionado} mes , rango 0-11
      * @param {Año proporcionado} anyo 
      * @returns {Devuelve el número de día dentro de la semana de una determinada fecha}
      * 

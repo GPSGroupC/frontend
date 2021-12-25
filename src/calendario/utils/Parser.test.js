@@ -67,11 +67,20 @@ it('Transforma un semestre a JSON', () => {
     var semesterJSON = [ //Lista de fechas en formato JSON
         JSON.stringify({date:"1/1/2021", type: constants.TIPOFECHA.L, horarioCambiado: null, semanaAB: "c"})
     ]
+
     expect(Parser.semesterToJSON(semester)).toEqual(semesterJSON)
 });
 
 it('Convierte un objeto fecha a string', () => {
-
     var date = new Date("January 1, 2021")
+
     expect(Parser.dateToString(date)).toEqual("1/1/2021")
+});
+
+it('Devuelve el numero de dia correspondiente al dia de la semana', () => {
+    //Caso la fecha es un Lunes
+    expect(Parser.devolverDiaSemana(20,11,2021)).toEqual(1)
+    //Caso el dia introducido es incorrecto
+    expect(Parser.devolverDiaSemana(Parser.BLANK_DATE,11,2021)).toEqual(undefined)
+
 });
