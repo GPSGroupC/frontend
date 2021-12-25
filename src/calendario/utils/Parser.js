@@ -167,10 +167,12 @@ class Parser {
     }
 
     /**
-     * Cada semana del calendario tiene un id con formato:
-     *      "globalWeekSelectorAB-${semestre}-${numWeek}"
+     * Todos los selectores html de semana a/B tienen el id:
+     *      "globalWeekSelectorAB-${monthIndex}-${weekIndex}"
+     * monthIndex := Indice numerico del mes correspondiente al selector
+     * weekIndex := Indice numerico de la semana correspondiente al selector
      *
-     * Parsea este id devolviendo la parte numerica ${numWeek}
+     * Devuelve weekIndex. Si este es incorrecto devuelve -1
      */
     static getNumWeekFromId(id) {
         var parts = id.split('-')
@@ -181,6 +183,14 @@ class Parser {
         return -1
     }
 
+    /**
+     * Todos los selectores html de semana a/B tienen el id:
+     *      "globalWeekSelectorAB-${monthIndex}-${weekIndex}"
+     * monthIndex := Indice numerico del mes correspondiente al selector
+     * weekIndex := Indice numerico de la semana correspondiente al selector
+     *
+     * Devuelve monthIndex. Si este es incorrecto devuelve -1
+     */
     static getNumMonthFromId(id) {
         var parts = id.split('-')
         var numMonth =  parts[1]

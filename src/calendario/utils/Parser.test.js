@@ -109,9 +109,16 @@ it('Devuelve true cuando una semana es vacia', () => {
 
 });
 
-it('Parsea el identificador de un selector de semana A/B devolviendo el numero de semana', () => {
-    //Selector de semana A/B de la segunda semana del primer semestre
-    expect(Parser.getNumWeekFromId("globalWeekSelectorAB-semestre1-2")).toEqual(2)
+it('Parsea el id de un selector HTML de semana A/B devolviendo el numero de semana', () => {
+    //Selector de semana a/b de la primera semana del tercer mes
+    expect(Parser.getNumWeekFromId("globalWeekSelectorAB-2-0")).toEqual(0)
     //Selector con id incorrecto
-    expect(Parser.getNumWeekFromId("globalWeekSelectorAB-semestre1-DOS")).toEqual(-1)
+    expect(Parser.getNumWeekFromId("globalWeekSelectorAB-MONTHINDEX-WEEKINDEX")).toEqual(-1)
+});
+
+it('Parsea el id de un selector HTML de semana A/B devolviendo el numero de mes', () => {
+    //Selector de semana a/b de la primera semana del tercer mes
+    expect(Parser.getNumMonthFromId("globalWeekSelectorAB-2-0")).toEqual(2)
+    //Selector con id incorrecto
+    expect(Parser.getNumMonthFromId("globalWeekSelectorAB-MONTHINDEX-WEEKINDEX")).toEqual(-1)
 });
