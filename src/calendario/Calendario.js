@@ -46,8 +46,8 @@ class Calendario extends Component {
             semanaABcheckBox: false,
             horarioCambiadoCheckBox: false,
             //CHECKBOX SELECTS
-            selectSemanaAB: "a",
-            selectHorarioCambiado: "L",
+            selectSemanaAB: constants.SEMANAAB_VALORES.A,
+            selectHorarioCambiado: constants.HORARIOCAMBIADO_VALORES.LUNES,
             //CALENDAR WEEK AB SELECTOR
             selectS1GlobalSemanaAB:[],
             //DIAS RECUPERADOS DE LA LIBRERIA DATES GENERATOR
@@ -524,8 +524,8 @@ class Calendario extends Component {
                                 </label>
                                 <select value={this.state.selectSemanaAB}
                                         onChange={(e) => {this.setState({selectSemanaAB: e.target.value})}}>
-                                    <option value="a">a</option>
-                                    <option value="b">b</option>
+                                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
                                 </select>
                             </li>
                             <li>
@@ -539,13 +539,13 @@ class Calendario extends Component {
                                 <br/>
                                 <select value={this.state.selectHorarioCambiado}
                                         onChange={(e) => {this.setState({selectHorarioCambiado: e.target.value})}}>
-                                    <option value="L">L</option>
-                                    <option value="M">M</option>
-                                    <option value="X">X</option>
-                                    <option value="J">J</option>
-                                    <option value="V">V</option>
-                                    <option value="S">S</option>
-                                    <option value="D">D</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.LUNES}>L</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.MARTES}>M</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.MIERCOLES}>X</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.JUEVES}>J</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.VIERNES}>V</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.SABADO}>S</option>
+                                    <option value={constants.HORARIOCAMBIADO_VALORES.DOMINGO}>D</option>
                                 </select>
                             </li>
                         </ul>
@@ -616,9 +616,9 @@ class Calendario extends Component {
                             ))}
                                 <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
                                         onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
-                                    <option value="c">-</option>
-                                    <option value="a">a</option>
-                                    <option value="b">b</option>
+                                    <option value={constants.SEMANAAB_VALORES.C}>-</option>
+                                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
                                 </select>
                         </tr>)
                     ))}

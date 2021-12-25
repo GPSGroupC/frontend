@@ -27,6 +27,21 @@
         HORARIOCAMBIADO: "horarioCambiado"
     },
 
+    SEMANAAB_VALORES : {
+        A : "a", // Semana A
+        B : "b", // Semana B
+        C : "c", // Semana sin letra asignada
+    },
+
+    HORARIOCAMBIADO_VALORES: {
+        LUNES : "L",
+        MARTES : "M",
+        MIERCOLES : "X",
+        JUEVES : "J",
+        VIERNES : "V",
+        SABADO : "S",
+        DOMINGO : "D"
+    },
 
     //URL donde se encuentra la API desplegada
     BASE_SERVER_URL : "https://timetableeina-back.herokuapp.com",
