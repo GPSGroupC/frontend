@@ -19,9 +19,13 @@
         VIERNES:   5,
         SABADO:    6,
     },
-
-    //Tipos de cada fecha mostrada en el calendario
-    TIPOFECHA : {C: 'convocatoria', F: 'festivo', L: 'lectivo'},
+    TIPOS_FECHA : {
+        CONVOCATORIA: "convocatoria",
+        FESTIVO: "festivo",
+        LECTIVO: "lectivo",
+        SEMANAAB: "semanaAB",
+        HORARIOCAMBIADO: "horarioCambiado"
+    },
 
 
     //URL donde se encuentra la API desplegada

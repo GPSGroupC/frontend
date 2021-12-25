@@ -28,7 +28,6 @@ const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 
 const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
 
 //Tipos internos de cada fecha del calendario
-const TIPOFECHALECTIVO = {S: 'semanaAB', H: 'horarioCambiado'};
 
 class Calendario extends Component {
     constructor(props) {
@@ -313,11 +312,11 @@ class Calendario extends Component {
         // Deseleccionamos todos los checkbox
         this.cleanCheckboxs()
         switch (date.type) {
-            case constants.TIPOFECHA.C:
+            case constants.TIPOS_FECHA.CONVOCATORIA:
                 // El dia es de tipo convocatoria
                 this.state.convocatoriaCheckBox = true
                 break;
-            case constants.TIPOFECHA.F:
+            case constants.TIPOS_FECHA.FESTIVO:
                 // El dia es de tipo festivo
                 this.state.festivoCheckBox = true
                 break;
@@ -353,13 +352,13 @@ class Calendario extends Component {
      */
     onCloseDialog = () => {
         //Por defecto fecha seleccionada marcada como lectivo
-        let newDateType = constants.TIPOFECHA.L
+        let newDateType = constants.TIPOS_FECHA.LECTIVO
         if (this.state.convocatoriaCheckBox) {
             //Fecha seleccionada marcada como convocatoria
-            newDateType = constants.TIPOFECHA.C
+            newDateType = constants.TIPOS_FECHA.CONVOCATORIA
         } else if (this.state.festivoCheckBox) {
             //Fecha seleccionada marcada como festivo
-            newDateType = constants.TIPOFECHA.F
+            newDateType = constants.TIPOS_FECHA.FESTIVO
         }
         this.state.selectedDate.type = newDateType
 
@@ -413,7 +412,7 @@ class Calendario extends Component {
      */
     onSelectedCheckBox = (id, checked) => {
         switch (id) {
-            case constants.TIPOFECHA.C:
+            case constants.TIPOS_FECHA.CONVOCATORIA:
                 if (checked) {
                     this.setState((state, props) => ({
                         convocatoriaCheckBox: true,
@@ -424,7 +423,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case constants.TIPOFECHA.F:
+            case constants.TIPOS_FECHA.FESTIVO:
                 if (checked) {
                     this.setState((state, props) => ({
                         festivoCheckBox: true,
@@ -435,7 +434,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case constants.TIPOFECHA.L:
+            case constants.TIPOS_FECHA.LECTIVO:
                 if (checked) {
                     this.setState((state, props) => ({
                         lectivoCheckBox: true,
@@ -445,7 +444,7 @@ class Calendario extends Component {
 
                 }
                 break;
-            case TIPOFECHALECTIVO.S:
+            case constants.TIPOS_FECHA.SEMANAAB:
                 if (checked) {
                     this.setState((state, props) => ({
                         semanaABcheckBox: true,
@@ -459,7 +458,7 @@ class Calendario extends Component {
                     }))
                 }
                 break;
-            case TIPOFECHALECTIVO.H:
+            case constants.TIPOS_FECHA.HORARIOCAMBIADO:
                 if (checked) {
                     this.setState((state, props) => ({
                         horarioCambiadoCheckBox:true,
@@ -491,8 +490,8 @@ class Calendario extends Component {
                 <ul>
                     <li>
                         <label>
-                            <input type="checkbox" id={constants.TIPOFECHA.C} checked={this.state.convocatoriaCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.C, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOS_FECHA.CONVOCATORIA} checked={this.state.convocatoriaCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.CONVOCATORIA, e.target.checked)}}>
                             </input>
                             Convocatoria
                         </label>
@@ -500,8 +499,8 @@ class Calendario extends Component {
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id={constants.TIPOFECHA.F} checked={this.state.festivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.F, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
                             </input>
                             Festivo
                         </label>
@@ -509,8 +508,8 @@ class Calendario extends Component {
                     </li>
                     <li>
                         <label>
-                            <input type="checkbox" id={constants.TIPOFECHA.L} checked={this.state.lectivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOFECHA.L, e.target.checked)}}>
+                            <input type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
+                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.LECTIVO, e.target.checked)}}>
                             </input>
                             Lectivo
                         </label>
@@ -518,8 +517,8 @@ class Calendario extends Component {
                         <ul>
                             <li>
                                 <label>
-                                    <input type="checkbox" id={TIPOFECHALECTIVO.S} checked={this.state.semanaABcheckBox}
-                                           onChange={(e) => {this.onSelectedCheckBox(TIPOFECHALECTIVO.S, e.target.checked)}}>
+                                    <input type="checkbox" id={constants.TIPOS_FECHA.SEMANAAB} checked={this.state.semanaABcheckBox}
+                                           onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.SEMANAAB, e.target.checked)}}>
                                     </input>
                                     Semana
                                 </label>
@@ -531,9 +530,9 @@ class Calendario extends Component {
                             </li>
                             <li>
                                 <label>
-                                    <input type="checkbox" id={TIPOFECHALECTIVO.H}
+                                    <input type="checkbox" id={constants.TIPOS_FECHA.HORARIOCAMBIADO}
                                            checked={this.state.horarioCambiadoCheckBox}
-                                           onChange={(e) => {this.onSelectedCheckBox(TIPOFECHALECTIVO.H, e.target.checked)}}>
+                                           onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.HORARIOCAMBIADO, e.target.checked)}}>
                                     </input>
                                     Dia con horario cambiado a
                                 </label>
