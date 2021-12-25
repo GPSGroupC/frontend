@@ -23,9 +23,7 @@ import constants from './utils/Constants'
 const {datesGenerator} = require('dates-generator');
 
 
-//Cabeceras del calendario
-const MONTHS = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sept', 'Oct', 'Nov', 'Dic'];
-const DAYS = ['L', 'M', 'X', 'J', 'V', 'S', 'D']
+
 
 //Tipos internos de cada fecha del calendario
 
@@ -290,7 +288,7 @@ class Calendario extends Component {
             Parser.parseFestivos(dates)
 
             acumDates = [...acumDates, dates]
-            monthNames = [...monthNames, MONTHS[queryDate.month]]
+            monthNames = [...monthNames, constants.MONTHS[queryDate.month]]
             queryDate = {month: nextMonth, year: nextYear, startingDay: 1}
         }
         //  dates:      lista de fechas con formato: meses[ semanas[ {fecha} ] ]
@@ -570,7 +568,7 @@ class Calendario extends Component {
                 <tr>
                     <td style={{fontWeight: 'bold',border: "2px solid #476b6b"}}>{periodo.year}</td>
                     <td style={{backgroundColor: "#476b6b",color:"white"}}>Sem</td>
-                    {DAYS.map((day) => (
+                    {constants.DAYS.map((day) => (
                         <td style={{backgroundColor: "#476b6b", color:"white"}} key={day} >
                             <div style={{textAlign: 'center'}}>
                                 {day}
@@ -606,7 +604,7 @@ class Calendario extends Component {
                                     style={{marginLeft: "15px",marginRight:'10px'}}>
                                     <div onClick={() => this.onSelectDate(day, semestre)}
                                          style={{cursor: 'pointer',textAlign: 'center',marginRight:'2px', marginBottom: "5px", marginLeft: "15px"}}>
-                                        {Parser.showCalendarDate(day, DAYS[dayIndex])}
+                                        {Parser.showCalendarDate(day, constants.DAYS[dayIndex])}
                                     </div>
                                     {(day === this.state.selectedDate)
                                         ?this.htmlDialog()
