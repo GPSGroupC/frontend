@@ -12,13 +12,13 @@ function App() {
 
       <div className="App">
 
-        <img className="logoCab" src={eina} style={{"margin-right":"1100px"}}/>
+        <img className="logoCabecera" src={eina} style={{marginTop: "15px", marginRight: "700px"}}/>
         <hr size="5px" color="black" />
         <br></br>
 
         <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-top":"120px", "margin-left": "27%"}}>
           <div className="inicioAux">
-            <img className="imagenLogos" src={calendar}/>
+            <img className="icono" src={calendar}/>
             <p id="textoImg">CALENDARIO GRADOS</p>
             <Link to="/calendario-grado">
               <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "70px"}}>EDITAR</button>
@@ -28,7 +28,7 @@ function App() {
 
         <div class="card border-primary mb-3" style={{"max-width": "700px", "height":"200px", "margin-left": "27%"}}>
         <div className="inicioAux">
-            <img className="imagenLogos" src={horario}/>
+            <img className="icono" src={horario}/>
             <p id="textoImg">HORARIOS</p>
             <Link to="/pantalla-horarios">
               <button type="button" class="btn btn-info btn-lg" style={{"margin-left": "250px"}}>EDITAR</button>

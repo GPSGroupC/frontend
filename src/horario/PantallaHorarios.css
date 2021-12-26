@@ -1,8 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@1,500&display=swap');
-
-
+/**
+ * CSS PARA EL COMPONENTE PANTALLA HORARIOS
+ */
 
 #buttongroup {
     padding : 0px;

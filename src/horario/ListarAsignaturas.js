@@ -6,7 +6,7 @@ import FilaEditable from "./componentes/FilaEditable";
 import { Link } from 'react-router-dom'
 import eina from '../images/eina-logo.png'
 import Api from "./servicios/api";
-
+import "./ListarAsignaturas.css";
 function ListarAsignaturas() {
 
   const [asignaturas, setAsignaturas] = useState(data);

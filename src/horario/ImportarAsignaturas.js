@@ -5,7 +5,7 @@ import FilaReadOnly from "./componentes/FilaReadOnly";
 import FilaEditable from "./componentes/FilaEditable";
 import { Link } from 'react-router-dom'
 import eina from '../images/eina-logo.png'
-import '../PantallaHorarios.css';
+import './PantallaHorarios.css';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/Button';
 import Api from "./servicios/api";

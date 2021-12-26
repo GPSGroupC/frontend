@@ -159,7 +159,7 @@ class Horario extends Component {
             <><><div>
 
                 <div>
-                    <Link to="/"><img className="logoCab2" src={eina} /></Link>
+                    <Link to="/"><img className="logoCabecera" src={eina} /></Link>
                     <Link to="/">
                         <button type="button" className="btn btn-info btn-lg" style={{ "margin-left": "750px", "margin-top": "15px" }}>SALIR SIN GUARDAR</button>
                     </Link>

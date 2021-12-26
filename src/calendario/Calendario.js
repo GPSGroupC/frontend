@@ -1,12 +1,13 @@
-import React, {Fragment, useState, useEffect, Component} from "react";
-import eina from '../images/eina-logo.png'
+import React, {Component} from "react";
 import {Link} from 'react-router-dom'
 import TextField from '@mui/material/TextField';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import Stack from '@mui/material/Stack';
+import {Alert} from "@material-ui/lab";
 import isWeekend from 'date-fns/isWeekend';
+
 import Api from "./servicios/api";
 import Parser from "./utils/Parser";
 import Pdf from "./utils/Pdf";
@@ -14,11 +15,10 @@ import amarillo from '../images/amarillo.png'
 import verde from '../images/verde.png'
 import morado from '../images/morado.png'
 import blanco from '../images/blanco.png'
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-import {Alert} from "@material-ui/lab";
+import eina from '../images/eina-logo.png'
 import Parse from "./utils/Parser";
 import constants from './utils/Constants'
+import './Calendario.css';
 
 const {datesGenerator} = require('dates-generator');
 
@@ -560,7 +560,7 @@ class Calendario extends Component {
     htmlTable(periodo, semestre) {
         var weekNum = 0
         return (
-            <table id="calendarTable">
+            <table className="tablaSemestre">
                 <thead style={{fontWeight: 'bold'}}>
                 <tr>
                     <td style={{fontWeight: 'bold',border: "2px solid #476b6b"}}>{periodo.year}</td>
@@ -641,10 +641,9 @@ class Calendario extends Component {
                 <br/>
                 <hr size="5px" color="black"/>
                 <br/><br/>
-                <div className="filtro2">
+                <div style={{marginLeft: "5%"}}>
                     <h5 className="titulo">Selecciona qué curso quieres editar</h5>
-                    <div className="select">
-                        <label htmlFor="exampleSelect1" className="form-label mt-4">Curso</label>
+                    <label>Curso
                         <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select"
                                 id="exampleSelect1">
                             <option value="2021-2022">2021-2022</option>
@@ -653,18 +652,15 @@ class Calendario extends Component {
                             <option value="2024-2025">2024-2025</option>
                             <option value="2026-2027">2026-2027</option>
                         </select>
-                        <br></br>
-                    </div>
-
+                    </label>
                     <Alert severity="info" style={{width:"300px"}}>Última
                         modificación: {Parser.dateToString(this.state.ultModificacion)}</Alert>
                     <br/><br/>
 
                     <h5 className="titulo">Selecciona el inicio de cada periodo del calendario</h5>
-                    <h10 className="texto1">Inicio primer semestre</h10>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <div>
-                            <Stack spacing={3} className="select">
+                        <label>Inicio primer semestre
+                            <Stack spacing={3} className="datePicker">
                                 <DesktopDatePicker
                                     label="dd/mm/yyyy"
                                     inputFormat="dd/MM/yyyy"
@@ -677,37 +673,37 @@ class Calendario extends Component {
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Stack>
-                        </div>
-
+                        </label>
                         <br></br>
-                        <h10 className="texto1">Inicio segundo semestre</h10>
-                        <Stack spacing={3} className="select">
-                            <DesktopDatePicker
-                                label="dd/mm/yyyy"
-                                inputFormat="dd/MM/yyyy"
-                                value={this.state.inicioSegundo_cuatri}
-                                defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 1)}
-                                minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
-                                maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
-                                onChange={this.handleChangeSegundoCuatri}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </Stack>
-
+                        <label>Inicio segundo semestre
+                            <Stack spacing={3} className="datePicker">
+                                <DesktopDatePicker
+                                    label="dd/mm/yyyy"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={this.state.inicioSegundo_cuatri}
+                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 1)}
+                                    minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
+                                    maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
+                                    onChange={this.handleChangeSegundoCuatri}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </label>
                         <br></br>
-                        <h10 className="texto1">Inicio período exámenes 2ª convocatoria</h10>
-                        <Stack spacing={3} className="select">
-                            <DesktopDatePicker
-                                label="dd/mm/yyyy"
-                                inputFormat="dd/MM/yyyy"
-                                value={this.state.inicioSegundaConvocatoria}
-                                onChange={this.handleChangeSegundaConv}
-                                defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 8)}
-                                minDate={new Date("9-1-" + this.state.estadoCurso.split('-')[1])}
-                                maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[1])}
-                                renderInput={(params) => <TextField {...params} />}
-                            />
-                        </Stack>
+                        <label>Inicio período exámenes 2ª convocatoria
+                            <Stack spacing={3} className="datePicker">
+                                <DesktopDatePicker
+                                    label="dd/mm/yyyy"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={this.state.inicioSegundaConvocatoria}
+                                    onChange={this.handleChangeSegundaConv}
+                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 8)}
+                                    minDate={new Date("9-1-" + this.state.estadoCurso.split('-')[1])}
+                                    maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[1])}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </label>
                     </LocalizationProvider>
                     <br/><br/>
 
@@ -729,7 +725,7 @@ class Calendario extends Component {
                             </p>
                         </div>
 
-                        <div className="calendarTable">
+                        <div className="calendario">
                             <div>
                                 <h7 className="titulo">Primer semestre</h7>
                                 {this.htmlTable(this.state.semestre1,"semestre1")}
@@ -743,23 +739,22 @@ class Calendario extends Component {
                             </div>
                         </div>
                         <br/>
-                        <div className="leyendaDiv">
-                        <span>
-                            <img className="leyenda" src={blanco}/>
-                            <p id="textoLeyenda">Día lectivo</p>
+                        <div style={{marginLeft: "20%"}}>
+                            <span>
+                                <img className="leyendaIcono" src={blanco}/>
+                                <p className="textoLeyenda">Día lectivo</p>
 
-                            <img className="leyenda" style={{marginLeft: '1%'}} src={amarillo}/>
-                            <p id="textoLeyenda">Día con horario de otro día de la semana</p>               
-                        </span>
+                                <img className="leyendaIcono" style={{marginLeft: '1%'}} src={amarillo}/>
+                                <p className="textoLeyenda">Día con horario de otro día de la semana</p>
+                            </span>
                         </div>
-
-                        <div className="leyendaDiv">
+                        <div style={{marginLeft: "20%"}}>
                         <span>
-                            <img className="leyenda" src={verde}/>
-                            <p id="textoLeyenda">Día festivo</p>  
+                            <img className="leyendaIcono" src={verde}/>
+                            <p className="textoLeyenda">Día festivo</p>
 
-                            <img className="leyenda" style={{marginLeft: '1%'}} src={morado}/>
-                            <p id="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
+                            <img className="leyendaIcono" style={{marginLeft: '1%'}} src={morado}/>
+                            <p className="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
                         </span>
                         </div>
 
