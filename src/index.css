@@ -1,3 +1,7 @@
+/**
+ * CSS PARA ELEMENTOS COMUNES A TODA LA APP
+ */
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@1,300&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@1,500&display=swap');
@@ -10,11 +14,19 @@ body {
   sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin:3% 20%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-  monospace;
+@media only screen and (max-width: 600px) {
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin:3% 0%;
+  }
 }
 
 hr {
@@ -28,133 +40,27 @@ hr {
   border-width: 1px;
 }
 
-.logoCab{
-  margin-top: 15px;
-  margin-right: 700px;
-  height: 100px;
-  width: 350px;
-
-}
-
-.logoCabAux{
-  margin-top: 15px;
-  margin-right: 700px;
-  height: 100px;
-  width: 350px;
-
-}
-
-.logoCabAux:hover{
-  transform: scale(1.05);
-}
-
-.logoCab2{
-  margin-top: 15px;
-  margin-left: 115px;
-  height: 100px;
-  width: 350px;
-}
-
-.logoCab3{
-  height: 100px;
-  width: 350px;
-}
-
-.logoCab3:hover{
-  transform: scale(1.05);
-}
-
-
-.logoCab2:hover{
-  transform: scale(1.05);
-}
-
-.texto1{
+label {
   font-style: italic;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
-.datepicker {
-  margin-left: 50px;
-  padding-left: 50px;
+.logoCabecera{
+  height: 100px;
+  width: 350px;
+}
+
+.icono{
+  width: 100px;
+  height: 100px;
 }
 
 .titulo {
   font-weight: bold;
 }
 
-
-.filtro{
-
-}
-
-.filtro2{
-  margin-left: 5%;
-}
-.select {
+.datePicker {
   width: 300px;
-}
-.filtro3{
-  margin-top: 7px;
-}
-
-.filtro4{
-  margin-top: 7px;
-}
-
-.calendarios {
-  max-width: 50px;
-  max-height: 20px;
-  height: max-content;
-  width: fit-content;
-}
-
-.center {
-  margin: auto;
-  width: 50%;
-  border: 3px solid green;
-  padding: 10px;
-}
-
-
-.inicio{
-  position: absolute;
-  left:25%;
-  top:30%;
-  width:310px;
-  text-align: center;
-}
-
-.inicio:hover{
-  transform: scale(1.1);
-}
-
-.aux{
-  margin-right: 100px;
-  margin-left: 100px;
-}
-
-.leyenda {
-
-  height: 25px;
-  width: 30px;
-  border: 0.1px solid rgb(0, 0, 0);
-
-}
-
-.inicio2{
-  left:25%;
-  top:30%;
-  margin-top: 140px;
-
-}
-
-.inicio2:hover{
-  transform: scale(1.1);
-}
-
-.inicio3:hover{
-  transform: scale(1.1);
 }
 
 .inicioAux{
@@ -165,30 +71,6 @@ hr {
   transform: scale(1.1);
 }
 
-.inicioAux2{
-  margin-left: 35px;
-}
-
-button {
-  margin-left: 15px;
-  margin-top: 5px;
-}
-
-
-.button2 {
-  margin-left: 15px;
-  margin-top: 5px;
-}
-
-.imagenLogos{
-  width: 100px;
-  height: 100px;
-}
-
-.leyendaDiv{
-  margin-left: 20%;
-}
-
 #textoImg{
   display: inline-block;
   vertical-align: top;
@@ -196,245 +78,6 @@ button {
   margin-left: 10px;
   font-size: 200%;
   font-weight: bold;
-}
-
-#textoLeyenda{
-  display: inline-block;
-  vertical-align: top;
-  margin-top: 5px;
-  margin-left: 5px;
-  font-size: 80%;
-  font-style: italic;
-}
-
-.react-pdf__Page__canvas {
-  margin: 0 auto;
-  width: 80% !important;
-  height: 100% !important;
-}
-
-
-.horarioTabla {
-  margin-top: 2%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border: 1px solid #b8b894;
-  border-radius:8px;
-  box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
-}
-
-
-.divToPrint{
-  /*left: 30%;*/
-  /*background-color: #f5f5f5;*/
-  width: 280mm;
-  height: 297mm;
-  /*margin-left: auto;*/
-  margin-right: auto;
-  /*box-shadow: 0 5px 10px 0 rgba(255, 255, 255, 0.1);
-  box-sizing: border-box;*/
-  /*min-height: '297mm';
-  margin-left: 'auto';
-  margin-right:'auto';*/
-}
-.pdfHeader{
-  display: flex;
-  margin-left: 17.5%;
-}
-.pdfBody {
-  display: block;
-}
-.pdfHeader p {
-  font-size: small;
-  margin-left: 50px;
-  color: dimgrey;
-
-}
-
-.company-logo {
-
-  width: 300px;
-  height: 90px;
-
-}
-
-
-.pdf-header {
-  display: flex;
-  padding-bottom: .2in;
-  margin-bottom: .3in;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.invoice-number {
-  padding-top: .1in;
-  float: right;
-}
-
-.pdf-footer {
-  position: absolute;
-  bottom: .25in;
-  left: .3in;
-  right: .3in;
-  padding-top: 0.05in;
-  border-top: 1px solid #e5e5e5;
-  font-size: 0.9em;
-  text-align: left;
-  color: #787878;
-}
-
-td.festivo {
-  background-color: #a2f29f;
-}
-td.convocatoria {
-  background-color: #d675bd;
-}
-td.horarioCambiado {
-  background-color: #e1f16d;
-}
-
-
-
-
-
-
-
-
-
-
-
-.pdf-page {
-  position: relative;
-  margin: 0 auto;
-  padding: .4in .3in;
-  color: #333;
-  background-color: #fff;
-  box-shadow: 0 5px 10px 0 rgba(0,0,0,.3);
-  box-sizing: border-box;
-
-  /*
-		Use the DejaVu Sans font for display and embedding in the PDF file.
-		The standard PDF fonts have no support for Unicode characters.
-	*/
-  font-family: "DejaVu Sans", "Arial", sans-serif;
-}
-
-/*
-    The example loads the DejaVu Sans from the Kendo UI CDN.
-    Other fonts have to be hosted from your application.
-    The official site of the Deja Vu Fonts project is
-    https://dejavu-fonts.github.io/.
-*/
-@font-face {
-  font-family: "DejaVu Sans";
-  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "DejaVu Sans";
-  font-weight: bold;
-  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "DejaVu Sans";
-  font-style: italic;
-  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "DejaVu Sans";
-  font-weight: bold;
-  font-style: italic;
-  src: url("https://kendo.cdn.telerik.com/2017.2.621/styles/fonts/DejaVu/DejaVuSans-Oblique.ttf") format("truetype");
-}
-
-.pdf-header {
-  padding-bottom: .2in;
-  margin-bottom: .3in;
-  border-bottom: 1px solid #e5e5e5;
-}
-
-.invoice-number {
-  padding-top: .1in;
-  float: right;
-}
-
-.pdf-footer {
-  position: absolute;
-  bottom: .25in;
-  left: .3in;
-  right: .3in;
-  padding-top: 0.05in;
-  border-top: 1px solid #e5e5e5;
-  font-size: 0.9em;
-  text-align: left;
-  color: #787878;
-}
-
-.addresses {
-  font-size: 12px;
-}
-
-  .addresses:after {
-    display: block;
-    content: "";
-    clear: both;
-  }
-
-.for {
-  float: left;
-}
-
-.from {
-  float: right;
-}
-
-.addresses p {
-  color: #787878;
-  padding: .05in 0;
-  border-top: 1px solid #e5e5e5;
-}
-
-  .addresses p:first-of-type {
-    border-top: 0;
-  }
-
-.pdf-body {
-  margin-top: .3in;
-}
-
-.company-logo {
-  font-size: 1.8em;
-  font-weight: bold;
-  color: #3aabf0;
-}
-
-.signature {
-  padding-top: .3in;
-}
-
-/* Dimensions other than px and em should be divided by 1.33 for the proper PDF output */
-.size-a4 {
-  width: 6.2in;
-  height: 8.7in;
-}
-
-.size-letter {
-  width: 6.3in;
-  height: 8.2in;
-}
-
-.size-executive {
-  width: 5.4in;
-  height: 7.8in;
-  font-size: 12px;
-}
-
-.size-executive .pdf-header {
-  margin-bottom: .1in;
 }
 
 .titulaciones {
@@ -449,22 +92,7 @@ td.horarioCambiado {
   box-sizing: border-box;
 }
 
-.box {
-  padding: 1em;
-  background-color: rgba(20, 53, 80, 0.038);
-  border: 1px solid rgba(20, 53, 80, 0.05);
-}
 
-
-/* ------------------- */
-.bodyMargin {
-  margin:3% 20%;
-}
-@media only screen and (max-width: 600px) {
-  .bodyMargin {
-    margin: 3% 0%
-  }
-}
 .header {
   display:flex; /* rows and columns style */
   flex-direction:row;
@@ -473,6 +101,7 @@ td.horarioCambiado {
   flex-wrap:wrap;
   margin: 0% 5%;
 }
+
 @media only screen and (max-width: 600px) {
   .header {
     display:flex; /* rows and columns style */
@@ -483,41 +112,8 @@ td.horarioCambiado {
   }
 }
 
-.calendarTable {
-  display:flex; /* rows and columns style */
-  flex-direction:row;
-  justify-content:center; /* Horizontal alignment */
-  align-items:start; /* vertical alignment */
-  flex-wrap:wrap;
-}
-.calendarTable div h7 {
-  margin-left: 25%;
-}
 
-#calendarTable
-{
-  font-size: small;
-  margin-left: 20px;
-  margin-right: 20px;
-  border: 2px solid #476b6b;
-  overflow:hidden;
-}
-
-#calendarTable td
-{
-  text-align: center;
-  vertical-align: middle;
-}
 
 .dialog ul li{
  text-align: start;
 }
-
-/* ------------------- */
-
-
-/* Horarios Tablas Seleccion */
-
-
-
-/*Termina Horarios tablas seleccion */

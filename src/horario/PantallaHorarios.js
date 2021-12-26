@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {Link} from 'react-router-dom'
 import eina from '../images/eina-logo.png'
-import '../PantallaHorarios.css';
+import './PantallaHorarios.css';
 import ImportarAsignaturas from "./ImportarAsignaturas";
 import ListarAsignaturas from "./ListarAsignaturas";
 import SeleccionHorarioGrados from "./SeleccionHorarioGrados";

@@ -1,0 +1,13 @@
+/**
+ * CSS PARA EL COMPONENTE LISTAR ASIGNATURAS
+ */
+.horarioTabla {
+    margin-top: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid #b8b894;
+    border-radius:8px;
+    box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+}
