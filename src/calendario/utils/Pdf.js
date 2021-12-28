@@ -37,10 +37,23 @@ class Pdf {
     static hideUnwantedElements() {
         // Escondemos lo selectores de semanaAB cuyo className es
         // 'globalWeekSelectorAB-semestre1', 'globalWeekSelectorAB-semestre2' y 'globalWeekSelectorAB-recuperacion'
-        var elements = document.querySelectorAll("select[class^='globalWeekSelectorAB-']");
-        if (elements) {
-            for(var i = 0; i < elements.length; i++) {
-                elements[i].style.display = "none"
+        var globalWeekSelector = document.querySelectorAll("select[class^='globalWeekSelectorAB-']");
+        var descripcionSemanal = document.querySelectorAll("input[class^='descripcionSemanal']");
+
+        if (globalWeekSelector) {
+            for(var i = 0; i < globalWeekSelector.length; i++) {
+                //Esconder los selectores de semana
+                globalWeekSelector[i].style.display = "none"
+            }
+        }
+        if(descripcionSemanal) {
+            for(var i = 0; i < descripcionSemanal.length; i++) {
+                if (descripcionSemanal[i].value.length == 0) {
+                    //Esconder las descripciones semanales vacias
+                    descripcionSemanal[i].style.display = "none"
+                }
+                //Esconder el border de todas las descripciones
+                descripcionSemanal[i].style.border = "none"
             }
         }
     }
@@ -49,10 +62,22 @@ class Pdf {
      * Devuelve la visibilidad a los elementos no incluidos en el PDF
      */
     static showUnwantedElements() {
-        var elements = document.querySelectorAll("select[class^='globalWeekSelectorAB-']");
-        if (elements) {
-            for(var i = 0; i < elements.length; i++) {
-                elements[i].style.display = "block"
+        var globalWeekSelector = document.querySelectorAll("select[class^='globalWeekSelectorAB-']");
+        var descripcionSemanal = document.querySelectorAll("input[class^='descripcionSemanal']");
+
+        if (globalWeekSelector) {
+            for(var i = 0; i < globalWeekSelector.length; i++) {
+                globalWeekSelector[i].style.display = "inline"
+            }
+        }
+        if(descripcionSemanal) {
+            for(var i = 0; i < descripcionSemanal.length; i++) {
+                if (descripcionSemanal[i].value.length == 0) {
+                    //Esconder las descripciones semanales vacias
+                    descripcionSemanal[i].style.display = "inline"
+                }
+                //Esconder el border de todas las descripciones
+                descripcionSemanal[i].style.border = "2px inset #EBE9ED"
             }
         }
     }

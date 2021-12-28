@@ -109,6 +109,25 @@ class Parser {
         return listDays;
     }
 
+    static getDiasConHorarioCambiado(semester){
+        let lista_dias_horario_cambiado = []
+        semester.dates.map((month) => {
+          month.map((week) => {
+            week.map((day) =>{
+                if (day.horarioCambiado) {
+                    lista_dias_horario_cambiado.push(
+                        day.date + "/"
+                        + day.month + "/"
+                        + day.year + " horario de "
+                        + this.getFullDayName(day.horarioCambiado)
+                    )
+                }
+            })
+          })
+        })
+        return lista_dias_horario_cambiado
+    }
+
     /**
      *
      * @param {Fecha a construir en el formato DD MM YYYY , el separador por defecto es el carácter '/' 
@@ -166,6 +185,17 @@ class Parser {
         return result
     }
 
+    static getFullDayName(initial) {
+        switch (initial) {
+            case "L": return "Lunes"
+            case "M": return "Martes"
+            case "X": return "Miércoles"
+            case "J": return "Jueves"
+            case "V": return "Viernes"
+            case "S": return "Sábado"
+            default: return "Domingo"
+        }
+    }
     /**
      * Todos los selectores html de semana a/B tienen el id:
      *      "globalWeekSelectorAB-${monthIndex}-${weekIndex}"

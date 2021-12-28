@@ -42,7 +42,7 @@ class Calendario extends Component {
             selectSemanaAB: constants.SEMANAAB_VALORES.A,
             selectHorarioCambiado: constants.HORARIOCAMBIADO_VALORES.LUNES,
             //CALENDAR WEEK AB SELECTOR
-            selectS1GlobalSemanaAB:[],
+            selectS1GlobalSemanaAB: [],
             //DIAS RECUPERADOS DE LA LIBRERIA DATES GENERATOR
             semestre1: {dates: [], year: -1, monthNames: []},
             semestre2: {dates: [], year: -1, monthNames: []},
@@ -59,7 +59,8 @@ class Calendario extends Component {
             //DIAS QUE HAN CAMBIADO EN FRONTEND
             semestre1_changed: {dates: []},
             semestre2_changed: {dates: []},
-            recuperacion_changed: {dates: []}
+            recuperacion_changed: {dates: []},
+
         }
     }
 
@@ -578,7 +579,7 @@ class Calendario extends Component {
 
                     <tbody>
                     <tr>
-                        <td style={{fontWeight: 'bold', width:"50px", borderBottom: "1px solid #476b6b"}} rowSpan={month.length + 1} scope="rowgroup">
+                        <td style={{fontWeight: 'bold', width:"50px", borderBottom: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}} rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
 
                         </td>
@@ -613,12 +614,16 @@ class Calendario extends Component {
                                     }
                                 </td>
                             ))}
-                                <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
-                                        onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
-                                    <option value={constants.SEMANAAB_VALORES.C}>-</option>
-                                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
-                                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
-                                </select>
+                            <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
+                                    onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
+                                <option value={constants.SEMANAAB_VALORES.C}>-</option>
+                                <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                                <option value={constants.SEMANAAB_VALORES.B}>b</option>
+                            </select>
+                                <input
+                                       className="descripcionSemanal"
+                                       placeholder="Añade una descripción de alguna fiesta que ocurra en esta semana."
+                                       type="text"/>
                         </tr>)
                     ))}
                     </tbody>
@@ -628,6 +633,21 @@ class Calendario extends Component {
         )
     }
 
+    htmlListaHorarioCambiado(semestre) {
+        var lista_dias_horario_cambiado = Parser.getDiasConHorarioCambiado(semestre)
+        if (lista_dias_horario_cambiado.length != 0) {
+            return (
+                <div className="descripcionHorariosCambiados">
+                    <p>Cambios de día:</p>
+                    <div className="listaHorariosCambiados">
+                        {Parser.getDiasConHorarioCambiado(semestre)
+                            .map((dia) => (<p>{dia}</p>))
+                        }
+                    </div>
+                </div>
+            )
+        }
+    }
 
     render() {
         return (
@@ -727,17 +747,23 @@ class Calendario extends Component {
 
                         <div className="calendario">
                             <div>
-                                <h7 className="titulo">Primer semestre</h7>
+                                <h7 className="titulo" >Primer semestre</h7>
+                                {this.htmlListaHorarioCambiado(this.state.semestre1)}
                                 {this.htmlTable(this.state.semestre1,"semestre1")}
-                                <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
-                                {this.htmlTable(this.state.recuperacion,"recuperacion")}
                             </div>
                             <div>
                                 <h7 className="titulo">Segundo semestre</h7>
+                                {this.htmlListaHorarioCambiado(this.state.semestre2)}
                                 {//No quiteis los string de semestre1 y semestre2 y recuperacion sino en el backend va ir mal.
                                     this.htmlTable(this.state.semestre2,"semestre2")}
                             </div>
+                            <div>
+                                <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
+                                {this.htmlListaHorarioCambiado(this.state.recuperacion)}
+                                {this.htmlTable(this.state.recuperacion,"recuperacion")}
+                            </div>
                         </div>
+
                         <br/>
                         <div style={{marginLeft: "20%"}}>
                             <span>

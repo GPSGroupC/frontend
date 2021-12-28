@@ -5,7 +5,7 @@
 /* PDF */
 .divToPrint{
     width: 280mm;
-    height: 297mm;
+    height: 500mm;
 }
 
 .pdfHeader{
@@ -23,22 +23,18 @@
 /* CALENDARIO */
 .calendario {
     display:flex; /* rows and columns style */
-    flex-direction:row;
+    flex-direction:column;
     justify-content:center; /* Horizontal alignment */
-    align-items:start; /* vertical alignment */
+    align-items: stretch; /* vertical alignment */
     flex-wrap:wrap;
+    margin-left: 150px;
+    margin-right: 20px;
 }
 
-.calendario div h7 {
-    margin-left: 25%;
-}
 
 .tablaSemestre
 {
     font-size: small;
-    margin-left: 20px;
-    margin-right: 20px;
-    border: 2px solid #476b6b;
     overflow:hidden;
 }
 
@@ -60,6 +56,25 @@ td.horarioCambiado {
     background-color: #e1f16d;
 }
 
+.descripcionSemanal {
+    margin-left:10px;
+    width:400px;
+    border:2px inset #EBE9ED;
+}
+
+.descripcionHorariosCambiados {
+    display:flex; /* rows and columns style */
+    flex-direction:row;
+    justify-content:start; /* Horizontal alignment */
+    align-items: center; /* vertical alignment */
+    flex-wrap:wrap;
+    margin-left: 20px;
+}
+.listaHorariosCambiados {
+    margin-left:20px;
+    line-height: 50%;
+    background-color:#e1f16d;
+}
 
 /*LEYENDA*/
 .leyendaIcono {
