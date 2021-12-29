@@ -4,8 +4,12 @@
 
 /* PDF */
 .divToPrint{
-    width: 280mm;
-    height: 500mm;
+    /*width: 280mm;
+    height: 500mm;*/
+    display:flex; /* rows and columns style */
+    flex-direction:column;
+    justify-content:center; /* Horizontal alignment */
+    align-items: start; /* vertical alignment */
 }
 
 .pdfHeader{
@@ -27,9 +31,9 @@
     justify-content:center; /* Horizontal alignment */
     align-items: stretch; /* vertical alignment */
     flex-wrap:wrap;
-    margin-left: 150px;
     margin-right: 20px;
 }
+
 
 
 .tablaSemestre
@@ -67,24 +71,51 @@ td.horarioCambiado {
     flex-direction:row;
     justify-content:start; /* Horizontal alignment */
     align-items: center; /* vertical alignment */
-    flex-wrap:wrap;
     margin-left: 20px;
+    margin-bottom: 5px;
 }
 .listaHorariosCambiados {
     margin-left:20px;
     line-height: 50%;
     background-color:#e1f16d;
+    font-size: 15px;
+}
+
+.dialog{
+    display:flex; /* rows and columns style */
+    flex-direction:column;
+    justify-content:start; /* Horizontal alignment */
+    align-items: start; /* vertical alignment */
+    width: 350px;
+
+}
+.dialog label {
+    font-size: 18px;
+    margin-bottom: 0px;
+}
+
+.checkBox{
+    transform: scale(1.5);
+    margin-right: 10px;
 }
 
 /*LEYENDA*/
+.leyenda {
+    margin-top:20px;
+    margin-left:250px;
+    width: 900px;
+    justify-content:stretch; /* Horizontal alignment */
+    align-items: end; /* vertical alignment */
+}
 .leyendaIcono {
+    display: inline;
     height: 25px;
     width: 30px;
     border: 0.1px solid rgb(0, 0, 0);
 }
 
 .textoLeyenda{
-    display: inline-block;
+    display: inline;
     vertical-align: top;
     margin-top: 5px;
     margin-left: 5px;

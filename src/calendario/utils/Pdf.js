@@ -39,6 +39,7 @@ class Pdf {
         // 'globalWeekSelectorAB-semestre1', 'globalWeekSelectorAB-semestre2' y 'globalWeekSelectorAB-recuperacion'
         var globalWeekSelector = document.querySelectorAll("select[class^='globalWeekSelectorAB-']");
         var descripcionSemanal = document.querySelectorAll("input[class^='descripcionSemanal']");
+        var calendar = document.querySelector("div[class^='calendario']");
 
         if (globalWeekSelector) {
             for(var i = 0; i < globalWeekSelector.length; i++) {
@@ -56,6 +57,10 @@ class Pdf {
                 descripcionSemanal[i].style.border = "none"
             }
         }
+        if(calendar) {
+            calendar.style.marginLeft = "250px"
+        }
+
     }
 
     /**
@@ -64,6 +69,7 @@ class Pdf {
     static showUnwantedElements() {
         var globalWeekSelector = document.querySelectorAll("select[class^='globalWeekSelectorAB-']");
         var descripcionSemanal = document.querySelectorAll("input[class^='descripcionSemanal']");
+        var calendar = document.querySelector("div[class^='calendario']");
 
         if (globalWeekSelector) {
             for(var i = 0; i < globalWeekSelector.length; i++) {
@@ -79,6 +85,9 @@ class Pdf {
                 //Esconder el border de todas las descripciones
                 descripcionSemanal[i].style.border = "2px inset #EBE9ED"
             }
+        }
+        if(calendar) {
+            calendar.style.marginLeft = "0px"
         }
     }
 }

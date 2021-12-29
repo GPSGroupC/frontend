@@ -483,58 +483,52 @@ class Calendario extends Component {
 
     htmlDialog() {
         return (
-            <dialog className="dialog" open={this.state.showDialog ? true : false}>
-                <ul>
-                    <li>
+            <dialog open={this.state.showDialog ? true : false}>
+                <div className="dialog">
                         <label>
-                            <input type="checkbox" id={constants.TIPOS_FECHA.CONVOCATORIA} checked={this.state.convocatoriaCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.CONVOCATORIA, e.target.checked)}}>
+                            <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.CONVOCATORIA} checked={this.state.convocatoriaCheckBox}
+                                   onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.CONVOCATORIA, e.target.checked)}}>
                             </input>
                             Convocatoria
                         </label>
-                        <br/>
-                    </li>
-                    <li>
+
                         <label>
-                            <input type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
+                            <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
+                                   onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
                             </input>
                             Festivo
                         </label>
-                        <br/>
-                    </li>
-                    <li>
+
                         <label>
-                            <input type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.LECTIVO, e.target.checked)}}>
+                            <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
+                                   onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.LECTIVO, e.target.checked)}}>
                             </input>
                             Lectivo
                         </label>
-                        <br/>
-                        <ul>
-                            <li>
+                            <span style={{marginLeft:"50px"}}>
                                 <label>
-                                    <input type="checkbox" id={constants.TIPOS_FECHA.SEMANAAB} checked={this.state.semanaABcheckBox}
+                                    <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.SEMANAAB} checked={this.state.semanaABcheckBox}
                                            onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.SEMANAAB, e.target.checked)}}>
                                     </input>
                                     Semana
                                 </label>
-                                <select value={this.state.selectSemanaAB}
+
+                                <select style={{marginLeft:"5px"}} value={this.state.selectSemanaAB}
                                         onChange={(e) => {this.setState({selectSemanaAB: e.target.value})}}>
                                     <option value={constants.SEMANAAB_VALORES.A}>a</option>
                                     <option value={constants.SEMANAAB_VALORES.B}>b</option>
                                 </select>
-                            </li>
-                            <li>
+                            </span>
+                            <span style={{marginLeft:"50px"}}>
                                 <label>
-                                    <input type="checkbox" id={constants.TIPOS_FECHA.HORARIOCAMBIADO}
+                                    <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.HORARIOCAMBIADO}
                                            checked={this.state.horarioCambiadoCheckBox}
                                            onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.HORARIOCAMBIADO, e.target.checked)}}>
                                     </input>
                                     Dia con horario cambiado a
                                 </label>
-                                <br/>
-                                <select value={this.state.selectHorarioCambiado}
+
+                                <select style={{marginLeft:"5px"}} value={this.state.selectHorarioCambiado}
                                         onChange={(e) => {this.setState({selectHorarioCambiado: e.target.value})}}>
                                     <option value={constants.HORARIOCAMBIADO_VALORES.LUNES}>L</option>
                                     <option value={constants.HORARIOCAMBIADO_VALORES.MARTES}>M</option>
@@ -544,10 +538,8 @@ class Calendario extends Component {
                                     <option value={constants.HORARIOCAMBIADO_VALORES.SABADO}>S</option>
                                     <option value={constants.HORARIOCAMBIADO_VALORES.DOMINGO}>D</option>
                                 </select>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                            </span>
+                </div>
                 <button className="btn btn-info" id="closeDialog" onClick={() => this.onCloseDialog()}>Cerrar</button>
             </dialog>
         )
@@ -651,7 +643,7 @@ class Calendario extends Component {
 
     render() {
         return (
-            <div className="bodyMargin">
+            <div>
                 <div className="header">
                     <h4 className="titulo">EDITAR CALENDARIO GRADOS</h4>
                     <Link to="/">
@@ -745,45 +737,41 @@ class Calendario extends Component {
                             </p>
                         </div>
 
+
                         <div className="calendario">
                             <div>
                                 <h7 className="titulo" >Primer semestre</h7>
                                 {this.htmlListaHorarioCambiado(this.state.semestre1)}
                                 {this.htmlTable(this.state.semestre1,"semestre1")}
                             </div>
-                            <div>
+                            <div style={{marginTop:"20px"}}>
                                 <h7 className="titulo">Segundo semestre</h7>
                                 {this.htmlListaHorarioCambiado(this.state.semestre2)}
                                 {//No quiteis los string de semestre1 y semestre2 y recuperacion sino en el backend va ir mal.
                                     this.htmlTable(this.state.semestre2,"semestre2")}
                             </div>
-                            <div>
+                            <div style={{marginTop:"20px"}}>
                                 <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
                                 {this.htmlListaHorarioCambiado(this.state.recuperacion)}
                                 {this.htmlTable(this.state.recuperacion,"recuperacion")}
                             </div>
                         </div>
 
-                        <br/>
-                        <div style={{marginLeft: "20%"}}>
-                            <span>
-                                <img className="leyendaIcono" src={blanco}/>
-                                <p className="textoLeyenda">Día lectivo</p>
+                        <div className="leyenda">
+                            <img className="leyendaIcono" src={blanco}/>
+                            <p className="textoLeyenda">Día lectivo</p>
 
-                                <img className="leyendaIcono" style={{marginLeft: '1%'}} src={amarillo}/>
-                                <p className="textoLeyenda">Día con horario de otro día de la semana</p>
-                            </span>
-                        </div>
-                        <div style={{marginLeft: "20%"}}>
-                        <span>
-                            <img className="leyendaIcono" src={verde}/>
-                            <p className="textoLeyenda">Día festivo</p>
-
-                            <img className="leyendaIcono" style={{marginLeft: '1%'}} src={morado}/>
-                            <p className="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
-                        </span>
+                            <img className="leyendaIcono" style={{marginLeft: '1%'}} src={amarillo}/>
+                            <p className="textoLeyenda">Día con horario de otro día de la semana</p>
                         </div>
 
+                        <div className="leyenda" style={{marginBottom:"50px"}}>
+                                <img className="leyendaIcono" src={verde}/>
+                                <p className="textoLeyenda">Día festivo</p>
+
+                                <img className="leyendaIcono" style={{marginLeft: '1%'}} src={morado}/>
+                                <p className="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
+                            </div>
                     </div>
                 </div>
                 <br/><br/>
