@@ -138,7 +138,7 @@ class Calendario extends Component {
             inicioPrimer_cuatri: newValue,
         }, () => {
             this.setState({
-                semestre1: this.getPeriodo( 8,  2021, 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
+                semestre1: this.getPeriodo( 8, parseInt(this.state.estadoCurso.split('-')[0]), 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
             })
         })
     };
@@ -280,7 +280,6 @@ class Calendario extends Component {
                     }
                 }
             }
-            console.log(dates)
             Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
 
@@ -559,6 +558,7 @@ class Calendario extends Component {
      */
     htmlTable(periodo, semestre) {
         var weekNum = 0
+        var startNumberWeekDay = 0
         return (
             <table className="tablaSemestre">
                 <thead style={{fontWeight: 'bold'}}>
@@ -591,10 +591,23 @@ class Calendario extends Component {
                                 {  /*Solo aumentamos el número de semana si empieza en Lunes o es la primera semana del primer mes del semestre,
                                     para evitar que el calendario que corta las semanas cuente algunas semanas dos veces seguidas.
                                     */
+                                   
+                                    //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
+                                    startNumberWeekDay = (semestre === "semestre1") ? 
+                                    Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri) : 
+                                    Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri,weekIndex,week[0]), 
+                                    
                                     semestre === "recuperacion"
                                     ? void(0)
-                                        : Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
-                                        || (monthIndex === 0 && weekIndex === 0)
+                                        : semestre === "semestre1" ? 
+                                            //Caso de que sea el primer Semestre
+                                            Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
+                                            ? weekNum= weekNum + 1
+                                            : void(0)
+                                        :   //Es el segundo semestre la logica es la misma pero debemos mirar si el dia es anterior o no al del inicio del 2 cuatri
+                                            new Date(week[0].year,week[0].month, week[0].date) >= new Date(this.state.inicioSegundo_cuatri) && Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
                                             ? weekNum= weekNum + 1
                                             : void(0)
                                 }
@@ -685,6 +698,7 @@ class Calendario extends Component {
                                     minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
                                     maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
                                     onChange={this.handleChangeSegundoCuatri}
+                                    shouldDisableDate={isWeekend}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Stack>
