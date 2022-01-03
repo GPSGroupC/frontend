@@ -31,6 +31,9 @@ class Calendario extends Component {
             inicioPrimer_cuatri: null,
             inicioSegundo_cuatri: null,
             inicioSegundaConvocatoria: null,
+            finPrimer_cuatri: null,
+            finSegundo_cuatri: null,
+            finSegundaConvocatoria: null,
             estadoCurso: "2021-2022",
             //CHECKBOXS
             convocatoriaCheckBox: false,
@@ -76,8 +79,11 @@ class Calendario extends Component {
             this.setState({
                 //Calendar metadata
                 inicioPrimer_cuatri: r[0],
+                //finPrimer_cuatri: r[1],
                 inicioSegundo_cuatri: r[1],
+                //finSegundo_cuatri: r[2],
                 inicioSegundaConvocatoria: r[2],
+                //finSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
                 //Dias recuperados de la libreria dates generator
                 semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
@@ -139,8 +145,14 @@ class Calendario extends Component {
             inicioPrimer_cuatri: newValue,
         }, () => {
             this.setState({
-                semestre1: this.getPeriodo( 8,  2021, 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
+                semestre1: this.getPeriodo( 8, parseInt(this.state.estadoCurso.split('-')[0]), 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
             })
+        })
+    };
+
+    handleChangeFinPrimerCuatri = (newValue) => {
+        this.setState({
+            finPrimer_cuatri: newValue,
         })
     };
 
@@ -150,9 +162,21 @@ class Calendario extends Component {
         })
     };
 
+    handleChangeFinSegundoCuatri = (newValue) => {
+        this.setState({
+            finSegundo_cuatri: newValue,
+        })
+    };
+
     handleChangeSegundaConv = (newValue) => {
         this.setState({
             inicioSegundaConvocatoria: newValue,
+        })
+    };
+
+    handleChangeFinSegundaConv = (newValue) => {
+        this.setState({
+            finSegundaConvocatoria: newValue,
         })
     };
 
@@ -281,7 +305,6 @@ class Calendario extends Component {
                     }
                 }
             }
-            console.log(dates)
             Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
 
@@ -552,6 +575,7 @@ class Calendario extends Component {
      */
     htmlTable(periodo, semestre) {
         var weekNum = 0
+        var startNumberWeekDay = 0
         return (
             <table className="tablaSemestre">
                 <thead style={{fontWeight: 'bold'}}>
@@ -584,10 +608,23 @@ class Calendario extends Component {
                                 {  /*Solo aumentamos el número de semana si empieza en Lunes o es la primera semana del primer mes del semestre,
                                     para evitar que el calendario que corta las semanas cuente algunas semanas dos veces seguidas.
                                     */
+                                   
+                                    //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
+                                    startNumberWeekDay = (semestre === "semestre1") ? 
+                                    Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri) : 
+                                    Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri,weekIndex,week[0]), 
+                                    
                                     semestre === "recuperacion"
                                     ? void(0)
-                                        : Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
-                                        || (monthIndex === 0 && weekIndex === 0)
+                                        : semestre === "semestre1" ? 
+                                            //Caso de que sea el primer Semestre
+                                            Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
+                                            ? weekNum= weekNum + 1
+                                            : void(0)
+                                        :   //Es el segundo semestre la logica es la misma pero debemos mirar si el dia es anterior o no al del inicio del 2 cuatri
+                                            new Date(week[0].year,week[0].month, week[0].date) >= new Date(this.state.inicioSegundo_cuatri) && Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
                                             ? weekNum= weekNum + 1
                                             : void(0)
                                 }
@@ -687,6 +724,22 @@ class Calendario extends Component {
                             </Stack>
                         </label>
                         <br></br>
+                        <label>Final primer semestre
+                            <Stack spacing={3} className="datePicker">
+                                <DesktopDatePicker
+                                    label="dd/mm/yyyy"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={this.state.finPrimer_cuatri}
+                                    onChange={this.handleChangeFinPrimerCuatri}
+                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[0], 8)}
+                                    minDate={new Date(this.state.inicioPrimer_cuatri)} //mayor o igual que la fecha de inicio del primer cuatri
+                                    maxDate={new Date(this.state.inicioSegundo_cuatri)} //no puede ser superior a la fecha de inicio del segundo cuatri
+                                    shouldDisableDate={isWeekend}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </label>
+                        <br></br>
                         <label>Inicio segundo semestre
                             <Stack spacing={3} className="datePicker">
                                 <DesktopDatePicker
@@ -697,6 +750,23 @@ class Calendario extends Component {
                                     minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
                                     maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
                                     onChange={this.handleChangeSegundoCuatri}
+                                    shouldDisableDate={isWeekend}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </label>
+                        <br></br>
+                        <label>Final segundo semestre
+                            <Stack spacing={3} className="datePicker">
+                                <DesktopDatePicker
+                                    label="dd/mm/yyyy"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={this.state.finSegundo_cuatri}
+                                    onChange={this.handleChangeFinSegundoCuatri}
+                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 1)}
+                                    minDate={new Date(this.state.inicioSegundo_cuatri)} //mayor o igual que la fecha de inicio del segundo cuatri
+                                    maxDate={new Date(this.state.inicioSegundaConvocatoria)} //no puede ser superior a la fecha de inicio de la segundna convocatoria
+                                    shouldDisableDate={isWeekend}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Stack>
@@ -716,9 +786,24 @@ class Calendario extends Component {
                                 />
                             </Stack>
                         </label>
+                        <br></br>
+                    <label>Final período exámenes 2ª convocatoria
+                            <Stack spacing={3} className="datePicker">
+                                <DesktopDatePicker
+                                    label="dd/mm/yyyy"
+                                    inputFormat="dd/MM/yyyy"
+                                    value={this.state.finSegundaConvocatoria}
+                                    onChange={this.handleChangeFinSegundaConv}
+                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 8)}
+                                    minDate={new Date(this.state.inicioSegundaConvocatoria)} //mayor o igual que la fecha de inicio de la segunda conv
+                                    maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[1])} //no puede ser superior a la fecha de inicio del primer cuatri que viene
+                                    shouldDisableDate={isWeekend}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </Stack>
+                        </label>
+                        <br></br>
                     </LocalizationProvider>
-                    <br/><br/>
-
 
                     <h5 className="titulo">Añade los días especiales pulsando directamente sobre las fechas del
                         calendario</h5>

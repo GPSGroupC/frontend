@@ -16,6 +16,17 @@ class Parser {
         })
     }
 
+      /**
+     *
+     * @param {String} date : Recibe un array con una fecha en formato DD-MM-YYYY
+     * , donde date[2] = AÑO , date[1] = MES, date[0] = dia
+     * @returns Devuelve una Date en formato YYYY-MM-DD
+     */
+       static parseDate = (date) => {
+        //El mes se numera desde el 0, por eso (Mes=date[1]) - 1
+        return new Date(date[2], date[1] - 1,date[0])
+    }
+
     /**
      * Devuelve un string correspondiente a la fecha formateada segun su tipo para
      * ser mostrada en la interfaz del calendario.
@@ -211,6 +222,19 @@ class Parser {
             return parseInt(numWeek,10)
         }
         return -1
+    }
+
+    /**
+     * 
+     * @param {Fecha en cualquier formato valido del tipo Date de JavaScript} date 
+     * @returns El número de la semana en el que se encuentra la fecha "date"
+     */
+    static getWeekNumberFromDate(date) {
+        let fecha = new Date(date)
+        var firstWeekday = new Date(fecha.getFullYear(), fecha.getMonth(), 1).getDay() - 1;
+        if (firstWeekday < 0) firstWeekday = 6;
+        var offsetDate = fecha.getDate() + firstWeekday - 1;
+        return Math.floor(offsetDate / 7);
     }
 
     /**
