@@ -569,13 +569,42 @@ class Calendario extends Component {
     }
 
     /**
+     *
+     * @param semestre
+     * @param weekIndex
+     * @param monthIndex
+     * @param week
+     * @returns {boolean} true sii a la semana 'week' le corresponde un numero de semana en el calendario
+     */
+    showNumWeek(semestre, weekIndex, monthIndex, week) {
+          /*Solo devolvemos true si empieza en Lunes o es la primera semana del primer mes del semestre,
+                                    para evitar que el calendario que corta las semanas cuente algunas semanas dos veces seguidas.
+                                    */
+
+            //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
+        const startNumberWeekDay = (semestre === "semestre1")
+            ? Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri)
+            : Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri, weekIndex, week[0]);
+        switch(semestre) {
+                case "semestre1":
+                    return Parser.devolverDiaSemana(week[0].date, week[0].month, week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                        || (monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
+                case "semestre2":
+                    return new Date(week[0].year, week[0].month, week[0].date) >= new Date(this.state.inicioSegundo_cuatri)
+                        && Parser.devolverDiaSemana(week[0].date, week[0].month, week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                        || (monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
+                default:
+                    return false
+            }
+    }
+
+    /**
      * Muestra una tabla con un periodo del calendario, para el primer semestre
      *
      * @param periodo   Objeto periodo que se quiere renderizar en una tabla
      */
     htmlTable(periodo, semestre) {
         var weekNum = 0
-        var startNumberWeekDay = 0
         return (
             <table className="tablaSemestre">
                 <thead style={{fontWeight: 'bold'}}>
@@ -605,28 +634,9 @@ class Calendario extends Component {
                             ? ''
                             :(<tr key={JSON.stringify(week[0])} >
                             <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>
-                                {  /*Solo aumentamos el número de semana si empieza en Lunes o es la primera semana del primer mes del semestre,
-                                    para evitar que el calendario que corta las semanas cuente algunas semanas dos veces seguidas.
-                                    */
-                                   
-                                    //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
-                                    startNumberWeekDay = (semestre === "semestre1") ? 
-                                    Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri) : 
-                                    Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri,weekIndex,week[0]), 
-                                    
-                                    semestre === "recuperacion"
-                                    ? void(0)
-                                        : semestre === "semestre1" ? 
-                                            //Caso de que sea el primer Semestre
-                                            Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
-                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
-                                            ? weekNum= weekNum + 1
-                                            : void(0)
-                                        :   //Es el segundo semestre la logica es la misma pero debemos mirar si el dia es anterior o no al del inicio del 2 cuatri
-                                            new Date(week[0].year,week[0].month, week[0].date) >= new Date(this.state.inicioSegundo_cuatri) && Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
-                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
-                                            ? weekNum= weekNum + 1
-                                            : void(0)
+                                {this.showNumWeek(semestre,weekIndex,monthIndex,week,weekNum)
+                                    ? weekNum= weekNum + 1
+                                    : void(0)
                                 }
                             </td>
                             {week.map((day, dayIndex) => (
