@@ -253,6 +253,37 @@ class Parser {
         }
         return -1
     }
+
+    static showDescriptions(week) {
+        let weekDescription = ""
+        week.map((day) => {
+            if(day.description &&
+                (day.type === constants.TIPOS_FECHA.FESTIVO || day.type === constants.TIPOS_FECHA.CONVOCATORIA)) {
+                weekDescription += " " + day.description
+            }
+        })
+        return weekDescription
+    }
+
+    static weekHasFestivo(week) {
+        let result = false
+        week.map((day) => {
+            if(day.type=== constants.TIPOS_FECHA.FESTIVO) {
+                result = true
+            }
+        })
+        return result
+    }
+
+    static weekHasConvocatoria(week) {
+        let result = false
+        week.map((day) => {
+            if(day.type=== constants.TIPOS_FECHA.CONVOCATORIA) {
+                result = true
+            }
+        })
+        return result
+    }
 }
 
 

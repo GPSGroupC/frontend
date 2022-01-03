@@ -57,60 +57,6 @@ class Api {
         return [respuesta]
     }
 
-    static getDescriptions = async(curso, semestre) => {
-        /* GET RESPONSE esperado :D
-         * descriptions: [
-         *    {
-         *      monthIndex: 0,
-         *      weekIndex: 1,
-         *      text: "del 11 al 13/10/21: Festividad del Pilar"
-         *    }
-         * ]
-         */
-
-        let response = null //Respuesta recibida en JSON
-        let descriptions = [] //Lista poblada con 'response'
-        //TODO(Fer):Hacer la peticion con axios
-
-       /* TODO(Fer): Descomentar codigo. NO ESTA PROBADO
-        * Lo que hace es poblar "descriptions" como una lista de listas
-        *
-        * response.map((description) =>{
-        *    descriptions[description.monthIndex][description.weekIndex] = description.text
-        * })
-        */
-        return descriptions
-    }
-
-    static putDescriptions = async (curso, semestre, descriptions) => {
-        var descriptionsJSON = []
-        /* TODO(Fer): Descomentar codigo. NO ESTA PROBADO
-        * A partir de la lista de listas 'descriptions', pobla la lista 'descriptionsJSON
-        * con las descripciones semanales en formato JSON.
-        *
-        * descriptions.map((month, monthIndex) =>{
-        *    month.map((description, weekIndex) =>{
-        *       descriptionsJSON.push(
-        *           {
-        *                monthIndex: monthIndex,
-        *                weekIndex: weekIndex,
-        *                text: description.text
-        *           }
-        *       )
-        *    })
-        * })
-        */
-        //TODO(Fer):Hacer la peticion con axios
-        /*
-         * ...
-         *  data: {
-         *       curso: curso,
-         *       semestre: semestre,
-         *       descriptions: descriptionsJSON
-         *   }})
-         * ...
-         */
-    }
     static putAllCalendarData = async(inicio1, inicio2, inicio3, course) => {
         axios({ method: 'POST', url: constants.BASE_SERVER_URL + "/calendar/updateCalendar",
             data: {

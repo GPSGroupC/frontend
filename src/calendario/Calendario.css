@@ -60,12 +60,26 @@ td.horarioCambiado {
     background-color: #e1f16d;
 }
 
-.descripcionSemanal {
+.inputDescriptionFestivo {
     margin-left:10px;
-    width:400px;
+    width:330px;
     border:2px inset #EBE9ED;
 }
 
+.inputDescriptionConvocatoria {
+    margin-left:10px;
+    width:330px;
+    border:2px inset #EBE9ED;
+}
+.descriptionIcono {
+    margin-left: 5px;
+    display: inline;
+    padding: 3px;
+    min-width: 20px;
+}
+.descriptionText {
+    margin-left: 5px;
+}
 .descripcionHorariosCambiados {
     display:flex; /* rows and columns style */
     flex-direction:row;

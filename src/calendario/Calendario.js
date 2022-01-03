@@ -63,7 +63,9 @@ class Calendario extends Component {
             semestre1_changed: {dates: []},
             semestre2_changed: {dates: []},
             recuperacion_changed: {dates: []},
-
+            //Descripciones de dias festivos o de convocatoria
+            description_festivo: "",
+            description_convocatoria:"",
         }
     }
 
@@ -121,6 +123,13 @@ class Calendario extends Component {
         })
     }
 
+    async updateDescriptions(curso) {
+        await Api.getDescriptions(curso).then(r => {
+            this.setState({
+                semestre1: undefined
+            })
+        })
+    }
 
     /**
      * Al acceder por primera vez, se actualizan los formularios y el calendario
@@ -179,6 +188,17 @@ class Calendario extends Component {
             finSegundaConvocatoria: newValue,
         })
     };
+    handleDescriptionFestivo = (event) => {
+        this.setState({
+            description_festivo: event.target.value,
+        })
+    }
+
+    handleDescriptionConvocatoria = (event) => {
+        this.setState({
+            description_convocatoria: event.target.value,
+        })
+    }
 
     HandleChangeCurso = async (curso) => {
         this.setState({estadoCurso: curso.target.value}, () => {
@@ -191,6 +211,7 @@ class Calendario extends Component {
             )
             response.then(_ => {
                 this.updateMetadata(this.state.estadoCurso)
+                this.updateDescriptions(this.state.estadoCurso)
             })
         })
 
@@ -334,10 +355,12 @@ class Calendario extends Component {
             case constants.TIPOS_FECHA.CONVOCATORIA:
                 // El dia es de tipo convocatoria
                 this.state.convocatoriaCheckBox = true
+                this.state.description_convocatoria = date.description
                 break;
             case constants.TIPOS_FECHA.FESTIVO:
                 // El dia es de tipo festivo
                 this.state.festivoCheckBox = true
+                this.state.description_festivo = date.description
                 break;
             default:
                 // date.type == undefined. El dia es de tipo lectivo
@@ -375,9 +398,11 @@ class Calendario extends Component {
         if (this.state.convocatoriaCheckBox) {
             //Fecha seleccionada marcada como convocatoria
             newDateType = constants.TIPOS_FECHA.CONVOCATORIA
+            this.state.selectedDate.description = this.state.description_convocatoria
         } else if (this.state.festivoCheckBox) {
             //Fecha seleccionada marcada como festivo
             newDateType = constants.TIPOS_FECHA.FESTIVO
+            this.state.selectedDate.description = this.state.description_festivo
         }
         this.state.selectedDate.type = newDateType
 
@@ -420,7 +445,11 @@ class Calendario extends Component {
                 break;
         }
 
-        this.setState({showDialog: false});
+        this.setState({
+            showDialog: false,
+            description_festivo: "",
+            description_convocatoria:"",
+        });
     }
 
     /**
@@ -504,6 +533,26 @@ class Calendario extends Component {
         this.state.horarioCambiadoCheckBox = false
     }
 
+    //html asociado a las descripciones mostradas a la derecha del calendario
+    htmlDescriptions(week) {
+        //Descripciones semanales que se tienen que mostrar en el calendario
+        let descriptions = Parse.showDescriptions(week)
+        //Color del icono de la descripcion. Por defecto en blanco
+        let color = "#FFFFFF"
+        if (descriptions) {
+            //Caso esta semana tiene alguna descripcion que mostrar.
+            //Actualizamos el color del icono de la descripcion semanal
+            color = Parse.weekHasConvocatoria(week)
+                ?  color = "#d675bd" //morado
+                :  color= "#a2f29f"  //verde
+        }
+        return (
+            <span>
+                <div className="descriptionIcono" style={{backgroundColor: color}}/>
+                <span className="descriptionText"> {descriptions}</span>
+            </span>
+        )
+    }
     htmlDialog() {
         return (
             <dialog open={this.state.showDialog ? true : false}>
@@ -514,13 +563,32 @@ class Calendario extends Component {
                             </input>
                             Convocatoria
                         </label>
-
+                        {
+                            this.state.convocatoriaCheckBox
+                                ? <input className="inputDescriptionConvocatoria"
+                                         maxLength="50"
+                                         onChange={this.handleDescriptionConvocatoria}
+                                         value={this.state.description_convocatoria}
+                                         placeholder="Añade una descripción"
+                                    />
+                                : void(0)
+                        }
                         <label>
                             <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
                                    onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
                             </input>
                             Festivo
                         </label>
+                        {
+                            this.state.festivoCheckBox
+                                ? <input className="inputDescriptionFestivo"
+                                         maxLength="50"
+                                         onChange={this.handleDescriptionFestivo}
+                                         value={this.state.description_festivo}
+                                         placeholder="Añade una descripción"
+                                />
+                                : void(0)
+                        }
 
                         <label>
                             <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
@@ -659,10 +727,7 @@ class Calendario extends Component {
                                 <option value={constants.SEMANAAB_VALORES.A}>a</option>
                                 <option value={constants.SEMANAAB_VALORES.B}>b</option>
                             </select>
-                                <input
-                                       className="descripcionSemanal"
-                                       placeholder="Añade una descripción de alguna fiesta que ocurra en esta semana."
-                                       type="text"/>
+                                {this.htmlDescriptions(week)}
                         </tr>)
                     ))}
                     </tbody>
@@ -881,6 +946,10 @@ class Calendario extends Component {
                         Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed)
                         Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2_changed)
                         Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed)
+                        Api.putDescriptions(this.state.curso,"semestre1", this.state.semestre1)
+                        Api.putDescriptions(this.state.curso,"semestre1", this.state.semestre2)
+                        Api.putDescriptions(this.state.curso,"semestre1", this.state.recuperacion)
+
                     }} type="button" className="btn btn-info btn-lg" >GUARDAR CALENDARIO
                     </button>
                 </Link>
