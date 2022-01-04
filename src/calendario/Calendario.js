@@ -369,14 +369,14 @@ class Calendario extends Component {
         }
         
         if (date.semanaAB != undefined) {
-            // El dia pertenece a semana a/b
+            // El dia lectivo pertenece a semana a/b
             this.state.semanaABcheckBox = true
-            date.semanaAB = this.state.selectSemanaAB
+            this.state.selectSemanaAB = date.semanaAB
         }
         if (date.horarioCambiado != undefined) {
-            // El dia tiene horario cambiado
+            // El dia lectivo tiene horario cambiado
             this.state.horarioCambiadoCheckBox = true
-            date.horarioCambiado = this.state.selectHorarioCambiado
+            this.state.selectHorarioCambiado = date.horarioCambiado
         }
 
         this.setState((state, props) => ({
