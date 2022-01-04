@@ -115,6 +115,8 @@ class Parser {
             dayFormatted.type = day.type ? day.type : "lectivo"
             dayFormatted.horarioCambiado = day.horarioCambiado ? day.horarioCambiado : null
             dayFormatted.semanaAB = day.semanaAB ? day.semanaAB : "c"
+            //TODO(fer): Descomentar
+            // dayFormatted.description = day.description ? day.description : ""
             listDays.push(JSON.stringify(dayFormatted));
         })
         return listDays;

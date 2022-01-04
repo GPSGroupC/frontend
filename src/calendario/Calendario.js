@@ -553,6 +553,7 @@ class Calendario extends Component {
             </span>
         )
     }
+
     htmlDialog() {
         return (
             <dialog open={this.state.showDialog ? true : false}>
@@ -938,7 +939,7 @@ class Calendario extends Component {
                 <div className="header">
                 <Link to="/">
                     <button onClick={() => {
-                        Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
+                        Api.putMetadataCalendar(this.state.inicioPrimer_cuatri,
                             this.state.inicioSegundo_cuatri,
                             this.state.inicioSegundaConvocatoria,
                             this.state.estadoCurso);
@@ -946,9 +947,6 @@ class Calendario extends Component {
                         Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed)
                         Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2_changed)
                         Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed)
-                        Api.putDescriptions(this.state.curso,"semestre1", this.state.semestre1)
-                        Api.putDescriptions(this.state.curso,"semestre1", this.state.semestre2)
-                        Api.putDescriptions(this.state.curso,"semestre1", this.state.recuperacion)
 
                     }} type="button" className="btn btn-info btn-lg" >GUARDAR CALENDARIO
                     </button>
