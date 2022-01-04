@@ -551,6 +551,24 @@ class Calendario extends Component {
         )
     }
 
+    // html asociado a los selectores de semana en cascada que se muestran a la
+    // derecha de cada semana del calendario
+    htmlGlobalWeekSelector(semesterName, monthIndex, weekIndex) {
+        if (semesterName !== "recuperacion") {
+            return (
+                <select value={this.state.selectS1GlobalSemanaAB[semesterName + "-" + monthIndex + "-" + weekIndex]}
+                        id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}
+                        className={`globalWeekSelectorAB-${semesterName}`}
+                        onChange={(e) => {
+                            this.handleGlobalWeekAB(e, semesterName, monthIndex, weekIndex)
+                        }}>
+                    <option value={constants.SEMANAAB_VALORES.C}>-</option>
+                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
+                </select>
+            )
+        }
+    }
     htmlDialog() {
         return (
             <dialog open={this.state.showDialog ? true : false}>
@@ -664,6 +682,7 @@ class Calendario extends Component {
             }
     }
 
+
     /**
      * Muestra una tabla con un periodo del calendario, para el primer semestre
      *
@@ -719,12 +738,7 @@ class Calendario extends Component {
                                     }
                                 </td>
                             ))}
-                            <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
-                                    onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
-                                <option value={constants.SEMANAAB_VALORES.C}>-</option>
-                                <option value={constants.SEMANAAB_VALORES.A}>a</option>
-                                <option value={constants.SEMANAAB_VALORES.B}>b</option>
-                            </select>
+                                {this.htmlGlobalWeekSelector(semestre, monthIndex, weekIndex)}
                                 {this.htmlDescriptions(week)}
                         </tr>)
                     ))}
