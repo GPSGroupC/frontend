@@ -112,6 +112,100 @@ class Api {
       })
       return result
   }
+
+  static importarAulas = async (formdata) => {
+    console.log("importarAulas");
+    let result = null
+    await fetch(baseUrl + "/importarAulas", {
+      method: 'POST',
+      body: formdata
+    })
+      .then(res => result = res)
+      .then(res => res.text())
+      .then(res => console.log(res))
+      .catch(err => {
+        console.error(err)
+      })
+    return result
+  }
+
+  static obtenerAulas = async () => {
+    console.log("obtenerAulas");
+    let result = null
+    await axios({ method: 'GET', url: baseUrl + "/obtenerAulas" })
+      .then((response) => {
+        if (response.status === 200) {
+          result = response;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    return result
+  }
+
+  static añadirAulas = async (formdata) => {
+    console.log("Añadir aulas");
+    let result = null
+    await fetch(baseUrl + "/anyadirAulas", {
+      method: 'POST',
+      body: formdata
+    })
+      .then(res => result = res)
+      .then(res => res.text())
+      .then(res => console.log(res))
+      .catch(err => {
+        console.error(err)
+      })
+    return result
+  }
+
+  static añadirAula = async (aulaObj) => {
+    console.log("Añadir aula");
+    let result = null
+    await axios.post(baseUrl + "/anyadirAula", { 
+      acronimo: aulaObj.acronimo,
+      nombre: aulaObj.nombre,
+      capacidad: aulaObj.capacidad,
+      edificio: aulaObj.edificio })
+      .then(response => {
+        result = response;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      return result
+  }
+
+  static editarAula = async (aulaObj) => {
+    console.log("Editar aula");
+    let result = null
+    await axios.put(baseUrl + "/editarAula/" + aulaObj.id, { 
+      acronimo: aulaObj.acronimo,
+      nombre: aulaObj.nombre,
+      capacidad: aulaObj.capacidad,
+      edificio: aulaObj.edificio })
+      .then(response => {
+        result = response;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      return result
+  }
+
+  static eliminarAula = async (id) => {
+    console.log("Eliminar aula con id: " + id);
+    let result = null
+    await axios.delete(baseUrl + "/eliminarAula", {
+      data: {
+        id : id
+      }
+    }).then(response => {
+      result = response;
+    })
+    return result
+  }
 }
 
 export default Api

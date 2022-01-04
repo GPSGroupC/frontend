@@ -4,7 +4,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
   return (
     <tr>
       <td>
-        <input style={{width:'80px'}}
+        <input style={{width:'60px'}}
           type="number"
           min="0"
           name="codplan"
@@ -15,7 +15,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
         />
       </td>
       <td>
-        <input style={{width:'80px'}}
+        <input style={{width:'200px'}}
           type="text"
           name="plan"
           required="required"
@@ -25,7 +25,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
         />
       </td>
       <td>
-        <input style={{width:'80px'}}
+        <input style={{width:'200px'}}
           type="text"
           name="area"
           required="required"
@@ -46,7 +46,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
         />
       </td>
       <td>
-        <input style={{width:'80px'}}
+        <input style={{width:'200px'}}
           type="text"
           name="nombre"
           required="required"
@@ -57,7 +57,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input style={{width:'80px'}}
+        <input style={{width:'40px'}}
           type="number"
           min="0"
           name="curso"
@@ -69,7 +69,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input
+        <input style={{width:'60px'}}
           type="text"
           name="periodo"
           required="required"
@@ -80,7 +80,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input
+        <input style={{width:'80px'}}
           type="number"
           step=".001"
           min="0"
@@ -93,7 +93,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input
+        <input style={{width:'80px'}}
           type="number"
           step=".001"
           min="0"
@@ -106,7 +106,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input
+        <input style={{width:'80px'}}
           type="number"
           step=".001"
           min="0"
@@ -119,7 +119,7 @@ const FilaEditable = ({editFormData, handleEditFormChange, handleCancelClick }) 
       </td>
 
       <td>
-        <input
+        <input style={{width:'80px'}}
           type="number"
           min="0"
           name="destvinculo"

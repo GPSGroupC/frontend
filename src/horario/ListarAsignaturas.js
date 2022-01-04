@@ -271,7 +271,9 @@ function ListarAsignaturas() {
 
   return (
 
-    <div>
+    <div style={{
+      width: "130%"
+}}>
             <div style={{
                     display: "block",
                     margin: "auto",
@@ -384,7 +386,7 @@ function ListarAsignaturas() {
               />
               
               <br></br>
-              <button type="submit" class="btn btn-info btn-md" style={{width: "150px", marginTop:'5px', marginLeft:'40%'}}>Añadir </button>
+              <button type="submit" class="btn btn-info btn-md" style={{width: "150px", marginTop:'10px', marginLeft:'0%'}}>Añadir </button>
           </form>
         <div>
           <br></br><br></br>
