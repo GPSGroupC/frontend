@@ -88,9 +88,9 @@ class Calendario extends Component {
                 //finSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
                 //Dias recuperados de la libreria dates generator
-                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
-                semestre2: this.getPeriodo(r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
-                recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
+                semestre1: this.getPeriodo("semestre1",r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
+                semestre2: this.getPeriodo("semestre2", r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
+                recuperacion: this.getPeriodo("recuperacion",r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
             })
         }).catch(err => {
             console.log("Error al actualizar el calendario: ", err)
@@ -154,7 +154,7 @@ class Calendario extends Component {
             inicioPrimer_cuatri: newValue,
         }, () => {
             this.setState({
-                semestre1: this.getPeriodo( 8, parseInt(this.state.estadoCurso.split('-')[0]), 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
+                semestre1: this.getPeriodo( "semestre1",8, parseInt(this.state.estadoCurso.split('-')[0]), 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
             })
         })
     };
@@ -240,13 +240,13 @@ class Calendario extends Component {
                         //Asignamos un valor 'a' o 'b'
                         this.state.selectS1GlobalSemanaAB[semestreSelected + "-" + monthIndex + "-" + weekIndex] = nextValue
                         //console.log("numWeek >= weekNumSelected: " + numWeek + " >= " + weekNumInMonth)
-                        this.updateWeek(semestreSelected,monthIndex,weekIndex, nextValue)
+                        this.updateWeekAB(semestreSelected,monthIndex,weekIndex, nextValue)
                         nextValue = (nextValue == 'a') ? 'b' : 'a'
                     }
                 }
             }
         } else {
-            this.updateWeek(semestreSelected,monthIndexSelected,weekIndexSelected, null)
+            this.updateWeekAB(semestreSelected,monthIndexSelected,weekIndexSelected, null)
         }
         this.setState((state, props) => ({
         }))
@@ -262,7 +262,7 @@ class Calendario extends Component {
      * Actualiza los dias lectivos de una semana de un semestre como dias de tipo "semanaAB"
      * con valor "value"
      */
-    updateWeek(semesterName, monthIndex, weekIndex, value) {
+    updateWeekAB(semesterName, monthIndex, weekIndex, value) {
         let semester
         let semester_changed
         switch(semesterName){
@@ -304,25 +304,29 @@ class Calendario extends Component {
      * @param {number} month    El mes en el que empieza el periodo. month 0 -> Enero
      * @param {number} year     El anho en el que empieza el periodo
      * @param {number} numMonths Duracion del periodo en meses
+     * @param {fechasCuatri} Periodo recuperado de backend
      */
-    getPeriodo = (month, year, numMonths, fechasCuatri, inicioPrimerCuatri) => {
-        // startingDay es el dia asociado a la primera fecha de cada semana
-        // startingDay 0 -> Domingo
-
+    getPeriodo = (semesterName, month, year, numMonths, fechasCuatri, inicioPrimerCuatri) => {
         let queryDate = {month: month, year: year, startingDay: 1}
         let acumDates = []
         let monthNames = []
 
         for (let i = 0; i < numMonths; i++) {
+            //Obtenemos las fechas reales del calendario asociado a `queryDate`
             const {dates, nextMonth, nextYear} = datesGenerator(queryDate)
-
             for (let i = 0; i < dates.length; i++) {
                 for (let j = 0; j < dates[i].length; j++) {
                     if (dates[i][j].month !== queryDate.month) {
+                        //Escondemos todas las fechas que no pertenezcan al mes
                         dates[i][j].date = ' '
+                    }
+                    else if (semesterName === "recuperacion") {
+                        //Ponemos que por defecto las fechas del periodo de recuperacion sean de tipo convocatoria
+                        dates[i][j].type = constants.TIPOS_FECHA.CONVOCATORIA
                     }
                 }
             }
+
             Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
 
