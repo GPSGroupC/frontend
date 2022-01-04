@@ -252,51 +252,48 @@ class Calendario extends Component {
         }))
     }
 
-    updateWeek(semester, monthIndex, weekIndex, value) {
-        console.log(semester)
-        switch(semester) {
+    /**
+     *
+     * @param semesterName Nombre del semestre al que pertenece monthIndex y weekIndex
+     * @param monthIndex  Indice el mes en el que se encuentra la semana a actualizar
+     * @param weekIndex   Indice de la semana en la que se encuentra la semana a actualizar
+     * @param value       String "a" o "b"
+     *
+     * Actualiza los dias lectivos de una semana de un semestre como dias de tipo "semanaAB"
+     * con valor "value"
+     */
+    updateWeek(semesterName, monthIndex, weekIndex, value) {
+        let semester
+        let semester_changed
+        switch(semesterName){
             case "semestre1":
-                for(let i=0; i < 5; i++){
-                    if (this.state.semestre1.dates[monthIndex][weekIndex][i].date != ' ') {
-                        this.state.semestre1.dates[monthIndex][weekIndex][i].semanaAB = value
-                        this.state.semestre1.dates[monthIndex][weekIndex][i].type = "lectivo"
-                        const indiceS1 = this.state.semestre1_changed.dates.findIndex( fecha => fecha.jsDate === this.state.semestre1.dates[monthIndex][weekIndex][i].jsDate);
-                        if(indiceS1 !== -1){
-                            this.state.semestre1_changed.dates[indiceS1] = this.state.semestre1.dates[monthIndex][weekIndex][i]
-                        }else{
-                            this.state.semestre1_changed.dates.push(this.state.semestre1.dates[monthIndex][weekIndex][i])
-                        }
-                    }
-                }
-                break;
+                semester = this.state.semestre1
+                semester_changed = this.state.semestre1_changed
+                break
             case "semestre2":
-                for(let i=0; i < 5; i++){
-                    if (this.state.semestre2.dates[monthIndex][weekIndex][i].date != ' ') {
-                        this.state.semestre2.dates[monthIndex][weekIndex][i].semanaAB = value
-                        this.state.semestre2.dates[monthIndex][weekIndex][i].type = "lectivo"
-                        const indiceS1 = this.state.semestre2_changed.dates.findIndex( fecha => fecha.jsDate === this.state.semestre2.dates[monthIndex][weekIndex][i].jsDate);
-                        if(indiceS1 !== -1){
-                            this.state.semestre2_changed.dates[indiceS1] = this.state.semestre2.dates[monthIndex][weekIndex][i]
-                        }else{
-                            this.state.semestre2_changed.dates.push(this.state.semestre2.dates[monthIndex][weekIndex][i])
-                        }
-                    }
-                }
-                break;
+                semester = this.state.semestre2
+                semester_changed = this.state.semestre2_changed
+                break
             default:
-                //recuperacion
-                for(let i=0; i < 5; i++){
-                    if (this.state.recuperacion.dates[monthIndex][weekIndex][i].date != ' ') {
-                        this.state.recuperacion.dates[monthIndex][weekIndex][i].semanaAB = value
-                        this.state.recuperacion.dates[monthIndex][weekIndex][i].type = "lectivo"
-                        const indiceS1 = this.state.recuperacion_changed.dates.findIndex( fecha => fecha.jsDate === this.state.recuperacion.dates[monthIndex][weekIndex][i].jsDate);
-                        if(indiceS1 !== -1){
-                            this.state.recuperacion_changed.dates[indiceS1] = this.state.recuperacion.dates[monthIndex][weekIndex][i]
-                        }else{
-                            this.state.recuperacion_changed.dates.push(this.state.recuperacion.dates[monthIndex][weekIndex][i])
-                        }
-                    }
+                semester = this.state.recuperacion
+                semester_changed = this.state.recuperacion_changed
+        }
+
+        for(let i=0; i < 5; i++){
+            // Dia concreto de la semana
+            let day = semester.dates[monthIndex][weekIndex][i]
+            if (day.date != ' ' && day.type == constants.TIPOS_FECHA.LECTIVO) {
+                // Actualizamos el dia con value -> ("a" o "b")
+                day.semanaAB = value
+                // Agregamos el dia a la estructura de datos semestre_changed que usamos para actualizar
+                // el backend solo con los dias que se modifican
+                const indiceS1 = semester_changed.dates.findIndex( fecha => fecha.jsDate === day.jsDate);
+                if(indiceS1 !== -1){
+                    semester_changed.dates[indiceS1] = day
+                }else{
+                    semester_changed.dates.push(day)
                 }
+            }
         }
     }
 
