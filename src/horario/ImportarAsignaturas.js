@@ -16,6 +16,7 @@ function ImportarAsignaturas() {
     await Api.importarAsignaturas(formdata).then(r => {
       console.log(r.status);
       if (r.status === 200) {
+        document.getElementById("file").value = "";
         window.alert("Asignaturas importadas con éxito");
       } else {
         window.alert("Ha ocurrido un error al importar las asignaturas");
@@ -54,7 +55,7 @@ function ImportarAsignaturas() {
         <div id="fileform">
           <form onSubmit={handleSubmit}>
             <label>
-              <input type="file" name="file" />
+              <input id="file" type="file" name="file" />
             </label>
             <input id="importarbutton" type="submit" value="Importar" />
           </form>

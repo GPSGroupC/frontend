@@ -56,6 +56,18 @@ function ListarAsignaturas() {
   async function añadirAsignatura(asiganturaObj) {
     await Api.añadirAsignatura(asiganturaObj).then(r => {
       console.log(r);
+      document.getElementById("codplan").value = "";
+      document.getElementById("plan").value = "";
+      document.getElementById("area").value = "";
+      document.getElementById("codasig").value = "";
+      document.getElementById("nombre").value = "";
+      document.getElementById("curso").value = "";
+      document.getElementById("periodo").value = "";
+      document.getElementById("horasestteoria").value = "";
+      document.getElementById("horasestproblemas").value = "";
+      document.getElementById("horasestpracticas").value = "";
+      document.getElementById("destvinculo").value = "";
+      window.alert("Asignatura añadida con éxito");
       obtenerAsignaturas();
     }).catch(err => {
       console.log("Error al añadir asignatura: ", err)
@@ -66,6 +78,7 @@ function ListarAsignaturas() {
     await Api.añadirAsignaturas(formdata).then(r => {
       console.log(r);
       if (r.status === 200) {
+        document.getElementById("file").value = "";
         window.alert("Asignaturas añadidas con éxito");
       } else {
         window.alert("Ha ocurrido un error al añadir las asignaturas");
@@ -274,6 +287,7 @@ function ListarAsignaturas() {
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="number"
               min="0"
+              id="codplan"
               name="codplan"
               required="required"
               placeholder="Código Plan"
@@ -281,6 +295,7 @@ function ListarAsignaturas() {
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
+              id="plan"
               name="plan"
               required="required"
               placeholder="Plan"
@@ -288,6 +303,7 @@ function ListarAsignaturas() {
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
+              id="area"
               name="area"
               required="required"
               placeholder="Área"
@@ -296,6 +312,7 @@ function ListarAsignaturas() {
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="number"
               min="0"
+              id="codasig"
               name="codasig"
               required="required"
               placeholder="Código"
@@ -303,6 +320,7 @@ function ListarAsignaturas() {
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
+              id="nombre"
               name="nombre"
               required="required"
               placeholder="Nombre"
@@ -311,6 +329,7 @@ function ListarAsignaturas() {
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="number"
               min="0"
+              id="curso"
               name="curso"
               required="required"
               placeholder="Curso"
@@ -318,6 +337,7 @@ function ListarAsignaturas() {
               />
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"
+              id="periodo"
               name="periodo"
               required="required"
               placeholder="Período"
@@ -327,6 +347,7 @@ function ListarAsignaturas() {
               type="number"
               step=".001"
               min="0"
+              id="horasestteoria"
               name="horasestteoria"
               required="required"
               placeholder="Horas Estud Teoría"
@@ -336,6 +357,7 @@ function ListarAsignaturas() {
               type="number"
               step=".001"
               min="0"
+              id="horasestproblemas"
               name="horasestproblemas"
               required="required"
               placeholder="Horas Estud Problemas"
@@ -345,6 +367,7 @@ function ListarAsignaturas() {
               type="number"
               step=".001"
               min="0"
+              id="horasestpracticas"
               name="horasestpracticas"
               required="required"
               placeholder="Horas Estud Prácticas"
@@ -353,6 +376,7 @@ function ListarAsignaturas() {
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="number"
               min="0"
+              id="destvinculo"
               name="destvinculo"
               required="required"
               placeholder="Destino Vínculo"
@@ -368,7 +392,7 @@ function ListarAsignaturas() {
           <div id="fileform">
             <form onSubmit={handleSubmit}>
               <label>
-                <input type="file" name="file" />
+                <input id="file" type="file" name="file" />
               </label>
               <input class="btn btn-info btn-md" style={{marginLeft:'2%'}} id="añadirButton" type="submit" value="Añadir" />
             </form>
