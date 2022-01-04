@@ -693,7 +693,7 @@ class Calendario extends Component {
 
                     <tbody>
                     <tr>
-                        <td style={{fontWeight: 'bold', width:"50px", borderBottom: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}} rowSpan={month.length + 1} scope="rowgroup">
+                        <td className="monthCell" rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
 
                         </td>
@@ -702,7 +702,7 @@ class Calendario extends Component {
                         (Parse.weekIsBlank(week))
                             ? ''
                             :(<tr key={JSON.stringify(week[0])} >
-                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>
+                            <td className="numWeek">
                                 {this.showNumWeek(semestre,weekIndex,monthIndex,week,weekNum)
                                     ? weekNum= weekNum + 1
                                     : void(0)
@@ -712,7 +712,7 @@ class Calendario extends Component {
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
                                     style={{marginLeft: "15px",marginRight:'10px'}}>
-                                    <div onClick={() => this.onSelectDate(day, semestre)}
+                                    <div className="dateCell" onClick={() => this.onSelectDate(day, semestre)}
                                          style={{cursor: 'pointer',textAlign: 'center',marginRight:'2px', marginBottom: "5px", marginLeft: "15px"}}>
                                         {Parser.showCalendarDate(day, constants.DAYS[dayIndex])}
                                     </div>
@@ -800,22 +800,6 @@ class Calendario extends Component {
                             </Stack>
                         </label>
                         <br></br>
-                        <label>Final primer semestre
-                            <Stack spacing={3} className="datePicker">
-                                <DesktopDatePicker
-                                    label="dd/mm/yyyy"
-                                    inputFormat="dd/MM/yyyy"
-                                    value={this.state.finPrimer_cuatri}
-                                    onChange={this.handleChangeFinPrimerCuatri}
-                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[0], 8)}
-                                    minDate={new Date(this.state.inicioPrimer_cuatri)} //mayor o igual que la fecha de inicio del primer cuatri
-                                    maxDate={new Date(this.state.inicioSegundo_cuatri)} //no puede ser superior a la fecha de inicio del segundo cuatri
-                                    shouldDisableDate={isWeekend}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </Stack>
-                        </label>
-                        <br></br>
                         <label>Inicio segundo semestre
                             <Stack spacing={3} className="datePicker">
                                 <DesktopDatePicker
@@ -826,22 +810,6 @@ class Calendario extends Component {
                                     minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
                                     maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
                                     onChange={this.handleChangeSegundoCuatri}
-                                    shouldDisableDate={isWeekend}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </Stack>
-                        </label>
-                        <br></br>
-                        <label>Final segundo semestre
-                            <Stack spacing={3} className="datePicker">
-                                <DesktopDatePicker
-                                    label="dd/mm/yyyy"
-                                    inputFormat="dd/MM/yyyy"
-                                    value={this.state.finSegundo_cuatri}
-                                    onChange={this.handleChangeFinSegundoCuatri}
-                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 1)}
-                                    minDate={new Date(this.state.inicioSegundo_cuatri)} //mayor o igual que la fecha de inicio del segundo cuatri
-                                    maxDate={new Date(this.state.inicioSegundaConvocatoria)} //no puede ser superior a la fecha de inicio de la segundna convocatoria
                                     shouldDisableDate={isWeekend}
                                     renderInput={(params) => <TextField {...params} />}
                                 />

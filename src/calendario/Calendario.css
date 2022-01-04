@@ -30,8 +30,8 @@
     flex-direction:column;
     justify-content:center; /* Horizontal alignment */
     align-items: stretch; /* vertical alignment */
-    flex-wrap:wrap;
-    margin-right: 20px;
+    /*flex-wrap:wrap;*/
+    /*margin-right: 20px;*/
 }
 
 
@@ -46,6 +46,26 @@
 {
     text-align: center;
     vertical-align: middle;
+    padding: 0px;
+}
+
+.dateCell{
+    min-width: 50px;
+}
+
+.monthCell {
+    font-weight: bold;
+    width:50px;
+    border-bottom: 1px solid #476b6b;
+    min-width: 50px;
+    border-left: 1px solid #476b6b;
+}
+
+.numWeek
+{
+    border-right: 1px solid #476b6b;
+    border-left:  1px solid #476b6b;
+
 }
 
 td.festivo {

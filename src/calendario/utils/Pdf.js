@@ -58,7 +58,7 @@ class Pdf {
             }
         }
         if(calendar) {
-            calendar.style.marginLeft = "250px"
+            calendar.style.marginLeft = "100px"
         }
 
     }
