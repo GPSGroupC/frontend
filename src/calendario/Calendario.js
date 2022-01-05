@@ -619,7 +619,7 @@ class Calendario extends Component {
                                     //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
                                     startNumberWeekDay = (semestre === "semestre1") ? 
                                     Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri) : 
-                                    Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri,weekIndex,week[0]), 
+                                    Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri,weekIndex,week[0]),
                                     
                                     semestre === "recuperacion"
                                     ? void(0)

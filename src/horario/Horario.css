@@ -1,3 +1,109 @@
 /**
  * CSS PARA EL COMPONENTE HORARIO
  */
+
+/*cabecera*/
+.cabecera {
+    display: flex;
+    flex-direction: row;
+    margin: auto auto auto;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/*Formulario*/
+.fondoFormulario {
+    display: flex;
+    flex-direction: column;
+    margin: 40px auto auto;
+    width: 80%;
+    border: 1px solid #b8b894;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+}
+.contenidoFormulario {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.elementoFormulario {
+    margin: 6px;
+}
+
+/* Tabla de horario*/
+.timetable {
+    margin: 20px auto auto;
+    display: block;
+    width: 90%;
+    border: 1px solid #b8b894;
+    border-radius: 8px;
+    box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+
+}
+
+.timetable td {
+    width: 5%;
+    text-align: center;
+}
+
+.timetable thead {
+    color: #313b47;
+    background-color: #d7dfe8;
+    border: 2px solid  #313b47;
+    border-right: 2px solid gray;
+    border-radius: 8px;
+}
+.timetable .columnaHoras {
+    color: #313b47;
+    min-width: 100px;
+    background-color: #d7dfe8;
+    border-left: 2px solid #313b47;
+    border-right: 2px solid #313b47;
+    border-bottom: 1px solid #313b47;
+
+}
+
+.timetable .celdaSinClase {
+    border: 1px solid #b8b894;
+    width: 15%;
+    text-align: center;
+}
+
+.timetable .claseDuracionMediaHora {
+    border: 2px solid #b8b894;
+}
+
+.timetable .clasePosicionInicio {
+    border-top: 2px solid #b8b894;
+    border-left: 2px solid #b8b894;
+    border-right: 2px solid #b8b894;
+}
+
+.timetable .clasePosicionMedio{
+    border-left: 2px solid #b8b894;
+    border-right: 2px solid #b8b894;
+}
+
+.timetable .clasePosicionFin {
+    border-bottom: 2px solid #b8b894;
+    border-left: 2px solid #b8b894;
+    border-right: 2px solid #b8b894;
+}
+
+#addButton {
+    margin: 20px auto auto;
+    width: 50%;
+    padding: 10px;
+    font-weight: bold;
+}
+
+#delButton {
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
