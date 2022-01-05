@@ -2,11 +2,21 @@
  * CSS PARA EL COMPONENTE HORARIO
  */
 
+/*cabecera*/
+.cabecera {
+    display: flex;
+    flex-direction: row;
+    margin: auto auto auto;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 /*Formulario*/
 .fondoFormulario {
     display: flex;
     flex-direction: column;
-    margin: 20px auto auto;
+    margin: 40px auto auto;
     width: 80%;
     border: 1px solid #b8b894;
     border-radius: 8px;
