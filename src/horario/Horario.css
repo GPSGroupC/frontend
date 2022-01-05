@@ -32,14 +32,55 @@
     border: 1px solid #b8b894;
     border-radius: 8px;
     box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+
 }
 
 .timetable td {
-    border: 1px solid #b8b894;
     width: 5%;
     text-align: center;
 }
+
 .timetable thead {
+    color: #313b47;
     background-color: #d7dfe8;
+    border: 2px solid  #313b47;
+    border-right: 2px solid gray;
+    border-radius: 8px;
+}
+.timetable .columnaHoras {
+    color: #313b47;
+    min-width: 100px;
+    background-color: #d7dfe8;
+    border-left: 2px solid #313b47;
+    border-right: 2px solid #313b47;
+    border-bottom: 1px solid #313b47;
+
+}
+
+.timetable .celdaSinClase {
+    border: 1px solid #b8b894;
+    width: 15%;
+    text-align: center;
+}
+
+.timetable .claseDuracionMediaHora {
+    border: 2px solid #b8b894;
+}
+
+.timetable .clasePosicionInicio {
+    border-top: 2px solid #b8b894;
+    border-left: 2px solid #b8b894;
+    border-right: 2px solid #b8b894;
+}
+
+.timetable .clasePosicionMedio{
+    border-left: 2px solid #b8b894;
+    border-right: 2px solid #b8b894;
+}
+
+.timetable .clasePosicionFin {
+    border-bottom: 2px solid #b8b894;
+    border-left: 2px solid #b8b894;
+    border-right: 2px solid #b8b894;
 }
 

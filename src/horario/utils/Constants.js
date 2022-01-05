@@ -24,8 +24,8 @@ import React from "react";
 
     TIPO_CLASE: {
         TEORIA: {NOMBRECORTO: "T", NOMBRELARGO: "Teoría"},
-        PROBLEMAS: {NOMBRECORTO: "PRO", NOMBRELARGO: "Problemas"},
-        PRACTICAS: {NOMBRECORTO: "PRA", NOMBRELARGO: "Prácticas"}
+        //PROBLEMAS: {NOMBRECORTO: "PRO", NOMBRELARGO: "Problemas"},
+        //PRACTICAS: {NOMBRECORTO: "PRA", NOMBRELARGO: "Prácticas"}
     },
 
     DURACION_CLASE : {
@@ -34,10 +34,19 @@ import React from "react";
         HORA_Y_MEDIA: 90
     },
 
+    //Posicion de un fragmento de media hora dentro de una clase que dura DURACION_CLASE
+    POSICION : {
+        INICIO : "Inicio",
+        MEDIO : "Medio",
+        FIN : "Fin"
+    },
+
     MENSAJE_ERROR : {
         CAMPO_OBLIGATORIO: "Algún campo está vacío — ¡Todos son obligatorios!",
         SOLAPAMIENTO: "La asignatura que quieres añadir se solapa con otra existente"
-    }
+    },
+
+
 
 }
 

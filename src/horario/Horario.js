@@ -15,29 +15,21 @@ class Horario extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            //Estado de la clase seleccionada
+            //Lista de clases anhadidas al horario
+            horario: [],
+            //Estado de los selects del formulario
             claseSelected: {
-                dia: "",
-                hora: null,
-                asignatura: "",
-                duracion: null,
-                tipo: ""
+                selectDia: "",
+                selectHora: null,
+                selectAsignatura: "",
+                selectDuracion: null,
+                selectTipo: ""
             },
-            //Clases insertadas en el horario
-            horario: [
-                {
-                    dia: "Lunes",
-                    hora: "8",
-                    asignatura: "Naturales",
-                    duracion: 90,
-                    tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
-                },
-            ],
             //Asignaturas disponibles
             asignaturasOptions: [],
-            //Estado del formulario
-            formError: false,
-            formErrorMessage: ""
+            //Estado errores
+            error: null,
+            errorMessage: ""
         }
     }
 
@@ -58,7 +50,11 @@ class Horario extends Component {
             "value" : d.id,
             "label" : d.name
         }))*/
-        const asignaturas = [{"value": 302505, "label": "Fisica 1"}]
+        const asignaturas = [
+            {"value": 302505, "label": "Fisica 1"},
+            {"value": 302505, "label": "Matemáticas 2"},
+            {"value": 302505, "label": "Programación 1"}
+        ]
         this.setState({asignaturasOptions: asignaturas})
     }
 
@@ -85,23 +81,20 @@ class Horario extends Component {
      * @returns [Object] las opciones del select 'tipo'
      */
     getTipoOptions() {
-        var tipo = [
-            constants.TIPO_CLASE.TEORIA.NOMBRELARGO,
-            constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO,
-            constants.TIPO_CLASE.PRACTICAS.NOMBRELARGO] //Tipo 1, tipo 2, tipo 3
+        var tipo = Object.values(constants.TIPO_CLASE).map((tipo) => tipo.NOMBRELARGO) //Tipo 1, tipo 2, tipo 3
         return tipo.map((t, index) => ({"value": (index + 1), "label": t}))
     }
 
     /**
      *
-     * @returns true sii la clase seleccionada no tiene ningun campo vacio o null
+     * @returns true sii el formulario no tiene ningun campo vacio o null
      */
     formIsValid() {
-        return this.state.claseSelected.asignatura
-            && this.state.claseSelected.dia
-            && this.state.claseSelected.hora
-            && this.state.claseSelected.duracion
-            && this.state.claseSelected.tipo
+        return this.state.claseSelected.selectAsignatura
+            && this.state.claseSelected.selectDia
+            && this.state.claseSelected.selectHora
+            && this.state.claseSelected.selectDuracion
+            && this.state.claseSelected.selectTipo
     }
 
     /**
@@ -141,21 +134,23 @@ class Horario extends Component {
 
     /**
      *
-     * @param claseSelected Objeto que guarda el estado del formulario
-     * Devuelve un objeto clase
+     * @param claseSelected Estado del formulario
+     * Devuelve un objeto clase a partir del estado del formulario
      */
      newClase(claseSelected) {
-         var hora = (claseSelected.hora.getMinutes() === 0)
-             ? claseSelected.hora.getHours().toString()
-             : claseSelected.hora.getHours() + ":" + claseSelected.hora.getMinutes()
-         var clase = {
-            dia: claseSelected.dia.label,
+         //El formato de hora es "15" si es en punto o "15:30" si no lo es
+         let hora = (claseSelected.selectHora.getMinutes() === 0)
+             ? claseSelected.selectHora.getHours().toString()
+             : claseSelected.selectHora.getHours() + ":" + claseSelected.selectHora.getMinutes()
+        //Objeto clase que se guarda en el horario
+        let clase = {
+            dia: claseSelected.selectDia.label,
             hora: hora,
-            asignatura: claseSelected.asignatura.label,
-            duracion: claseSelected.duracion.value,
-            tipo: claseSelected.tipo.label
+            asignatura: claseSelected.selectAsignatura.label,
+            duracion: claseSelected.selectDuracion.value,
+            tipo: claseSelected.selectTipo.label
         }
-        //console.log("newclse: " + claseSelected.dia.label)
+
         return clase
     }
 
@@ -168,14 +163,14 @@ class Horario extends Component {
             console.log("candAddClase: clase NO es undefined")
             let horaIndex = constants.RANGO_HORAS.findIndex((hora) => hora === clase.hora)
             //Clase del horario situada en la anterior media hora
-            let claseAnteriorMediaHora = this.getClase(clase.dia, constants.RANGO_HORAS[horaIndex - 1])
+            let claseAnteriorMediaHora = this.getClaseFromHorario(clase.dia, constants.RANGO_HORAS[horaIndex - 1])
             if (claseAnteriorMediaHora && (claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA
                 || claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
                 //La clase que quiero anhadir se solapa con la clase de la anterior media hora
                 canAddClase = false
                 console.log("candAddClase: SOLAPA con la clase de la media hora enterior")
             }
-            let claseAnteriorHora = this.getClase(clase.dia, constants.RANGO_HORAS[horaIndex - 2])
+            let claseAnteriorHora = this.getClaseFromHorario(clase.dia, constants.RANGO_HORAS[horaIndex - 2])
             if (claseAnteriorHora && (claseAnteriorHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
                 // La clase que quiero anhadir se solapa con la clase de la anterior hora
                 canAddClase = false
@@ -197,8 +192,8 @@ class Horario extends Component {
         //Chequear que la clase seleccionada por el usuario es valida
         if (!this.formIsValid()) {
             this.setState({
-                formError: true,
-                formErrorMessage: constants.MENSAJE_ERROR.CAMPO_OBLIGATORIO
+                error: true,
+                errorMessage: constants.MENSAJE_ERROR.CAMPO_OBLIGATORIO
             })
         } else {
             //Caso formulario rellenado correctamente
@@ -206,8 +201,8 @@ class Horario extends Component {
             //Comprobamos que podemos anhadir la nueva clase al horario
             if(!this.canAddClase(newClase)) {
                 this.setState({
-                    formError: true,
-                    formErrorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
+                    error: true,
+                    errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
                 })
             } else {
                 //Eliminamos clases repetidas y solapadas con la nueva clase a
@@ -215,7 +210,7 @@ class Horario extends Component {
                 this.state.horario = this.eliminarRedundancias(newClase)
                 //Anadimos la nueva clase al horario
                 this.setState({
-                    formError: false,
+                    error: false,
                     horario: [...this.state.horario, newClase],
                 })
             }
@@ -248,6 +243,17 @@ class Horario extends Component {
         )
     }
 
+    /**
+     * Devuelve un alert que muestra un success message
+     */
+    htmlAlertSuccess() {
+        return(
+            <div className="elementoFormulario">
+                <Alert severity="success">Clase añadida correctamente</Alert>
+            </div>
+        )
+    }
+
     //html con el formulario para anhadir una asignatura
      htmlFormulario() {
         return(
@@ -259,18 +265,18 @@ class Horario extends Component {
                             options={this.state.asignaturasOptions}
                             placeholder={<div>Asignatura</div>}
                             onChange={(a) => {
-                                this.setState(this.state.claseSelected.asignatura = a);
+                                this.setState(this.state.claseSelected.selectAsignatura = a);
                             } }
-                            value={this.state.claseSelected.asignatura} />
+                            value={this.state.claseSelected.selectAsignatura} />
                     </div>
                     <div className="elementoFormulario">
                         <Select
                             options={this.getDiasOptions()}
                             placeholder={<div>Día</div>}
                             onChange={(d) => {
-                                this.setState(this.state.claseSelected.dia = d);
+                                this.setState(this.state.claseSelected.selectDia = d);
                             } }
-                            value={this.state.claseSelected.dia} />
+                            value={this.state.claseSelected.selectDia} />
                     </div>
                     <div className="elementoFormulario">
                         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -280,9 +286,9 @@ class Horario extends Component {
                                         minTime={new Date(0, 0, 0, 8)}
                                         maxTime={new Date(0, 0, 0, 20, 30)}
                                         onChange={(h) => {
-                                            this.setState(this.state.claseSelected.hora = h);
+                                            this.setState(this.state.claseSelected.selectHora = h);
                                         } }
-                                        value={this.state.claseSelected.hora}
+                                        value={this.state.claseSelected.selectHora}
                                         renderInput={(params) => <TextField {...params} />} />
                         </LocalizationProvider>
                     </div>
@@ -291,26 +297,28 @@ class Horario extends Component {
                             options={this.getDuracionOptions()}
                             placeholder={<div>Duración</div>}
                             onChange={(d) => {
-                                this.setState(this.state.claseSelected.duracion = d);
+                                this.setState(this.state.claseSelected.selectDuracion = d);
                             } }
-                            value={this.state.claseSelected.duracion} />
+                            value={this.state.claseSelected.selectDuracion} />
                     </div>
                     <div className="elementoFormulario">
                         <Select
                             options={this.getTipoOptions()}
                             placeholder={<div>Tipo</div>}
                             onChange={(t) => {
-                                this.setState(this.state.claseSelected.tipo = t);
+                                this.setState(this.state.claseSelected.selectTipo = t);
                             } }
-                            value={this.state.claseSelected.tipo} />
+                            value={this.state.claseSelected.selectTipo} />
                     </div>
                 </div>
 
                 <button className="btn btn-info" onClick={() => this.addClase()}>Añadir</button>
 
-                {this.state.formError
-                    ? this.htmlAlertError(this.state.formErrorMessage)
-                    : ''}
+                {this.state.error === null
+                    ? ""
+                    : this.state.error
+                        ? this.htmlAlertError(this.state.errorMessage)
+                        : this.htmlAlertSuccess()}
             </div>
         )
     }
@@ -319,69 +327,93 @@ class Horario extends Component {
      *
      * @param hora String "8:30"
      * @param dia String "Lunes"
-     * Devuelve la clase asociada a un dia y hora.
+     * Devuelve la clase asociada a un dia y hora del horario.
      * Si no existe, devuelve undefined
      */
-    getClase(dia, hora) {
+    getClaseFromHorario(dia, hora) {
         return this.state.horario.find(clase =>
             clase.dia == dia && clase.hora == hora
         )
     }
 
-    getColorClase(clase) {
+    /**
+     *
+     * @param clase
+     * Devuelve el CSS asociado a cada clase segun su tipo y posicion en el horario
+     */
+    getCSS(clase, duracion, posicion) {
+        let color
+        let className
         switch (clase.tipo) {
             case constants.TIPO_CLASE.TEORIA.NOMBRELARGO:
-                return "#d7dfe8" //Azul
+                color =  "#d7dfe8"; break //azul
             default:
-                return "#FFFFFF" //Blanco
+                color = "#FFFFFF"; break //blanco
         }
+        if (duracion === constants.DURACION_CLASE.MEDIA_HORA) {
+            className = "claseDuracionMediaHora"
+        } else {
+            switch (posicion) {
+                case constants.POSICION.INICIO:
+                    className = "clasePosicionInicio";
+                    break
+                case constants.POSICION.MEDIO:
+                    className = "clasePosicionMedio";
+                    break
+                default:
+                    className = "clasePosicionFin"
+            }
+        }
+
+        return {className: className, color: color}
     }
 
     /**
      *
      * @param hora
      * @param dia
-     * Devuelve una celda html con la asignatura perteneciente
-     * a un dia y hora del horario
+     * Devuelve el html y css asociado a una celda del horario donde puede
+     * haber o no una clase insertada
      */
     htmlClase(dia, hora, horaIndex) {
         //Obtener la clase perteneciente a una hora y dia
-        let clase = this.getClase(dia, hora)
-        //Por defecto la celda no muestra nada y es de color blanco
+        let clase = this.getClaseFromHorario(dia, hora)
+        //Por defecto la celda no muestra nada y tiene el estilo CSS por defecto
         let nombreAsignatura = ""
-        let colorAsignatura = "#FFFFFF"
+        let css = {className: "celdaSinClase", color: "#FFFFFF"}
 
         if (clase) {
-            //console.log("Clase MATCH!: " + clase.asignatura + " " + clase.duracion)
             //Caso hay una clase que empieza el dia 'dia' a la hora 'hora'
             nombreAsignatura = clase.asignatura
-            colorAsignatura = this.getColorClase(clase)
+            css = this.getCSS(clase, clase.duracion, constants.POSICION.INICIO)
             //console.log("color: " + colorAsignatura)
         } else {
             //Obtenemos la clase asociada a la anterior media hora
-            clase = this.getClase(dia, constants.RANGO_HORAS[horaIndex - 1])
-            if(clase) {
-                //Caso hay una clase que empieza el dia 'dia' a la hora 'hora' - 30 minutos
-                if (clase.duracion === constants.DURACION_CLASE.HORA
-                    || clase.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
-                    //Caso la clase de la media hora anterior dura una hora o una hora y media
-                    //console.log("Clase PRIMER ABAJO!: " + clase.asignatura)
-                    colorAsignatura = this.getColorClase(clase)
+            let claseAnteriorMediaHora = this.getClaseFromHorario(dia, constants.RANGO_HORAS[horaIndex - 1])
+            if(claseAnteriorMediaHora) {
+                //Caso hay una clase que empieza el dia 'dia' justo la media hora anterior
+                if (claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA) {
+                    //Caso la clase de la media hora anterior dura una hora
+                    css = this.getCSS(claseAnteriorMediaHora, claseAnteriorMediaHora.duracion, constants.POSICION.FIN)
+                } else if (claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
+                    //Caso la clase de la media hora anterior dura una hora y media
+                    css = this.getCSS(claseAnteriorMediaHora, claseAnteriorMediaHora.duracion, constants.POSICION.MEDIO)
                 }
             }
             //Obtenemos la clase asociada a la anterior hora
-            clase = this.getClase(dia, constants.RANGO_HORAS[horaIndex - 2])
-            if(clase) {
+            let claseAnteriorHora = this.getClaseFromHorario(dia, constants.RANGO_HORAS[horaIndex - 2])
+            if(claseAnteriorHora) {
                 //Caso hay una clase que empieza el dia 'dia' a la hora 'hora' - 60 minutos
-                if (clase.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
+                if (claseAnteriorHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
                     //Caso la clase de la hora anterior dura una hora y media
                     //console.log("Clase SEGUNDO ABAJO!: " + clase.asignatura)
-                    colorAsignatura = this.getColorClase(clase)
+                    css = this.getCSS(claseAnteriorHora, claseAnteriorHora.duracion, constants.POSICION.FIN)
+                    console.log("AAAA: " + css.className)
                 }
             }
         }
         return (
-            <td style={{backgroundColor: colorAsignatura}}>{nombreAsignatura}</td>
+            <td className={css.className} style={{backgroundColor: css.color}}>{nombreAsignatura}</td>
         )
     }
 
@@ -390,7 +422,7 @@ class Horario extends Component {
             <table className="timetable">
                 <thead style={{fontWeight: 'bold'}}>
                 <tr>
-                    <td className="columnaHoras">Horas</td>
+                    <td className="">Horas</td>
                     {constants.DAYS.map((day) => (
                         <td key={day} >
                             <div style={{textAlign: 'center'}}>
@@ -403,7 +435,12 @@ class Horario extends Component {
                 <tbody>
                 {constants.RANGO_HORAS.map((hora, horaIndex) => (
                     <tr>
-                        <td> {hora}</td>
+                        <td className="columnaHoras"> {
+                            (horaIndex < constants.RANGO_HORAS.length - 1)
+                                ? hora + " - " + constants.RANGO_HORAS[horaIndex + 1]
+                                : hora + " - " + "21"
+                            }
+                        </td>
                         {this.htmlClase(constants.DIAS_SEMANA.LUNES, hora,horaIndex)}
                         {this.htmlClase(constants.DIAS_SEMANA.MARTES, hora,horaIndex)}
                         {this.htmlClase(constants.DIAS_SEMANA.MIERCOLES, hora,horaIndex)}
@@ -421,7 +458,6 @@ class Horario extends Component {
                 {this.htmlCabecera()}
                 {this.htmlFormulario()}
                 {this.htmlHorario()}
-
             </div>
 
         )
