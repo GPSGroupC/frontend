@@ -63,14 +63,6 @@ label {
   width: 300px;
 }
 
-.inicioAux{
-  margin-top: 15px;
-}
-
-.inicioAux:hover{
-  transform: scale(1.1);
-}
-
 #textoImg{
   display: inline-block;
   vertical-align: top;
