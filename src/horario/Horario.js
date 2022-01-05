@@ -217,6 +217,13 @@ class Horario extends Component {
         }
     }
 
+    delClase(clase) {
+        let horario = this.state.horario.filter((c) => c !== clase)
+        this.setState({
+            horario: horario,
+        })
+    }
+
     //html de la cabecera con el logo y titulo
     htmlCabecera() {
         return(
@@ -258,7 +265,7 @@ class Horario extends Component {
      htmlFormulario() {
         return(
             <div className="fondoFormulario">
-                <p>Añadir asignatura</p>
+                <p>Añade una clase al calendario</p>
                 <div className="contenidoFormulario">
                     <div className="elementoFormulario">
                         <Select
@@ -312,7 +319,7 @@ class Horario extends Component {
                     </div>
                 </div>
 
-                <button className="btn btn-info" onClick={() => this.addClase()}>Añadir</button>
+                <button className="btn btn-info" id="addButton" onClick={() => this.addClase()}>Añadir clase</button>
 
                 {this.state.error === null
                     ? ""
@@ -413,7 +420,15 @@ class Horario extends Component {
             }
         }
         return (
-            <td className={css.className} style={{backgroundColor: css.color}}>{nombreAsignatura}</td>
+            <td className={css.className} style={{backgroundColor: css.color}}>
+                <div>
+                    {nombreAsignatura}
+                    {(nombreAsignatura)
+                        ? <button className="btn btn-info" id="delButton" onClick={() => this.delClase(clase)}>x</button>
+                        : ""
+                    }
+                </div>
+            </td>
         )
     }
 

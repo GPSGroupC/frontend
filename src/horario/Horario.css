@@ -4,9 +4,10 @@
 
 /*Formulario*/
 .fondoFormulario {
-    display: block;
+    display: flex;
+    flex-direction: column;
     margin: 20px auto auto;
-    width: 75%;
+    width: 80%;
     border: 1px solid #b8b894;
     border-radius: 8px;
     padding: 10px;
@@ -84,3 +85,15 @@
     border-right: 2px solid #b8b894;
 }
 
+#addButton {
+    margin: 20px auto auto;
+    width: 50%;
+    padding: 10px;
+    font-weight: bold;
+}
+
+#delButton {
+    margin-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
