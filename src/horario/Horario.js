@@ -29,14 +29,15 @@ class Horario extends Component {
                     dia: "Lunes",
                     hora: "8",
                     asignatura: "Naturales",
-                    duracion: 30,
-                    tipo: "teoria"
+                    duracion: 90,
+                    tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
                 },
             ],
             //Asignaturas disponibles
             asignaturasOptions: [],
             //Estado del formulario
-            formError: false
+            formError: false,
+            formErrorMessage: ""
         }
     }
 
@@ -84,7 +85,10 @@ class Horario extends Component {
      * @returns [Object] las opciones del select 'tipo'
      */
     getTipoOptions() {
-        var tipo = ["teoría", "problemas", "prácticas"] //Tipo 1, tipo 2, tipo 3
+        var tipo = [
+            constants.TIPO_CLASE.TEORIA.NOMBRELARGO,
+            constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO,
+            constants.TIPO_CLASE.PRACTICAS.NOMBRELARGO] //Tipo 1, tipo 2, tipo 3
         return tipo.map((t, index) => ({"value": (index + 1), "label": t}))
     }
 
@@ -148,11 +152,42 @@ class Horario extends Component {
             dia: claseSelected.dia.label,
             hora: hora,
             asignatura: claseSelected.asignatura.label,
-            duracion: claseSelected.duracion,
-            tipo: claseSelected.tipo
+            duracion: claseSelected.duracion.value,
+            tipo: claseSelected.tipo.label
         }
-        console.log("newclse: " + claseSelected.dia.label)
+        //console.log("newclse: " + claseSelected.dia.label)
         return clase
+    }
+
+    /**
+     * Devuelve true si es posible anhadir una nueva clase al horario
+     */
+    canAddClase(clase) {
+        let canAddClase = true
+        if (clase) {
+            console.log("candAddClase: clase NO es undefined")
+            let horaIndex = constants.RANGO_HORAS.findIndex((hora) => hora === clase.hora)
+            //Clase del horario situada en la anterior media hora
+            let claseAnteriorMediaHora = this.getClase(clase.dia, constants.RANGO_HORAS[horaIndex - 1])
+            if (claseAnteriorMediaHora && (claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA
+                || claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
+                //La clase que quiero anhadir se solapa con la clase de la anterior media hora
+                canAddClase = false
+                console.log("candAddClase: SOLAPA con la clase de la media hora enterior")
+            }
+            let claseAnteriorHora = this.getClase(clase.dia, constants.RANGO_HORAS[horaIndex - 2])
+            if (claseAnteriorHora && (claseAnteriorHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
+                // La clase que quiero anhadir se solapa con la clase de la anterior hora
+                canAddClase = false
+                console.log("candAddClase: SOLAPA con la clase de la hora enterior")
+            }
+
+        } else {
+            console.log("candAddClase: clase es undefined")
+            canAddClase = false
+        }
+
+        return canAddClase
     }
 
     /**
@@ -161,18 +196,29 @@ class Horario extends Component {
     addClase() {
         //Chequear que la clase seleccionada por el usuario es valida
         if (!this.formIsValid()) {
-            this.setState({formError: true})
-            return
+            this.setState({
+                formError: true,
+                formErrorMessage: constants.MENSAJE_ERROR.CAMPO_OBLIGATORIO
+            })
         } else {
             //Caso formulario rellenado correctamente
             var newClase = this.newClase(this.state.claseSelected)
-            //Eliminamos solapamientos entre clases y asignaturas repetidas
-            this.state.horario = this.eliminarRedundancias(newClase)
-            //Anadimos la nueva clase al horario
-            this.setState({
-                formError: false,
-                horario: [...this.state.horario, newClase],
-            })
+            //Comprobamos que podemos anhadir la nueva clase al horario
+            if(!this.canAddClase(newClase)) {
+                this.setState({
+                    formError: true,
+                    formErrorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
+                })
+            } else {
+                //Eliminamos clases repetidas y solapadas con la nueva clase a
+                //anhadir
+                this.state.horario = this.eliminarRedundancias(newClase)
+                //Anadimos la nueva clase al horario
+                this.setState({
+                    formError: false,
+                    horario: [...this.state.horario, newClase],
+                })
+            }
         }
     }
 
@@ -185,6 +231,19 @@ class Horario extends Component {
                     <button type="button" className="btn btn-info btn-lg" style={{ "margin-left": "750px", "margin-top": "15px" }}>SALIR SIN GUARDAR</button>
                 </Link>
                 <hr size="5px" color="black" />
+            </div>
+        )
+    }
+
+    /**
+     *
+     * @param error String con un mensaje de error
+     * Devuelve un alert que muestra un mensaje de error
+     */
+    htmlAlertError(error) {
+        return(
+            <div className="elementoFormulario">
+                <Alert severity="error">{error}</Alert>
             </div>
         )
     }
@@ -250,11 +309,32 @@ class Horario extends Component {
                 <button className="btn btn-info" onClick={() => this.addClase()}>Añadir</button>
 
                 {this.state.formError
-                    ? (<div className="elementoFormulario"><Alert severity="error">Algún campo está vacío — ¡Todos son
-                        obligatorios!</Alert></div>)
+                    ? this.htmlAlertError(this.state.formErrorMessage)
                     : ''}
             </div>
         )
+    }
+
+    /**
+     *
+     * @param hora String "8:30"
+     * @param dia String "Lunes"
+     * Devuelve la clase asociada a un dia y hora.
+     * Si no existe, devuelve undefined
+     */
+    getClase(dia, hora) {
+        return this.state.horario.find(clase =>
+            clase.dia == dia && clase.hora == hora
+        )
+    }
+
+    getColorClase(clase) {
+        switch (clase.tipo) {
+            case constants.TIPO_CLASE.TEORIA.NOMBRELARGO:
+                return "#d7dfe8" //Azul
+            default:
+                return "#FFFFFF" //Blanco
+        }
     }
 
     /**
@@ -264,12 +344,44 @@ class Horario extends Component {
      * Devuelve una celda html con la asignatura perteneciente
      * a un dia y hora del horario
      */
-    htmlClase(hora, dia) {
-        let clase =  this.state.horario.find(clase =>
-             clase.hora == hora && clase.dia == dia
-        )
-        return(
-            <td>{(clase) ? clase.asignatura : ""}</td>
+    htmlClase(dia, hora, horaIndex) {
+        //Obtener la clase perteneciente a una hora y dia
+        let clase = this.getClase(dia, hora)
+        //Por defecto la celda no muestra nada y es de color blanco
+        let nombreAsignatura = ""
+        let colorAsignatura = "#FFFFFF"
+
+        if (clase) {
+            //console.log("Clase MATCH!: " + clase.asignatura + " " + clase.duracion)
+            //Caso hay una clase que empieza el dia 'dia' a la hora 'hora'
+            nombreAsignatura = clase.asignatura
+            colorAsignatura = this.getColorClase(clase)
+            //console.log("color: " + colorAsignatura)
+        } else {
+            //Obtenemos la clase asociada a la anterior media hora
+            clase = this.getClase(dia, constants.RANGO_HORAS[horaIndex - 1])
+            if(clase) {
+                //Caso hay una clase que empieza el dia 'dia' a la hora 'hora' - 30 minutos
+                if (clase.duracion === constants.DURACION_CLASE.HORA
+                    || clase.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
+                    //Caso la clase de la media hora anterior dura una hora o una hora y media
+                    //console.log("Clase PRIMER ABAJO!: " + clase.asignatura)
+                    colorAsignatura = this.getColorClase(clase)
+                }
+            }
+            //Obtenemos la clase asociada a la anterior hora
+            clase = this.getClase(dia, constants.RANGO_HORAS[horaIndex - 2])
+            if(clase) {
+                //Caso hay una clase que empieza el dia 'dia' a la hora 'hora' - 60 minutos
+                if (clase.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
+                    //Caso la clase de la hora anterior dura una hora y media
+                    //console.log("Clase SEGUNDO ABAJO!: " + clase.asignatura)
+                    colorAsignatura = this.getColorClase(clase)
+                }
+            }
+        }
+        return (
+            <td style={{backgroundColor: colorAsignatura}}>{nombreAsignatura}</td>
         )
     }
 
@@ -289,14 +401,14 @@ class Horario extends Component {
                 </tr>
                 </thead>
                 <tbody>
-                {constants.RANGO_HORAS.map((hora, index) => (
+                {constants.RANGO_HORAS.map((hora, horaIndex) => (
                     <tr>
                         <td> {hora}</td>
-                        {this.htmlClase(hora, constants.DIAS_SEMANA.LUNES)}
-                        {this.htmlClase(hora, constants.DIAS_SEMANA.MARTES)}
-                        {this.htmlClase(hora, constants.DIAS_SEMANA.MIERCOLES)}
-                        {this.htmlClase(hora, constants.DIAS_SEMANA.JUEVES)}
-                        {this.htmlClase(hora, constants.DIAS_SEMANA.VIERNES)}
+                        {this.htmlClase(constants.DIAS_SEMANA.LUNES, hora,horaIndex)}
+                        {this.htmlClase(constants.DIAS_SEMANA.MARTES, hora,horaIndex)}
+                        {this.htmlClase(constants.DIAS_SEMANA.MIERCOLES, hora,horaIndex)}
+                        {this.htmlClase(constants.DIAS_SEMANA.JUEVES, hora,horaIndex)}
+                        {this.htmlClase( constants.DIAS_SEMANA.VIERNES, hora,horaIndex)}
                     </tr>
                 ))}
                 </tbody>
