@@ -1,3 +1,45 @@
 /**
  * CSS PARA EL COMPONENTE HORARIO
  */
+
+/*Formulario*/
+.fondoFormulario {
+    display: block;
+    margin: 20px auto auto;
+    width: 75%;
+    border: 1px solid #b8b894;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+}
+.contenidoFormulario {
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.elementoFormulario {
+    margin: 6px;
+}
+
+/* Tabla de horario*/
+.timetable {
+    margin: 20px auto auto;
+    display: block;
+    width: 90%;
+    border: 1px solid #b8b894;
+    border-radius: 8px;
+    box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+}
+
+.timetable td {
+    border: 1px solid #b8b894;
+    width: 5%;
+    text-align: center;
+}
+.timetable thead {
+    background-color: #d7dfe8;
+}
+
