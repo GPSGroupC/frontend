@@ -115,30 +115,9 @@ class Parser {
             dayFormatted.type = day.type ? day.type : "lectivo"
             dayFormatted.horarioCambiado = day.horarioCambiado ? day.horarioCambiado : null
             dayFormatted.semanaAB = day.semanaAB ? day.semanaAB : "c"
-            //TODO(fer): Descomentar
-            // dayFormatted.description = day.description ? day.description : ""
             listDays.push(JSON.stringify(dayFormatted));
         })
         return listDays;
-    }
-
-    static getDiasConHorarioCambiado(semester){
-        let lista_dias_horario_cambiado = []
-        semester.dates.map((month) => {
-          month.map((week) => {
-            week.map((day) =>{
-                if (day.horarioCambiado) {
-                    lista_dias_horario_cambiado.push(
-                        day.date + "/"
-                        + day.month + "/"
-                        + day.year + " horario de "
-                        + this.getFullDayName(day.horarioCambiado)
-                    )
-                }
-            })
-          })
-        })
-        return lista_dias_horario_cambiado
     }
 
     /**
@@ -198,17 +177,6 @@ class Parser {
         return result
     }
 
-    static getFullDayName(initial) {
-        switch (initial) {
-            case "L": return "Lunes"
-            case "M": return "Martes"
-            case "X": return "Miércoles"
-            case "J": return "Jueves"
-            case "V": return "Viernes"
-            case "S": return "Sábado"
-            default: return "Domingo"
-        }
-    }
     /**
      * Todos los selectores html de semana a/B tienen el id:
      *      "globalWeekSelectorAB-${monthIndex}-${weekIndex}"
@@ -254,37 +222,6 @@ class Parser {
             return parseInt(numMonth,10)
         }
         return -1
-    }
-
-    static showDescriptions(week) {
-        let weekDescription = ""
-        week.map((day) => {
-            if(day.description &&
-                (day.type === constants.TIPOS_FECHA.FESTIVO || day.type === constants.TIPOS_FECHA.CONVOCATORIA)) {
-                weekDescription += " " + day.description
-            }
-        })
-        return weekDescription
-    }
-
-    static weekHasFestivo(week) {
-        let result = false
-        week.map((day) => {
-            if(day.type=== constants.TIPOS_FECHA.FESTIVO) {
-                result = true
-            }
-        })
-        return result
-    }
-
-    static weekHasConvocatoria(week) {
-        let result = false
-        week.map((day) => {
-            if(day.type=== constants.TIPOS_FECHA.CONVOCATORIA) {
-                result = true
-            }
-        })
-        return result
     }
 }
 

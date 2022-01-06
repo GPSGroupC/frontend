@@ -34,22 +34,6 @@ class Api {
         return [dateIC1, dateIC2, dateIS1, ultMod]
     }
 
-    static putMetadataCalendar = async(inicio1, inicio2, inicio3, course) => {
-        axios({ method: 'POST', url: constants.BASE_SERVER_URL + "/calendar/updateCalendar",
-            data: {
-                fecha_inicio_1: inicio1,
-                fecha_inicio_2: inicio2,
-                convSeptiembre: inicio3,
-                course: course,
-            }})
-            .then( () => {
-                console.log("Exito en el envio");
-            })
-            .catch(error => {
-                console.log(error);
-            })
-    }
-
     /**
      * Obtiene del backend todas las fechas correspondientes a un curso y un semestre concreto.
      * @param curso Formato: "2021-2022"
@@ -71,6 +55,22 @@ class Api {
                 console.log(error);
             })
         return [respuesta]
+    }
+
+    static putAllCalendarData = async(inicio1, inicio2, inicio3, course) => {
+        axios({ method: 'POST', url: constants.BASE_SERVER_URL + "/calendar/updateCalendar",
+            data: {
+                fecha_inicio_1: inicio1,
+                fecha_inicio_2: inicio2,
+                convSeptiembre: inicio3,
+                course: course,
+            }})
+            .then( () => {
+                console.log("Exito en el envio");
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     static putSemester = async(course, semesterName, semester) => {

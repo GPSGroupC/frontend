@@ -4,12 +4,8 @@
 
 /* PDF */
 .divToPrint{
-    /*width: 280mm;
-    height: 500mm;*/
-    display:flex; /* rows and columns style */
-    flex-direction:column;
-    justify-content:center; /* Horizontal alignment */
-    align-items: start; /* vertical alignment */
+    width: 280mm;
+    height: 297mm;
 }
 
 .pdfHeader{
@@ -27,18 +23,22 @@
 /* CALENDARIO */
 .calendario {
     display:flex; /* rows and columns style */
-    flex-direction:column;
+    flex-direction:row;
     justify-content:center; /* Horizontal alignment */
-    align-items: stretch; /* vertical alignment */
-    /*flex-wrap:wrap;*/
-    /*margin-right: 20px;*/
+    align-items:start; /* vertical alignment */
+    flex-wrap:wrap;
 }
 
-
+.calendario div h7 {
+    margin-left: 25%;
+}
 
 .tablaSemestre
 {
     font-size: small;
+    margin-left: 20px;
+    margin-right: 20px;
+    border: 2px solid #476b6b;
     overflow:hidden;
 }
 
@@ -46,26 +46,6 @@
 {
     text-align: center;
     vertical-align: middle;
-    padding: 0px;
-}
-
-.dateCell{
-    min-width: 50px;
-}
-
-.monthCell {
-    font-weight: bold;
-    width:50px;
-    border-bottom: 1px solid #476b6b;
-    min-width: 50px;
-    border-left: 1px solid #476b6b;
-}
-
-.numWeek
-{
-    border-right: 1px solid #476b6b;
-    border-left:  1px solid #476b6b;
-
 }
 
 td.festivo {
@@ -80,76 +60,16 @@ td.horarioCambiado {
     background-color: #e1f16d;
 }
 
-.inputDescriptionFestivo {
-    margin-left:10px;
-    width:330px;
-    border:2px inset #EBE9ED;
-}
-
-.inputDescriptionConvocatoria {
-    margin-left:10px;
-    width:330px;
-    border:2px inset #EBE9ED;
-}
-.descriptionIcono {
-    margin-left: 5px;
-    display: inline;
-    padding: 3px;
-    min-width: 20px;
-}
-.descriptionText {
-    margin-left: 5px;
-}
-.descripcionHorariosCambiados {
-    display:flex; /* rows and columns style */
-    flex-direction:row;
-    justify-content:start; /* Horizontal alignment */
-    align-items: center; /* vertical alignment */
-    margin-left: 20px;
-    margin-bottom: 5px;
-}
-.listaHorariosCambiados {
-    margin-left:20px;
-    line-height: 50%;
-    background-color:#e1f16d;
-    font-size: 15px;
-}
-
-.dialog{
-    display:flex; /* rows and columns style */
-    flex-direction:column;
-    justify-content:start; /* Horizontal alignment */
-    align-items: start; /* vertical alignment */
-    width: 350px;
-
-}
-.dialog label {
-    font-size: 18px;
-    margin-bottom: 0px;
-}
-
-.checkBox{
-    transform: scale(1.5);
-    margin-right: 10px;
-}
 
 /*LEYENDA*/
-.leyenda {
-    margin-top:20px;
-    margin-left:250px;
-    width: 900px;
-    justify-content:stretch; /* Horizontal alignment */
-    align-items: end; /* vertical alignment */
-}
 .leyendaIcono {
-    display: inline;
     height: 25px;
     width: 30px;
     border: 0.1px solid rgb(0, 0, 0);
 }
 
 .textoLeyenda{
-    display: inline;
+    display: inline-block;
     vertical-align: top;
     margin-top: 5px;
     margin-left: 5px;
