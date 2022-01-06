@@ -49,6 +49,7 @@
 .timetable td {
     width: 5%;
     text-align: center;
+    padding:0px;
 }
 
 .timetable thead {
