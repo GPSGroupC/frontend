@@ -15,7 +15,7 @@ class Api {
      */
     static getMetadataCalendar = async (curso) => {
         console.log("getAllCalendarData: " +  curso)
-        let dateIC1 = null,dateIC2 = null,dateIS1 = null, ultMod = null
+        let dateIC1 = null,dateIC2 = null,dateIS1 = null,dateFS1 = null, ultMod = null
         await axios({ method: 'GET', url: constants.BASE_SERVER_URL + "/calendar/getCalendar",
             params: {
                 course: curso,
@@ -25,13 +25,31 @@ class Api {
                      dateIC1 = Parser.parseDate(response.data[0].fechainicio1.split('-'))
                      dateIC2 = Parser.parseDate(response.data[0].fechainicio2.split('-'))
                      dateIS1 = Parser.parseDate(response.data[0].fechainiciosept.split('-'))
-                    ultMod = Parser.parseDate(response.data[0].fechaultmodificacion.split('-'))
+                     dateFS1 = Parser.parseDate(response.data[0].fechafinsept.split('-'))
+                     ultMod = Parser.parseDate(response.data[0].fechaultmodificacion.split('-'))
                 }
             })
             .catch(error => {
                 console.log(error);
             })
-        return [dateIC1, dateIC2, dateIS1, ultMod]
+        return [dateIC1, dateIC2, dateIS1, ultMod,dateFS1]
+    }
+
+    static putMetadataCalendar = async(inicio1, inicio2, inicio3,finSeptiembre, course) => {
+        axios({ method: 'POST', url: constants.BASE_SERVER_URL + "/calendar/updateCalendar",
+            data: {
+                fecha_inicio_1: inicio1,
+                fecha_inicio_2: inicio2,
+                convSeptiembre: inicio3,
+                finconvSeptiembre: finSeptiembre,
+                course: course,
+            }})
+            .then( () => {
+                console.log("Exito en el envio");
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     /**
@@ -55,22 +73,6 @@ class Api {
                 console.log(error);
             })
         return [respuesta]
-    }
-
-    static putAllCalendarData = async(inicio1, inicio2, inicio3, course) => {
-        axios({ method: 'POST', url: constants.BASE_SERVER_URL + "/calendar/updateCalendar",
-            data: {
-                fecha_inicio_1: inicio1,
-                fecha_inicio_2: inicio2,
-                convSeptiembre: inicio3,
-                course: course,
-            }})
-            .then( () => {
-                console.log("Exito en el envio");
-            })
-            .catch(error => {
-                console.log(error);
-            })
     }
 
     static putSemester = async(course, semesterName, semester) => {
