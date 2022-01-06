@@ -59,6 +59,9 @@
     border-right: 2px solid gray;
     border-radius: 8px;
 }
+.timetable thead td {
+    border-left: 2px solid black;
+}
 .timetable .columnaHoras {
     color: #313b47;
     min-width: 100px;
@@ -70,7 +73,8 @@
 }
 
 .timetable .celdaSinClase {
-    border: 1px solid #b8b894;
+    border-right: 1px solid #b8b894;
+    border-bottom: 1px solid #b8b894;
     width: 15%;
     text-align: center;
 }
@@ -109,6 +113,7 @@
     margin-bottom: 5px;
 }
 
+/*Drag and drop*/
 .objectDrag {
     border:1px solid #b8b894;
     background-color:grey;

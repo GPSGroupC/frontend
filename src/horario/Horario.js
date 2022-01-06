@@ -6,6 +6,7 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import {Alert} from "@material-ui/lab";
 import {Link} from "react-router-dom";
 import eina from "../images/eina-logo.png";
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 import './Horario.css'
 import constants from "./utils/Constants";
 
@@ -100,16 +101,6 @@ class Horario extends Component {
      *
      * @param claseA Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
      * @param claseB Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
-     * @returns true sii las asignaturas y el tipo de cada clase son iguales.
-     */
-    asignaturasIguales(claseA, claseB) {
-        return claseA.asignatura == claseB.asignatura && claseA.tipo == claseB.tipo
-    }
-
-    /**
-     *
-     * @param claseA Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
-     * @param claseB Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
      * @returns true sii la claseA se solapa en el tiempo con la clase B
      */
     clasesSolapadas(claseA, claseB) {
@@ -124,12 +115,12 @@ class Horario extends Component {
      *              Puede existir en el horario una asignatura igual que la que se quiere añadir.
      *              Puede existir en el horario una clase solapada en el tiempo con la que se quiere añadir.
      */
-    eliminarRedundancias(new_clase) {
+    /*eliminarRedundancias(new_clase) {
         return this.state.horario.filter(
             (clase) => !this.asignaturasIguales(clase, new_clase)
                 && !this.clasesSolapadas(clase, new_clase)
         );
-    }
+    }*/
 
     /**
      *
@@ -154,73 +145,144 @@ class Horario extends Component {
     }
 
     /**
+     * Devuelve true sii la clase a insertar en el horario 'newClase'
+     * se solaparia con otra clase del horario
+     */
+    haySolapamiento(newClase) {
+        let indexHora = constants.RANGO_HORAS.findIndex((hora) => hora === newClase.hora)
+        return this.solapamientoHoraActual(newClase,indexHora)
+            || this.solapamientoMediaHoraAnterior(newClase, indexHora)
+            || this.solapamientoHoraAnterior(newClase, indexHora)
+            || this.solapamientoMediaHoraSiguiente(newClase, indexHora)
+            || this.solapamientoHoraSiguiente(newClase, indexHora)
+    }
+
+    /**
+     *
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con una clase del horario que empieza
+     * a la misma hora
+     */
+    solapamientoHoraActual(newClase, indexHora) {
+        let claseHoraActual = this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora])
+        return !!(claseHoraActual)
+    }
+
+    /**
+     *
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * una hora antes
+     */
+    solapamientoMediaHoraAnterior(newClase, indexHora) {
+        let claseMediaHoraAnterior= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora - 1])
+        return (claseMediaHoraAnterior && (claseMediaHoraAnterior.duracion > constants.DURACION_CLASE.MEDIA_HORA))
+    }
+
+    /**
+     *
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * media hora antes
+     */
+    solapamientoHoraAnterior(newClase, indexHora) {
+        let claseHoraAnterior= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora - 2])
+        return (claseHoraAnterior && (claseHoraAnterior.duracion > constants.DURACION_CLASE.HORA))
+    }
+    /**
+     *
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * media hora despues
+     */
+    solapamientoMediaHoraSiguiente(newClase, indexHora) {
+        let claseMediaHoraSiguiente= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora + 1])
+        return (claseMediaHoraSiguiente && (newClase.duracion > constants.DURACION_CLASE.MEDIA_HORA))
+    }
+
+    /**
+     *
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * una hora despues.
+     */
+    solapamientoHoraSiguiente(newClase, indexHora) {
+        let claseHoraSiguiente= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora + 2])
+        return (claseHoraSiguiente && (newClase.duracion > constants.DURACION_CLASE.HORA))
+    }
+
+
+
+    /**
      * Devuelve true si es posible anhadir una nueva clase al horario
      */
     canAddClase(clase) {
-        let canAddClase = true
         if (clase) {
-            console.log("candAddClase: clase NO es undefined")
-            let horaIndex = constants.RANGO_HORAS.findIndex((hora) => hora === clase.hora)
-            //Clase del horario situada en la anterior media hora
-            let claseAnteriorMediaHora = this.getClaseFromHorario(clase.dia, constants.RANGO_HORAS[horaIndex - 1])
-            if (claseAnteriorMediaHora && (claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA
-                || claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
-                //La clase que quiero anhadir se solapa con la clase de la anterior media hora
-                canAddClase = false
-                console.log("candAddClase: SOLAPA con la clase de la media hora enterior")
-            }
-            let claseAnteriorHora = this.getClaseFromHorario(clase.dia, constants.RANGO_HORAS[horaIndex - 2])
-            if (claseAnteriorHora && (claseAnteriorHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
-                // La clase que quiero anhadir se solapa con la clase de la anterior hora
-                canAddClase = false
-                console.log("candAddClase: SOLAPA con la clase de la hora enterior")
-            }
-
+            return !this.haySolapamiento(clase)
         } else {
-            console.log("candAddClase: clase es undefined")
-            canAddClase = false
+            return false
         }
-
-        return canAddClase
     }
 
     /**
      * Gestiona el evento anhadir la clase seleccionada al horario
      */
-    addClase() {
-        //Chequear que la clase seleccionada por el usuario es valida
-        if (!this.formIsValid()) {
-            this.setState({
-                error: true,
-                errorMessage: constants.MENSAJE_ERROR.CAMPO_OBLIGATORIO
-            })
-        } else {
-            //Caso formulario rellenado correctamente
-            var newClase = this.newClase(this.state.claseSelected)
-            //Comprobamos que podemos anhadir la nueva clase al horario
-            if(!this.canAddClase(newClase)) {
+    addClase(clase) {
+        let newClase
+        if (!clase) {
+            //Caso obtenemos el objeto clase desde formulario
+            if (!this.formIsValid()) {
                 this.setState({
                     error: true,
-                    errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
+                    errorMessage: constants.MENSAJE_ERROR.CAMPO_OBLIGATORIO
                 })
             } else {
-                //Eliminamos clases repetidas y solapadas con la nueva clase a
-                //anhadir
-                this.state.horario = this.eliminarRedundancias(newClase)
-                //Anadimos la nueva clase al horario
-                this.setState({
-                    error: false,
-                    horario: [...this.state.horario, newClase],
-                })
+                //Caso formulario rellenado correctamente
+                 newClase = this.newClase(this.state.claseSelected)
             }
+        }
+        else {
+            //Caso obtenemos el objeto clase como argumento
+            newClase = clase
+        }
+
+        //Comprobamos que podemos anhadir la nueva clase al horario
+        if(!this.canAddClase(newClase)) {
+            this.setState({
+                error: true,
+                errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
+            })
+        } else {
+            //Eliminamos clases repetidas y solapadas con la nueva clase a
+            //anhadir
+            //this.state.horario = this.eliminarRedundancias(newClase)
+            //Anadimos la nueva clase al horario
+            this.setState({
+                error: false,
+                horario: [...this.state.horario, newClase],
+            })
         }
     }
 
-    delClase(clase) {
-        let horario = this.state.horario.filter((c) => c !== clase)
-        this.setState({
-            horario: horario,
-        })
+    moveClase = (e, clase) => {
+
+    }
+
+
+
+    handleDelClase = (e, clase) => {
+        e.stopPropagation(); // Hace que el html padre no expanda su comportamiento onClick en este boton
+        this.delClaseFromHorario(clase)
     }
 
     //html de la cabecera con el logo y titulo
@@ -321,7 +383,6 @@ class Horario extends Component {
                 </div>
 
                 <button className="btn btn-info" id="addButton" onClick={() => this.addClase()}>Añadir clase</button>
-
                 {this.state.error === null
                     ? ""
                     : this.state.error
@@ -342,6 +403,13 @@ class Horario extends Component {
         return this.state.horario.find(clase =>
             clase.dia == dia && clase.hora == hora
         )
+    }
+
+    delClaseFromHorario(clase) {
+        let horario = this.state.horario.filter((c) => c !== clase)
+        this.setState({
+            horario: horario,
+        })
     }
 
     /**
@@ -421,11 +489,27 @@ class Horario extends Component {
             }
         }
         return (
-            <td className={css.className} style={{backgroundColor: css.color}}>
+            <td className={css.className}
+                id={dia + " " + hora}
+                style={{backgroundColor: css.color}}
+                draggable="true"
+                onDragStart={this.handleDragStart}
+                onDragEnd={this.handleDragEnd}
+                onDragOver={this.handleDragOver}
+                onDragEnter={this.handleDragEnter}
+                onDragLeave={this.handleDragLeave}
+                onDrop={(e) => this.handleDrop(e,dia,hora)}
+                onClick={() => this.handleClick(dia, hora)}
+            >
                 <div>
                     {nombreAsignatura}
                     {(nombreAsignatura)
-                        ? <button className="btn btn-info" id="delButton" onClick={() => this.delClase(clase)}>x</button>
+                        ? <button style={{padding:"0px", backgroundColor:"white", color:"dimgrey"}}
+                                  id="delButton"
+                                  onClick={(e) => this.handleDelClase(e, clase)}
+                        >
+                            <DeleteSharpIcon></DeleteSharpIcon>
+                        </button>
                         : ""
                     }
                 </div>
@@ -469,6 +553,47 @@ class Horario extends Component {
         )
     }
 
+    /**
+     * Devuelve un valor del rango [30, 60, 90]
+     * siguiendo la secuencia round-robin
+     */
+    roundRobin(duracion) {
+        let newDuracion = (duracion === 90)
+            ? 30
+            : duracion + 30
+        return newDuracion
+    }
+
+    /**
+     * Modifica la duracion de una clse
+     */
+    changeDuration(clase) {
+        clase.duracion = this.roundRobin(clase.duracion)
+    }
+
+    /**
+     * Evento clicar en una clase del horario.
+     * Aumenta la duracion de la clase
+     */
+    handleClick = (dia, hora) => {
+        // Obtenemos la clase que hemos clicado en el horario
+        let clase = this.getClaseFromHorario(dia, hora)
+        if(clase) {
+            let duracionBackup = clase.duracion
+            let indexHora = constants.RANGO_HORAS.findIndex((hora) => hora === clase.hora)
+            //Cambiamos la duracion de la clase seleccionada
+            this.changeDuration(clase)
+            if (this.solapamientoMediaHoraSiguiente(clase,indexHora)
+                || this.solapamientoHoraSiguiente(clase, indexHora)) {
+                // NO SE PUEDE AUMENTAR LA DURACION -> ROLLBACK
+                clase.duracion = duracionBackup
+            } else {
+                // SE PUEDE AUMENTAR LA DURACION
+                this.setState({})
+            }
+        }
+        this.state.horario.map((clase) => console.log("HORARIO:" + clase.asignatura + " " + clase.duracion))
+    }
     /*Drag&Drop*/
 
     componentDidMount() {
@@ -483,15 +608,24 @@ class Horario extends Component {
 
         this.state.dragSrcEl = e.target
         e.dataTransfer.effectAllowed = 'move'
-        e.dataTransfer.setData('text/html', e.target.innerHTML)
+        e.dataTransfer.setData('text/html', e.target.textContent)
     }
 
-    handleDrop = (e) => {
+    handleDrop = (e, dia, hora) => {
         e.stopPropagation(); // Evita redireccion del navegador.
 
         if(this.state.dragSrcEl != e.target) {
-            this.state.dragSrcEl.innerHTML = e.target.innerHTML
-            e.target.innerHTML = e.dataTransfer.getData('text/html')
+            //this.state.dragSrcEl.innerHTML = e.target.innerHTML
+            //e.target.textContent = e.dataTransfer.getData('text/html')
+            let asignatura = e.dataTransfer.getData('text/html')
+            let clase = {
+                dia: dia,
+                hora: hora,
+                asignatura: asignatura,
+                duracion: 30,
+                tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
+            }
+            this.addClase(clase)
         }
             return false;
     }
@@ -542,32 +676,18 @@ class Horario extends Component {
             <div>
                 {this.htmlCabecera()}
                 {this.htmlFormulario()}
-                <div className="objectDrag objectOver"
+                <div className="objectDrag"
                      draggable="true"
                      onDragStart={this.handleDragStart}
                      onDragEnd={this.handleDragEnd}
-
-                     onDragOver={this.handleDragOver}
-
-                     onDragEnter={this.handleDragEnter}
-                     onDragLeave={this.handleDragLeave}
-
-                     onDrop={this.handleDrop}
                 >
                     Naturales
                 </div>
 
-                <div className="objectDrag objectOver"
+                <div className="objectDrag"
                      draggable="true"
                      onDragStart={this.handleDragStart}
                      onDragEnd={this.handleDragEnd}
-
-                     onDragOver={this.handleDragOver}
-
-                     onDragEnter={this.handleDragEnter}
-                     onDragLeave={this.handleDragLeave}
-
-                     onDrop={this.handleDrop}
                 >
                     Biologia
                 </div>
