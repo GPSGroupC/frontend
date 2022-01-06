@@ -1,8 +1,8 @@
 import React, { useState, Fragment } from "react";
 import { nanoid } from "nanoid";
 import data from "../mock-data.json";
-import FilaReadOnly from "./componentes/FilaReadOnly";
-import FilaEditable from "./componentes/FilaEditable";
+import FilaReadOnly from "./componentes/FilaReadOnlyAulas";
+import FilaEditable from "./componentes/FilaEditableAulas";
 import { Link } from 'react-router-dom'
 import eina from '../images/eina-logo.png'
 import './PantallaHorarios.css';
@@ -10,31 +10,31 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/Button';
 import Api from "./servicios/api";
 
-function ImportarAsignaturas() {
+function ImportarAulas() {
 
-  async function importarAsignaturas(formdata) {
-    await Api.importarAsignaturas(formdata).then(r => {
+  async function importarAulas(formdata) {
+    await Api.importarAulas(formdata).then(r => {
       console.log(r.status);
       if (r.status === 200) {
         document.getElementById("file").value = "";
-        window.alert("Asignaturas importadas con éxito");
+        window.alert("Aulas importadas con éxito");
       } else {
-        window.alert("Ha ocurrido un error al importar las asignaturas");
+        window.alert("Ha ocurrido un error al importar las aulas");
       }
     }).catch(err => {
-      console.log("Error al importar asignaturas: ", err)
+      console.log("Error al importar aulas: ", err)
     })
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e.target[0].files[0]);
-    const answer = window.confirm("¿Estás seguro? Se perderán todas las asignaturas importadas previamente");
+    const answer = window.confirm("¿Estás seguro? Se perderán todas las aulas importadas previamente");
     if (answer) {
       const formdata = new FormData()
       formdata.append('file', e.target[0].files[0]);
-      formdata.append('conservarNoImportadas', document.getElementById("conservarAsignaturas").checked);
-      importarAsignaturas(formdata);
+      formdata.append('conservarNoImportadas', document.getElementById("conservarAulas").checked);
+      importarAulas(formdata);
     } else {
 
 
@@ -47,10 +47,10 @@ function ImportarAsignaturas() {
     <div>
       <div id="import-box">
         <h3>
-          Importar Asignaturas
+          Importar Aulas
         </h3><br></br><br></br>
         <p>
-          Selecciona el archivo excel para importar las asignaturas
+          Selecciona el archivo excel para importar las aulas
         </p><br></br><br></br>
         <div id="fileform">
           <form onSubmit={handleSubmit}>
@@ -61,8 +61,8 @@ function ImportarAsignaturas() {
           </form>
           <br></br><br></br>
           <label>
-            <input id="conservarAsignaturas" type="checkbox" />
-            Conservar asignaturas que se habían añadido manualmente
+            <input id="conservarAulas" type="checkbox" />
+            Conservar aulas que se habían añadido manualmente
           </label>
         </div>
       </div>
@@ -70,4 +70,4 @@ function ImportarAsignaturas() {
   );
 };
 
-export default ImportarAsignaturas;
+export default ImportarAulas;

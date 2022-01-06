@@ -63,14 +63,6 @@ label {
   width: 300px;
 }
 
-.inicioAux{
-  margin-top: 15px;
-}
-
-.inicioAux:hover{
-  transform: scale(1.1);
-}
-
 #textoImg{
   display: inline-block;
   vertical-align: top;
@@ -94,11 +86,12 @@ label {
 
 
 .header {
-  display:flex; /* rows and columns style */
-  flex-direction:row;
-  justify-content:space-between; /* Horizontal alignment */
-  align-items:end; /* vertical alignment */
-  flex-wrap:wrap;
+  display: flex;
+  flex-direction: row;
+  margin: auto auto auto;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
   margin: 0% 5%;
 }
 
@@ -111,8 +104,6 @@ label {
     flex-wrap:wrap;
   }
 }
-
-
 
 .dialog ul li{
  text-align: start;

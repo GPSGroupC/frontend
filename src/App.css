@@ -36,3 +36,26 @@
     transform: rotate(360deg);
   }
 }
+
+/* Tarjetas de opciones de la pantalla inicial*/
+.optionCard{
+  margin: 50px auto auto;
+  padding-bottom: 40px;
+  padding-top: 40px;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly; /*Horizontal alignment*/
+  align-items: center; /*Vertical alignment*/
+  flex-wrap: wrap;
+
+  width: 60%;
+  border: 1px solid #476b6b;
+  border-radius: 8px;
+  box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+
+}
+
+.optionCard:hover{
+  transform: scale(1.1);
+}
