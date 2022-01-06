@@ -85,7 +85,7 @@ class Calendario extends Component {
                 inicioSegundo_cuatri: r[1],
                 //finSegundo_cuatri: r[2],
                 inicioSegundaConvocatoria: r[2],
-                //finSegundaConvocatoria: r[2],
+                finSegundaConvocatoria: r[4],
                 ultModificacion: r[3],
                 //Dias recuperados de la libreria dates generator
                 semestre1: this.getPeriodo("semestre1",r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
@@ -211,7 +211,7 @@ class Calendario extends Component {
             )
             response.then(_ => {
                 this.updateMetadata(this.state.estadoCurso)
-                this.updateDescriptions(this.state.estadoCurso)
+                //this.updateDescriptions(this.state.estadoCurso)
             })
         })
 
@@ -925,6 +925,7 @@ class Calendario extends Component {
                         Api.putMetadataCalendar(this.state.inicioPrimer_cuatri,
                             this.state.inicioSegundo_cuatri,
                             this.state.inicioSegundaConvocatoria,
+                            this.state.finSegundaConvocatoria,
                             this.state.estadoCurso);
                         //Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1)
                         Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed)
