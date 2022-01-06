@@ -45,7 +45,7 @@ class Calendario extends Component {
             selectSemanaAB: constants.SEMANAAB_VALORES.A,
             selectHorarioCambiado: constants.HORARIOCAMBIADO_VALORES.LUNES,
             //CALENDAR WEEK AB SELECTOR
-            selectS1GlobalSemanaAB:[],
+            selectS1GlobalSemanaAB: [],
             //DIAS RECUPERADOS DE LA LIBRERIA DATES GENERATOR
             semestre1: {dates: [], year: -1, monthNames: []},
             semestre2: {dates: [], year: -1, monthNames: []},
@@ -62,7 +62,10 @@ class Calendario extends Component {
             //DIAS QUE HAN CAMBIADO EN FRONTEND
             semestre1_changed: {dates: []},
             semestre2_changed: {dates: []},
-            recuperacion_changed: {dates: []}
+            recuperacion_changed: {dates: []},
+            //Descripciones de dias festivos o de convocatoria
+            description_festivo: "",
+            description_convocatoria:"",
         }
     }
 
@@ -85,9 +88,9 @@ class Calendario extends Component {
                 //finSegundaConvocatoria: r[2],
                 ultModificacion: r[3],
                 //Dias recuperados de la libreria dates generator
-                semestre1: this.getPeriodo(r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
-                semestre2: this.getPeriodo(r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
-                recuperacion: this.getPeriodo(r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
+                semestre1: this.getPeriodo("semestre1",r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
+                semestre2: this.getPeriodo("semestre2", r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
+                recuperacion: this.getPeriodo("recuperacion",r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
             })
         }).catch(err => {
             console.log("Error al actualizar el calendario: ", err)
@@ -120,6 +123,13 @@ class Calendario extends Component {
         })
     }
 
+    async updateDescriptions(curso) {
+        await Api.getDescriptions(curso).then(r => {
+            this.setState({
+                semestre1: undefined
+            })
+        })
+    }
 
     /**
      * Al acceder por primera vez, se actualizan los formularios y el calendario
@@ -144,7 +154,7 @@ class Calendario extends Component {
             inicioPrimer_cuatri: newValue,
         }, () => {
             this.setState({
-                semestre1: this.getPeriodo( 8, parseInt(this.state.estadoCurso.split('-')[0]), 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
+                semestre1: this.getPeriodo( "semestre1",8, parseInt(this.state.estadoCurso.split('-')[0]), 5, this.state.fechasSemestre1,this.state.inicioPrimer_cuatri),
             })
         })
     };
@@ -178,6 +188,17 @@ class Calendario extends Component {
             finSegundaConvocatoria: newValue,
         })
     };
+    handleDescriptionFestivo = (event) => {
+        this.setState({
+            description_festivo: event.target.value,
+        })
+    }
+
+    handleDescriptionConvocatoria = (event) => {
+        this.setState({
+            description_convocatoria: event.target.value,
+        })
+    }
 
     HandleChangeCurso = async (curso) => {
         this.setState({estadoCurso: curso.target.value}, () => {
@@ -190,6 +211,7 @@ class Calendario extends Component {
             )
             response.then(_ => {
                 this.updateMetadata(this.state.estadoCurso)
+                this.updateDescriptions(this.state.estadoCurso)
             })
         })
 
@@ -218,63 +240,60 @@ class Calendario extends Component {
                         //Asignamos un valor 'a' o 'b'
                         this.state.selectS1GlobalSemanaAB[semestreSelected + "-" + monthIndex + "-" + weekIndex] = nextValue
                         //console.log("numWeek >= weekNumSelected: " + numWeek + " >= " + weekNumInMonth)
-                        this.updateWeek(semestreSelected,monthIndex,weekIndex, nextValue)
+                        this.updateWeekAB(semestreSelected,monthIndex,weekIndex, nextValue)
                         nextValue = (nextValue == 'a') ? 'b' : 'a'
                     }
                 }
             }
         } else {
-            this.updateWeek(semestreSelected,monthIndexSelected,weekIndexSelected, null)
+            this.updateWeekAB(semestreSelected,monthIndexSelected,weekIndexSelected, null)
         }
         this.setState((state, props) => ({
         }))
     }
 
-    updateWeek(semester, monthIndex, weekIndex, value) {
-        console.log(semester)
-        switch(semester) {
+    /**
+     *
+     * @param semesterName Nombre del semestre al que pertenece monthIndex y weekIndex
+     * @param monthIndex  Indice el mes en el que se encuentra la semana a actualizar
+     * @param weekIndex   Indice de la semana en la que se encuentra la semana a actualizar
+     * @param value       String "a" o "b"
+     *
+     * Actualiza los dias lectivos de una semana de un semestre como dias de tipo "semanaAB"
+     * con valor "value"
+     */
+    updateWeekAB(semesterName, monthIndex, weekIndex, value) {
+        let semester
+        let semester_changed
+        switch(semesterName){
             case "semestre1":
-                for(let i=0; i < 5; i++){
-                    if (this.state.semestre1.dates[monthIndex][weekIndex][i].date != ' ') {
-                        this.state.semestre1.dates[monthIndex][weekIndex][i].semanaAB = value
-                        this.state.semestre1.dates[monthIndex][weekIndex][i].type = "lectivo"
-                        const indiceS1 = this.state.semestre1_changed.dates.findIndex( fecha => fecha.jsDate === this.state.semestre1.dates[monthIndex][weekIndex][i].jsDate);
-                        if(indiceS1 !== -1){
-                            this.state.semestre1_changed.dates[indiceS1] = this.state.semestre1.dates[monthIndex][weekIndex][i]
-                        }else{
-                            this.state.semestre1_changed.dates.push(this.state.semestre1.dates[monthIndex][weekIndex][i])
-                        }
-                    }
-                }
-                break;
+                semester = this.state.semestre1
+                semester_changed = this.state.semestre1_changed
+                break
             case "semestre2":
-                for(let i=0; i < 5; i++){
-                    if (this.state.semestre2.dates[monthIndex][weekIndex][i].date != ' ') {
-                        this.state.semestre2.dates[monthIndex][weekIndex][i].semanaAB = value
-                        this.state.semestre2.dates[monthIndex][weekIndex][i].type = "lectivo"
-                        const indiceS1 = this.state.semestre2_changed.dates.findIndex( fecha => fecha.jsDate === this.state.semestre2.dates[monthIndex][weekIndex][i].jsDate);
-                        if(indiceS1 !== -1){
-                            this.state.semestre2_changed.dates[indiceS1] = this.state.semestre2.dates[monthIndex][weekIndex][i]
-                        }else{
-                            this.state.semestre2_changed.dates.push(this.state.semestre2.dates[monthIndex][weekIndex][i])
-                        }
-                    }
-                }
-                break;
+                semester = this.state.semestre2
+                semester_changed = this.state.semestre2_changed
+                break
             default:
-                //recuperacion
-                for(let i=0; i < 5; i++){
-                    if (this.state.recuperacion.dates[monthIndex][weekIndex][i].date != ' ') {
-                        this.state.recuperacion.dates[monthIndex][weekIndex][i].semanaAB = value
-                        this.state.recuperacion.dates[monthIndex][weekIndex][i].type = "lectivo"
-                        const indiceS1 = this.state.recuperacion_changed.dates.findIndex( fecha => fecha.jsDate === this.state.recuperacion.dates[monthIndex][weekIndex][i].jsDate);
-                        if(indiceS1 !== -1){
-                            this.state.recuperacion_changed.dates[indiceS1] = this.state.recuperacion.dates[monthIndex][weekIndex][i]
-                        }else{
-                            this.state.recuperacion_changed.dates.push(this.state.recuperacion.dates[monthIndex][weekIndex][i])
-                        }
-                    }
+                semester = this.state.recuperacion
+                semester_changed = this.state.recuperacion_changed
+        }
+
+        for(let i=0; i < 5; i++){
+            // Dia concreto de la semana
+            let day = semester.dates[monthIndex][weekIndex][i]
+            if (day.date != ' ' && day.type == constants.TIPOS_FECHA.LECTIVO) {
+                // Actualizamos el dia con value -> ("a" o "b")
+                day.semanaAB = value
+                // Agregamos el dia a la estructura de datos semestre_changed que usamos para actualizar
+                // el backend solo con los dias que se modifican
+                const indiceS1 = semester_changed.dates.findIndex( fecha => fecha.jsDate === day.jsDate);
+                if(indiceS1 !== -1){
+                    semester_changed.dates[indiceS1] = day
+                }else{
+                    semester_changed.dates.push(day)
                 }
+            }
         }
     }
 
@@ -285,25 +304,29 @@ class Calendario extends Component {
      * @param {number} month    El mes en el que empieza el periodo. month 0 -> Enero
      * @param {number} year     El anho en el que empieza el periodo
      * @param {number} numMonths Duracion del periodo en meses
+     * @param {fechasCuatri} Periodo recuperado de backend
      */
-    getPeriodo = (month, year, numMonths, fechasCuatri, inicioPrimerCuatri) => {
-        // startingDay es el dia asociado a la primera fecha de cada semana
-        // startingDay 0 -> Domingo
-
+    getPeriodo = (semesterName, month, year, numMonths, fechasCuatri, inicioPrimerCuatri) => {
         let queryDate = {month: month, year: year, startingDay: 1}
         let acumDates = []
         let monthNames = []
 
         for (let i = 0; i < numMonths; i++) {
+            //Obtenemos las fechas reales del calendario asociado a `queryDate`
             const {dates, nextMonth, nextYear} = datesGenerator(queryDate)
-
             for (let i = 0; i < dates.length; i++) {
                 for (let j = 0; j < dates[i].length; j++) {
                     if (dates[i][j].month !== queryDate.month) {
+                        //Escondemos todas las fechas que no pertenezcan al mes
                         dates[i][j].date = ' '
+                    }
+                    else if (semesterName === "recuperacion") {
+                        //Ponemos que por defecto las fechas del periodo de recuperacion sean de tipo convocatoria
+                        dates[i][j].type = constants.TIPOS_FECHA.CONVOCATORIA
                     }
                 }
             }
+
             Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
             Parser.parseFestivos(dates)
 
@@ -333,10 +356,12 @@ class Calendario extends Component {
             case constants.TIPOS_FECHA.CONVOCATORIA:
                 // El dia es de tipo convocatoria
                 this.state.convocatoriaCheckBox = true
+                this.state.description_convocatoria = date.description
                 break;
             case constants.TIPOS_FECHA.FESTIVO:
                 // El dia es de tipo festivo
                 this.state.festivoCheckBox = true
+                this.state.description_festivo = date.description
                 break;
             default:
                 // date.type == undefined. El dia es de tipo lectivo
@@ -345,14 +370,14 @@ class Calendario extends Component {
         }
         
         if (date.semanaAB != undefined) {
-            // El dia pertenece a semana a/b
+            // El dia lectivo pertenece a semana a/b
             this.state.semanaABcheckBox = true
-            date.semanaAB = this.state.selectSemanaAB
+            this.state.selectSemanaAB = date.semanaAB
         }
         if (date.horarioCambiado != undefined) {
-            // El dia tiene horario cambiado
+            // El dia lectivo tiene horario cambiado
             this.state.horarioCambiadoCheckBox = true
-            date.horarioCambiado = this.state.selectHorarioCambiado
+            this.state.selectHorarioCambiado = date.horarioCambiado
         }
 
         this.setState((state, props) => ({
@@ -374,9 +399,11 @@ class Calendario extends Component {
         if (this.state.convocatoriaCheckBox) {
             //Fecha seleccionada marcada como convocatoria
             newDateType = constants.TIPOS_FECHA.CONVOCATORIA
+            this.state.selectedDate.description = this.state.description_convocatoria
         } else if (this.state.festivoCheckBox) {
             //Fecha seleccionada marcada como festivo
             newDateType = constants.TIPOS_FECHA.FESTIVO
+            this.state.selectedDate.description = this.state.description_festivo
         }
         this.state.selectedDate.type = newDateType
 
@@ -419,7 +446,11 @@ class Calendario extends Component {
                 break;
         }
 
-        this.setState({showDialog: false});
+        this.setState({
+            showDialog: false,
+            description_festivo: "",
+            description_convocatoria:"",
+        });
     }
 
     /**
@@ -503,60 +534,112 @@ class Calendario extends Component {
         this.state.horarioCambiadoCheckBox = false
     }
 
+    //html asociado a las descripciones mostradas a la derecha del calendario
+    htmlDescriptions(week) {
+        //Descripciones semanales que se tienen que mostrar en el calendario
+        let descriptions = Parse.showDescriptions(week)
+        //Color del icono de la descripcion. Por defecto en blanco
+        let color = "#FFFFFF"
+        if (descriptions) {
+            //Caso esta semana tiene alguna descripcion que mostrar.
+            //Actualizamos el color del icono de la descripcion semanal
+            color = Parse.weekHasConvocatoria(week)
+                ?  color = "#d675bd" //morado
+                :  color= "#a2f29f"  //verde
+        }
+        return (
+            <span>
+                <div className="descriptionIcono" style={{backgroundColor: color}}/>
+                <span className="descriptionText"> {descriptions}</span>
+            </span>
+        )
+    }
+
+    // html asociado a los selectores de semana en cascada que se muestran a la
+    // derecha de cada semana del calendario
+    htmlGlobalWeekSelector(semesterName, monthIndex, weekIndex) {
+        if (semesterName !== "recuperacion") {
+            return (
+                <select value={this.state.selectS1GlobalSemanaAB[semesterName + "-" + monthIndex + "-" + weekIndex]}
+                        id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}
+                        className={`globalWeekSelectorAB-${semesterName}`}
+                        onChange={(e) => {
+                            this.handleGlobalWeekAB(e, semesterName, monthIndex, weekIndex)
+                        }}>
+                    <option value={constants.SEMANAAB_VALORES.C}>-</option>
+                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
+                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
+                </select>
+            )
+        }
+    }
     htmlDialog() {
         return (
-            <dialog className="dialog" open={this.state.showDialog ? true : false}>
-                <ul>
-                    <li>
+            <dialog open={this.state.showDialog ? true : false}>
+                <div className="dialog">
                         <label>
-                            <input type="checkbox" id={constants.TIPOS_FECHA.CONVOCATORIA} checked={this.state.convocatoriaCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.CONVOCATORIA, e.target.checked)}}>
+                            <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.CONVOCATORIA} checked={this.state.convocatoriaCheckBox}
+                                   onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.CONVOCATORIA, e.target.checked)}}>
                             </input>
                             Convocatoria
                         </label>
-                        <br/>
-                    </li>
-                    <li>
+                        {
+                            this.state.convocatoriaCheckBox
+                                ? <input className="inputDescriptionConvocatoria"
+                                         maxLength="50"
+                                         onChange={this.handleDescriptionConvocatoria}
+                                         value={this.state.description_convocatoria}
+                                         placeholder="Añade una descripción"
+                                    />
+                                : void(0)
+                        }
                         <label>
-                            <input type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
+                            <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.FESTIVO} checked={this.state.festivoCheckBox}
+                                   onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.FESTIVO, e.target.checked)}}>
                             </input>
                             Festivo
                         </label>
-                        <br/>
-                    </li>
-                    <li>
+                        {
+                            this.state.festivoCheckBox
+                                ? <input className="inputDescriptionFestivo"
+                                         maxLength="50"
+                                         onChange={this.handleDescriptionFestivo}
+                                         value={this.state.description_festivo}
+                                         placeholder="Añade una descripción"
+                                />
+                                : void(0)
+                        }
+
                         <label>
-                            <input type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
-                                      onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.LECTIVO, e.target.checked)}}>
+                            <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.LECTIVO} checked={this.state.lectivoCheckBox}
+                                   onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.LECTIVO, e.target.checked)}}>
                             </input>
                             Lectivo
                         </label>
-                        <br/>
-                        <ul>
-                            <li>
+                            <span style={{marginLeft:"50px"}}>
                                 <label>
-                                    <input type="checkbox" id={constants.TIPOS_FECHA.SEMANAAB} checked={this.state.semanaABcheckBox}
+                                    <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.SEMANAAB} checked={this.state.semanaABcheckBox}
                                            onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.SEMANAAB, e.target.checked)}}>
                                     </input>
                                     Semana
                                 </label>
-                                <select value={this.state.selectSemanaAB}
+
+                                <select style={{marginLeft:"5px"}} value={this.state.selectSemanaAB}
                                         onChange={(e) => {this.setState({selectSemanaAB: e.target.value})}}>
                                     <option value={constants.SEMANAAB_VALORES.A}>a</option>
                                     <option value={constants.SEMANAAB_VALORES.B}>b</option>
                                 </select>
-                            </li>
-                            <li>
+                            </span>
+                            <span style={{marginLeft:"50px"}}>
                                 <label>
-                                    <input type="checkbox" id={constants.TIPOS_FECHA.HORARIOCAMBIADO}
+                                    <input className="checkBox" type="checkbox" id={constants.TIPOS_FECHA.HORARIOCAMBIADO}
                                            checked={this.state.horarioCambiadoCheckBox}
                                            onChange={(e) => {this.onSelectedCheckBox(constants.TIPOS_FECHA.HORARIOCAMBIADO, e.target.checked)}}>
                                     </input>
                                     Dia con horario cambiado a
                                 </label>
-                                <br/>
-                                <select value={this.state.selectHorarioCambiado}
+
+                                <select style={{marginLeft:"5px"}} value={this.state.selectHorarioCambiado}
                                         onChange={(e) => {this.setState({selectHorarioCambiado: e.target.value})}}>
                                     <option value={constants.HORARIOCAMBIADO_VALORES.LUNES}>L</option>
                                     <option value={constants.HORARIOCAMBIADO_VALORES.MARTES}>M</option>
@@ -566,14 +649,43 @@ class Calendario extends Component {
                                     <option value={constants.HORARIOCAMBIADO_VALORES.SABADO}>S</option>
                                     <option value={constants.HORARIOCAMBIADO_VALORES.DOMINGO}>D</option>
                                 </select>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
+                            </span>
+                </div>
                 <button className="btn btn-info" id="closeDialog" onClick={() => this.onCloseDialog()}>Cerrar</button>
             </dialog>
         )
     }
+
+    /**
+     *
+     * @param semestre
+     * @param weekIndex
+     * @param monthIndex
+     * @param week
+     * @returns {boolean} true sii a la semana 'week' le corresponde un numero de semana en el calendario
+     */
+    showNumWeek(semestre, weekIndex, monthIndex, week) {
+          /*Solo devolvemos true si empieza en Lunes o es la primera semana del primer mes del semestre,
+                                    para evitar que el calendario que corta las semanas cuente algunas semanas dos veces seguidas.
+                                    */
+
+            //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
+        const startNumberWeekDay = (semestre === "semestre1")
+            ? Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri)
+            : Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri, weekIndex, week[0]);
+        switch(semestre) {
+                case "semestre1":
+                    return Parser.devolverDiaSemana(week[0].date, week[0].month, week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                        || (monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
+                case "semestre2":
+                    return new Date(week[0].year, week[0].month, week[0].date) >= new Date(this.state.inicioSegundo_cuatri)
+                        && Parser.devolverDiaSemana(week[0].date, week[0].month, week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
+                        || (monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
+                default:
+                    return false
+            }
+    }
+
 
     /**
      * Muestra una tabla con un periodo del calendario, para el primer semestre
@@ -582,7 +694,6 @@ class Calendario extends Component {
      */
     htmlTable(periodo, semestre) {
         var weekNum = 0
-        var startNumberWeekDay = 0
         return (
             <table className="tablaSemestre">
                 <thead style={{fontWeight: 'bold'}}>
@@ -602,7 +713,7 @@ class Calendario extends Component {
 
                     <tbody>
                     <tr>
-                        <td style={{fontWeight: 'bold', width:"50px", borderBottom: "1px solid #476b6b"}} rowSpan={month.length + 1} scope="rowgroup">
+                        <td className="monthCell" rowSpan={month.length + 1} scope="rowgroup">
                             {periodo.monthNames[monthIndex]}
 
                         </td>
@@ -611,36 +722,17 @@ class Calendario extends Component {
                         (Parse.weekIsBlank(week))
                             ? ''
                             :(<tr key={JSON.stringify(week[0])} >
-                            <td style={{borderRight: "1px solid #476b6b", borderLeft: "1px solid #476b6b"}}>
-                                {  /*Solo aumentamos el número de semana si empieza en Lunes o es la primera semana del primer mes del semestre,
-                                    para evitar que el calendario que corta las semanas cuente algunas semanas dos veces seguidas.
-                                    */
-                                   
-                                    //Obtenemos el numero de la semana de la fecha dada (0,1,2,3,4)
-                                    startNumberWeekDay = (semestre === "semestre1") ? 
-                                    Parser.getWeekNumberFromDate(this.state.inicioPrimer_cuatri) : 
-                                    Parser.getWeekNumberFromDate(this.state.inicioSegundo_cuatri,weekIndex,week[0]),
-                                    
-                                    semestre === "recuperacion"
-                                    ? void(0)
-                                        : semestre === "semestre1" ? 
-                                            //Caso de que sea el primer Semestre
-                                            Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
-                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
-                                            ? weekNum= weekNum + 1
-                                            : void(0)
-                                        :   //Es el segundo semestre la logica es la misma pero debemos mirar si el dia es anterior o no al del inicio del 2 cuatri
-                                            new Date(week[0].year,week[0].month, week[0].date) >= new Date(this.state.inicioSegundo_cuatri) && Parser.devolverDiaSemana(week[0].date,week[0].month,week[0].year) === constants.DIAS_SEMANA_ENUMERADOS.LUNES
-                                            || ( monthIndex === 0 && weekIndex - startNumberWeekDay === 0)
-                                            ? weekNum= weekNum + 1
-                                            : void(0)
+                            <td className="numWeek">
+                                {this.showNumWeek(semestre,weekIndex,monthIndex,week,weekNum)
+                                    ? weekNum= weekNum + 1
+                                    : void(0)
                                 }
                             </td>
                             {week.map((day, dayIndex) => (
                                 <td key={JSON.stringify(day)}
                                     class={day.horarioCambiado != undefined ? "horarioCambiado" : day.type}
                                     style={{marginLeft: "15px",marginRight:'10px'}}>
-                                    <div onClick={() => this.onSelectDate(day, semestre)}
+                                    <div className="dateCell" onClick={() => this.onSelectDate(day, semestre)}
                                          style={{cursor: 'pointer',textAlign: 'center',marginRight:'2px', marginBottom: "5px", marginLeft: "15px"}}>
                                         {Parser.showCalendarDate(day, constants.DAYS[dayIndex])}
                                     </div>
@@ -650,12 +742,8 @@ class Calendario extends Component {
                                     }
                                 </td>
                             ))}
-                                <select value={this.state.selectS1GlobalSemanaAB[semestre + "-" + monthIndex + "-" + weekIndex]}id={`globalWeekSelectorAB-${monthIndex}-${weekIndex}`}className={`globalWeekSelectorAB-${semestre}`}
-                                        onChange={(e) => {this.handleGlobalWeekAB(e,semestre,monthIndex, weekIndex)}}>
-                                    <option value={constants.SEMANAAB_VALORES.C}>-</option>
-                                    <option value={constants.SEMANAAB_VALORES.A}>a</option>
-                                    <option value={constants.SEMANAAB_VALORES.B}>b</option>
-                                </select>
+                                {this.htmlGlobalWeekSelector(semestre, monthIndex, weekIndex)}
+                                {this.htmlDescriptions(week)}
                         </tr>)
                     ))}
                     </tbody>
@@ -665,10 +753,25 @@ class Calendario extends Component {
         )
     }
 
+    htmlListaHorarioCambiado(semestre) {
+        var lista_dias_horario_cambiado = Parser.getDiasConHorarioCambiado(semestre)
+        if (lista_dias_horario_cambiado.length != 0) {
+            return (
+                <div className="descripcionHorariosCambiados">
+                    <p>Cambios de día:</p>
+                    <div className="listaHorariosCambiados">
+                        {Parser.getDiasConHorarioCambiado(semestre)
+                            .map((dia) => (<p>{dia}</p>))
+                        }
+                    </div>
+                </div>
+            )
+        }
+    }
 
     render() {
         return (
-            <div className="bodyMargin">
+            <div>
                 <div className="header">
                     <h4 className="titulo">EDITAR CALENDARIO GRADOS</h4>
                     <Link to="/">
@@ -712,22 +815,6 @@ class Calendario extends Component {
                             </Stack>
                         </label>
                         <br></br>
-                        <label>Final primer semestre
-                            <Stack spacing={3} className="datePicker">
-                                <DesktopDatePicker
-                                    label="dd/mm/yyyy"
-                                    inputFormat="dd/MM/yyyy"
-                                    value={this.state.finPrimer_cuatri}
-                                    onChange={this.handleChangeFinPrimerCuatri}
-                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[0], 8)}
-                                    minDate={new Date(this.state.inicioPrimer_cuatri)} //mayor o igual que la fecha de inicio del primer cuatri
-                                    maxDate={new Date(this.state.inicioSegundo_cuatri)} //no puede ser superior a la fecha de inicio del segundo cuatri
-                                    shouldDisableDate={isWeekend}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </Stack>
-                        </label>
-                        <br></br>
                         <label>Inicio segundo semestre
                             <Stack spacing={3} className="datePicker">
                                 <DesktopDatePicker
@@ -738,22 +825,6 @@ class Calendario extends Component {
                                     minDate={new Date("2-1-" + this.state.estadoCurso.split('-')[1])}
                                     maxDate={new Date("2-29-" + this.state.estadoCurso.split('-')[1])}
                                     onChange={this.handleChangeSegundoCuatri}
-                                    shouldDisableDate={isWeekend}
-                                    renderInput={(params) => <TextField {...params} />}
-                                />
-                            </Stack>
-                        </label>
-                        <br></br>
-                        <label>Final segundo semestre
-                            <Stack spacing={3} className="datePicker">
-                                <DesktopDatePicker
-                                    label="dd/mm/yyyy"
-                                    inputFormat="dd/MM/yyyy"
-                                    value={this.state.finSegundo_cuatri}
-                                    onChange={this.handleChangeFinSegundoCuatri}
-                                    defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 1)}
-                                    minDate={new Date(this.state.inicioSegundo_cuatri)} //mayor o igual que la fecha de inicio del segundo cuatri
-                                    maxDate={new Date(this.state.inicioSegundaConvocatoria)} //no puede ser superior a la fecha de inicio de la segundna convocatoria
                                     shouldDisableDate={isWeekend}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
@@ -810,46 +881,48 @@ class Calendario extends Component {
                             </p>
                         </div>
 
+
                         <div className="calendario">
                             <div>
-                                <h7 className="titulo">Primer semestre</h7>
+                                <h7 className="titulo" >Primer semestre</h7>
+                                {this.htmlListaHorarioCambiado(this.state.semestre1)}
                                 {this.htmlTable(this.state.semestre1,"semestre1")}
-                                <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
-                                {this.htmlTable(this.state.recuperacion,"recuperacion")}
                             </div>
-                            <div>
+                            <div style={{marginTop:"20px"}}>
                                 <h7 className="titulo">Segundo semestre</h7>
+                                {this.htmlListaHorarioCambiado(this.state.semestre2)}
                                 {//No quiteis los string de semestre1 y semestre2 y recuperacion sino en el backend va ir mal.
                                     this.htmlTable(this.state.semestre2,"semestre2")}
                             </div>
-                        </div>
-                        <br/>
-                        <div style={{marginLeft: "20%"}}>
-                            <span>
-                                <img className="leyendaIcono" src={blanco}/>
-                                <p className="textoLeyenda">Día lectivo</p>
-
-                                <img className="leyendaIcono" style={{marginLeft: '1%'}} src={amarillo}/>
-                                <p className="textoLeyenda">Día con horario de otro día de la semana</p>
-                            </span>
-                        </div>
-                        <div style={{marginLeft: "20%"}}>
-                        <span>
-                            <img className="leyendaIcono" src={verde}/>
-                            <p className="textoLeyenda">Día festivo</p>
-
-                            <img className="leyendaIcono" style={{marginLeft: '1%'}} src={morado}/>
-                            <p className="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
-                        </span>
+                            <div style={{marginTop:"20px"}}>
+                                <h7 className="titulo">Período exámenes 2ª convocatoria</h7>
+                                {this.htmlListaHorarioCambiado(this.state.recuperacion)}
+                                {this.htmlTable(this.state.recuperacion,"recuperacion")}
+                            </div>
                         </div>
 
+                        <div className="leyenda">
+                            <img className="leyendaIcono" src={blanco}/>
+                            <p className="textoLeyenda">Día lectivo</p>
+
+                            <img className="leyendaIcono" style={{marginLeft: '1%'}} src={amarillo}/>
+                            <p className="textoLeyenda">Día con horario de otro día de la semana</p>
+                        </div>
+
+                        <div className="leyenda" style={{marginBottom:"50px"}}>
+                                <img className="leyendaIcono" src={verde}/>
+                                <p className="textoLeyenda">Día festivo</p>
+
+                                <img className="leyendaIcono" style={{marginLeft: '1%'}} src={morado}/>
+                                <p className="textoLeyenda">Día reservado para la realización de exámenes de convocatoria</p>
+                            </div>
                     </div>
                 </div>
                 <br/><br/>
                 <div className="header">
                 <Link to="/">
                     <button onClick={() => {
-                        Api.putAllCalendarData(this.state.inicioPrimer_cuatri,
+                        Api.putMetadataCalendar(this.state.inicioPrimer_cuatri,
                             this.state.inicioSegundo_cuatri,
                             this.state.inicioSegundaConvocatoria,
                             this.state.estadoCurso);
@@ -857,6 +930,7 @@ class Calendario extends Component {
                         Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed)
                         Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2_changed)
                         Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed)
+
                     }} type="button" className="btn btn-info btn-lg" >GUARDAR CALENDARIO
                     </button>
                 </Link>
