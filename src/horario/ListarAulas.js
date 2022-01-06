@@ -197,7 +197,7 @@ function ListarAulas() {
                     boxShadow: "4px 5px 4px -3px rgba(97,97,97,1)"
           }}>
 
-          <p style={{fontWeight:'bold'}}>Añadir Aula</p>
+          <h3>Añadir Aula</h3>
           <form onSubmit={handleAddFormSubmit}>
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="text"

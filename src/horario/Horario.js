@@ -230,7 +230,7 @@ class Horario extends Component {
             <div>
                 <div className="header">
                     <Link to="/"><img className="logoCabecera" src={eina} /></Link>
-                    <Link to="/">
+                    <Link to="/pantalla-horarios">
                         <button type="button" className="btn btn-info btn-lg">SALIR SIN GUARDAR</button>
                     </Link>
                 </div>

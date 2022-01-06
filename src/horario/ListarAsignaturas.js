@@ -271,12 +271,10 @@ function ListarAsignaturas() {
 
   return (
 
-    <div style={{
-      width: "130%"
-}}>
+    <div>
             <div style={{
                     display: "block",
-                    margin: "auto",
+                    margin: "20px auto auto",
                     width: "50%",
                     border: "1px solid #b8b894",
                     borderRadius: "8px",
@@ -284,7 +282,7 @@ function ListarAsignaturas() {
                     boxShadow: "4px 5px 4px -3px rgba(97,97,97,1)"
           }}>
 
-          <p style={{fontWeight:'bold'}}>Añadir Asignatura</p>
+          <h3>Añadir Asignatura</h3>
           <form onSubmit={handleAddFormSubmit}>
               <input style={{marginLeft: '1px', marginRight: '1px'}}
               type="number"
