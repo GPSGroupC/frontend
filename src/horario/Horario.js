@@ -29,14 +29,13 @@ class Horario extends Component {
             asignaturasOptions: [],
             //Estado errores
             error: null,
-            errorMessage: ""
+            errorMessage: "",
+            //Drag & Drop
+            dragSrcEl: null,
         }
     }
 
-    
-    componentDidMount() {
-        this.getAsignaturasOptions()
-    }
+
 
     /**
      *
@@ -469,11 +468,110 @@ class Horario extends Component {
             </table>
         )
     }
+
+    /*Drag&Drop*/
+
+    componentDidMount() {
+        this.getAsignaturasOptions()
+    }
+
+    /**
+     * Empezar a arrastrar un objeto
+     */
+    handleDragStart = (e) =>{
+        e.target.style.opacity = '0.4';
+
+        this.state.dragSrcEl = e.target
+        e.dataTransfer.effectAllowed = 'move'
+        e.dataTransfer.setData('text/html', e.target.innerHTML)
+    }
+
+    handleDrop = (e) => {
+        e.stopPropagation(); // Evita redireccion del navegador.
+
+        if(this.state.dragSrcEl != e.target) {
+            this.state.dragSrcEl.innerHTML = e.target.innerHTML
+            e.target.innerHTML = e.dataTransfer.getData('text/html')
+        }
+            return false;
+    }
+
+    /**
+     * Terminar de arrastrar un objeto
+     */
+    handleDragEnd(e) {
+        e.target.style.opacity = '1';
+    }
+
+
+    /**
+     * Si se arrastra un objeto sobre un link, evita
+     * que el navegador redirija a ese link
+     */
+    handleDragOver(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        return false
+    }
+
+    /**
+     * Un objeto distitno esta siendo arrastrado encima de este
+     */
+    handleDragEnter(e) {
+        //console.log("onDragEnter!!")
+        // Insertamos css para que este objeto tenga un borde de puntitos
+        // indicando que el otro objeto se puede soltar sobre este.
+        e.target.classList.add('objectOver');
+    }
+
+    /**
+     * Un objeto distitno ha dejado de ser arrastrado por encima de este
+     */
+    handleDragLeave(e) {
+        //console.log("onDragLeave!!")
+        // Eliminamos el css con el borde de puntitos indicando que el otro
+        // objeto ya no se puede soltar sobre este.
+        e.target.classList.remove('objectOver');
+    }
+
+
+
     render() {
         return (
             <div>
                 {this.htmlCabecera()}
                 {this.htmlFormulario()}
+                <div className="objectDrag objectOver"
+                     draggable="true"
+                     onDragStart={this.handleDragStart}
+                     onDragEnd={this.handleDragEnd}
+
+                     onDragOver={this.handleDragOver}
+
+                     onDragEnter={this.handleDragEnter}
+                     onDragLeave={this.handleDragLeave}
+
+                     onDrop={this.handleDrop}
+                >
+                    Naturales
+                </div>
+
+                <div className="objectDrag objectOver"
+                     draggable="true"
+                     onDragStart={this.handleDragStart}
+                     onDragEnd={this.handleDragEnd}
+
+                     onDragOver={this.handleDragOver}
+
+                     onDragEnter={this.handleDragEnter}
+                     onDragLeave={this.handleDragLeave}
+
+                     onDrop={this.handleDrop}
+                >
+                    Biologia
+                </div>
+
                 {this.htmlHorario()}
             </div>
 

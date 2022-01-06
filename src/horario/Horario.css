@@ -108,3 +108,14 @@
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+.objectDrag {
+    border:1px solid #b8b894;
+    background-color:grey;
+    max-width:90px;
+    cursor: move;
+}
+
+.objectOver {
+    border: 3px dotted #666;
+}
