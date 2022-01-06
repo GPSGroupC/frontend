@@ -1,40 +1,10 @@
 /**
  * CSS PARA EL COMPONENTE PANTALLA HORARIOS
  */
-
-#buttongroup {
-    padding : 0px;
-    float: left;
-    border-radius: 0%;
-    align-items: center;
-    background-color: transparent;
-    border: 0px;
-
-}
-
-#buttonselect {
-    width: 100%;
-    margin: 0px;
-    display: block;
-    text-align: center;
-
-}
-
-.selected {
-    background-color: rgb(126, 124, 124) ;
-}
-
-#import-box {
-    border: 1px solid black;
-    border-radius: 3%;
-    float:left;
-    margin-left: 10%;
-    text-align: center;
-    padding: 5%;
-}
-
-#importarbutton {
-    margin-left: 25px;
+.navBar {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
 }
 
 .einaImg{
@@ -42,10 +12,6 @@
     width: 350px;
 }
 
-.menuHorarios {
-    width: 300px;
-    margin-left: 3%;
-}
 
 @media only screen and (max-width: 600px) {
     .menuHorarios {

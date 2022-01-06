@@ -31,7 +31,7 @@ class PantallaHorarios extends Component {
     }
 
     handleClick = (event) => {
-        var menuItem= this.state.menu.find((menuItem) => menuItem.id == event.target.value)
+        let menuItem= this.state.menu.find((menuItem) => menuItem.id == event.target.value)
         this.setState({
             menuItemSelected: menuItem.component
         })
@@ -51,23 +51,34 @@ class PantallaHorarios extends Component {
         )
     }
 
-    renderMenu() {
+    htmlNavBar() {
         return (
-            <div className="menuHorarios">
-                {this.state.menu.map((menuItem) => (
-                <button id="buttonselect" type="button" value={menuItem.id}
-                        onClick={this.handleClick}>{menuItem.name}</button>
-                ))}
+            <div className="btn-group-toggle navBar" data-toggle="buttons">
+                    {this.state.menu.map((menuItem) => (
+                        <button
+                            type="button"
+                            className=
+                                {(menuItem.component === this.state.menuItemSelected)
+                                    ? "btn btn-secondary active"
+                                    : "btn btn-secondary"
+                                }
+                            style={{borderColor:"#e3f2fd"}}
+                            value={menuItem.id}
+                            onClick={this.handleClick}>{menuItem.name}
+                        </button>
+
+                    ))}
             </div>
         )
     }
 
     render() {
         return (
-            <div className="bodyMargin">
+            <div>
                 {this.renderHeader()}<br/><br/>
-                {this.renderMenu()}<br/><br/>
-                {this.state.menuItemSelected}
+                <div style={{marginLeft: "10%"}}>                    {this.htmlNavBar()}<br/><br/>
+                    {this.state.menuItemSelected}
+                </div>
             </div>
         );
     };

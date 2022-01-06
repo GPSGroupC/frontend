@@ -781,7 +781,7 @@ class Calendario extends Component {
                 <br/>
                 <hr size="5px" color="black"/>
                 <br/><br/>
-                <div style={{marginLeft: "5%"}}>
+                <div style={{marginLeft: "10%"}}>
                     <h5 className="titulo">Selecciona qué curso quieres editar</h5>
                     <label>Curso
                         <select value={this.state.estadoCurso} onChange={this.HandleChangeCurso} className="form-select"

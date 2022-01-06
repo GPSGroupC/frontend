@@ -1,3 +1,13 @@
 /**
  * CSS PARA EL COMPONENTE IMPORTAR ASIGNATURAS
  */
+
+#import-box {
+    margin: 50px auto auto;
+    padding: 20px;
+    display: block;
+    width: 50%;
+    border: 1px solid #b8b894;
+    border-radius:8px;
+    box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+}

@@ -18,7 +18,7 @@
 }
 
 .pdfHeader p {
-    font-size: small;
+    font-size: smaller;
     margin-left: 50px;
     color: dimgrey;
 }
@@ -38,7 +38,7 @@
 
 .tablaSemestre
 {
-    font-size: small;
+    font-size: medium;
     overflow:hidden;
 }
 
@@ -50,7 +50,7 @@
 }
 
 .dateCell{
-    min-width: 50px;
+    min-width: 60px;
 }
 
 .monthCell {
