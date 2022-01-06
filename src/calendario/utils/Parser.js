@@ -90,6 +90,7 @@ class Parser {
                     if(diaencontrado !== undefined && day.date !== this.BLANK_DATE){
                         day.type = diaencontrado.docencia
                         day.horarioCambiado = diaencontrado.horariocambiado
+                        day.description = diaencontrado.festividad
                         if(diaencontrado.semana_a_b !== 'c'){
                             day.semanaAB = diaencontrado.semana_a_b
                         }
@@ -115,8 +116,7 @@ class Parser {
             dayFormatted.type = day.type ? day.type : "lectivo"
             dayFormatted.horarioCambiado = day.horarioCambiado ? day.horarioCambiado : null
             dayFormatted.semanaAB = day.semanaAB ? day.semanaAB : "c"
-            //TODO(fer): Descomentar
-            // dayFormatted.description = day.description ? day.description : ""
+            dayFormatted.description = day.description ? day.description : ""
             listDays.push(JSON.stringify(dayFormatted));
         })
         return listDays;

@@ -856,7 +856,6 @@ class Calendario extends Component {
                                     defaultCalendarMonth={new Date(this.state.estadoCurso.split('-')[1], 8)}
                                     minDate={new Date(this.state.inicioSegundaConvocatoria)} //mayor o igual que la fecha de inicio de la segunda conv
                                     maxDate={new Date("9-30-" + this.state.estadoCurso.split('-')[1])} //no puede ser superior a la fecha de inicio del primer cuatri que viene
-                                    shouldDisableDate={isWeekend}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </Stack>
