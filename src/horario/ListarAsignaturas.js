@@ -405,10 +405,10 @@ function ListarAsignaturas() {
 
       
 
-        <div className="horarioTabla">
+        <div className="tablaAsignaturas">
 
         <form onSubmit={handleEditFormSubmit}>
-        <table class="table table-hover">
+        <table>
             <thead>
                 <tr class="table-light">
                     <th scope="col">Código Plan</th>
