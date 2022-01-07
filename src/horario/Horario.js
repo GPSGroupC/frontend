@@ -1,235 +1,406 @@
-import React, {Component, useState, Fragment} from "react";
-import Select from 'react-select'
-import {LocalizationProvider, TimePicker} from "@mui/lab";
-import {TextField} from "@material-ui/core";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import React, {Component} from "react";
 import {Alert} from "@material-ui/lab";
 import {Link} from "react-router-dom";
 import eina from "../images/eina-logo.png";
-import './Horario.css'
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import constants from "./utils/Constants";
+import './Horario.css'
 
+/**
+ * Interfaz para editar un horario de una carrera, curso, cuatrimestre y grupo
+ */
 class Horario extends Component {
 
     
     constructor(props) {
         super(props)
         this.state = {
-            //Lista de clases anhadidas al horario
+            //Estructura que guarda las clases del horario
             horario: [],
-            //Estado de los selects del formulario
-            claseSelected: {
-                selectDia: "",
-                selectHora: null,
-                selectAsignatura: "",
-                selectDuracion: null,
-                selectTipo: ""
-            },
-            //Asignaturas disponibles
-            asignaturasOptions: [],
-            //Estado errores
+            //Errores
             error: null,
-            errorMessage: ""
+            errorMessage: "",
+            //Drag and Drop
+            //Asignatura seleccionada
+            dragSrcEl: null,
+            //Origen de la accion de arrastrar una asignatura
+            // (INSERTAR desde fuera del horario o MOVER desde dentro)
+            origen_accion: constants.ACCION_ORIGEN.INSERTAR,
+            diaOrigenAlMover: null,
+            horaOrigenAlMover: null,
         }
     }
 
-    
-    componentDidMount() {
-        this.getAsignaturasOptions()
+    /**
+     * Devuelve true sii la clase a insertar en el horario 'newClase'
+     * se solaparia con otra clase del horario
+     */
+    haySolapamiento(newClase) {
+        let indexHora = constants.RANGO_HORAS.findIndex((hora) => hora === newClase.hora)
+        return this.solapamientoHoraActual(newClase,indexHora)
+            || this.solapamientoMediaHoraAnterior(newClase, indexHora)
+            || this.solapamientoHoraAnterior(newClase, indexHora)
+            || this.solapamientoMediaHoraSiguiente(newClase, indexHora)
+            || this.solapamientoHoraSiguiente(newClase, indexHora)
     }
 
     /**
      *
-     * @returns [Object] las opciones del select 'Asignatura'
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con una clase del horario que empieza
+     * a la misma hora
      */
-    async getAsignaturasOptions() {
-        //const res = await axios.get('https://jsonplaceholder.typicode.com/users')
-        //const data = res.data
-
-        /*const asignaturas = data.map(d => ({
-            "value" : d.id,
-            "label" : d.name
-        }))*/
-        const asignaturas = [
-            {"value": 302505, "label": "Fisica 1"},
-            {"value": 302505, "label": "Matemáticas 2"},
-            {"value": 302505, "label": "Programación 1"}
-        ]
-        this.setState({asignaturasOptions: asignaturas})
+    solapamientoHoraActual(newClase, indexHora) {
+        let claseHoraActual = this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora])
+        return !!(claseHoraActual)
     }
 
     /**
      *
-     * @returns [Object] las opciones del select 'dia'
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * una hora antes
      */
-    getDiasOptions() {
-        var dias = constants.DAYS
-        return dias.map((d) => ({"value": d, "label": d}))
+    solapamientoMediaHoraAnterior(newClase, indexHora) {
+        let claseMediaHoraAnterior= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora - 1])
+        return (claseMediaHoraAnterior && (claseMediaHoraAnterior.duracion > constants.DURACION_CLASE.MEDIA_HORA))
     }
 
     /**
      *
-     * @returns [Object] las opciones del select 'duracion'
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * media hora antes
      */
-    getDuracionOptions() {
-        var duracion = [30, 60, 90]
-        return duracion.map((d) => ({"value": d, "label": `${d} minutos`}))
+    solapamientoHoraAnterior(newClase, indexHora) {
+        let claseHoraAnterior= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora - 2])
+        return (claseHoraAnterior && (claseHoraAnterior.duracion > constants.DURACION_CLASE.HORA))
+    }
+    /**
+     *
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
+     *
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * media hora despues
+     */
+    solapamientoMediaHoraSiguiente(newClase, indexHora) {
+        let claseMediaHoraSiguiente= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora + 1])
+        return (claseMediaHoraSiguiente && (newClase.duracion > constants.DURACION_CLASE.MEDIA_HORA))
     }
 
     /**
      *
-     * @returns [Object] las opciones del select 'tipo'
-     */
-    getTipoOptions() {
-        var tipo = Object.values(constants.TIPO_CLASE).map((tipo) => tipo.NOMBRELARGO) //Tipo 1, tipo 2, tipo 3
-        return tipo.map((t, index) => ({"value": (index + 1), "label": t}))
-    }
-
-    /**
+     * @param newClase Clase que se quiere insertar en el horario
+     * @param indexHora Indice de RANGO_HORAS donde se quiere insertar 'newClase'
      *
-     * @returns true sii el formulario no tiene ningun campo vacio o null
+     * Devuelve true sii 'newClase' se solaparia con la clase que empieza
+     * una hora despues.
      */
-    formIsValid() {
-        return this.state.claseSelected.selectAsignatura
-            && this.state.claseSelected.selectDia
-            && this.state.claseSelected.selectHora
-            && this.state.claseSelected.selectDuracion
-            && this.state.claseSelected.selectTipo
+    solapamientoHoraSiguiente(newClase, indexHora) {
+        let claseHoraSiguiente= this.getClaseFromHorario(newClase.dia, constants.RANGO_HORAS[indexHora + 2])
+        return (claseHoraSiguiente && (newClase.duracion > constants.DURACION_CLASE.HORA))
     }
 
-    /**
-     *
-     * @param claseA Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
-     * @param claseB Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
-     * @returns true sii las asignaturas y el tipo de cada clase son iguales.
-     */
-    asignaturasIguales(claseA, claseB) {
-        return claseA.asignatura == claseB.asignatura && claseA.tipo == claseB.tipo
-    }
 
-    /**
-     *
-     * @param claseA Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
-     * @param claseB Una clase de universidad. Formato:{dia,hora,asignatura,duracion,tipo}
-     * @returns true sii la claseA se solapa en el tiempo con la clase B
-     */
-    clasesSolapadas(claseA, claseB) {
-        return claseA.dia == claseB.dia && claseA.hora == claseB.hora
-    }
-
-    /**
-     *
-     * @param new_clase Una clase de universidad que se va a añaidir al horario
-     * @returns Devuelve un horario sin redundancias.
-     *          Redundancias detectadas:
-     *              Puede existir en el horario una asignatura igual que la que se quiere añadir.
-     *              Puede existir en el horario una clase solapada en el tiempo con la que se quiere añadir.
-     */
-    eliminarRedundancias(new_clase) {
-        return this.state.horario.filter(
-            (clase) => !this.asignaturasIguales(clase, new_clase)
-                && !this.clasesSolapadas(clase, new_clase)
-        );
-    }
-
-    /**
-     *
-     * @param claseSelected Estado del formulario
-     * Devuelve un objeto clase a partir del estado del formulario
-     */
-     newClase(claseSelected) {
-         //El formato de hora es "15" si es en punto o "15:30" si no lo es
-         let hora = (claseSelected.selectHora.getMinutes() === 0)
-             ? claseSelected.selectHora.getHours().toString()
-             : claseSelected.selectHora.getHours() + ":" + claseSelected.selectHora.getMinutes()
-        //Objeto clase que se guarda en el horario
-        let clase = {
-            dia: claseSelected.selectDia.label,
-            hora: hora,
-            asignatura: claseSelected.selectAsignatura.label,
-            duracion: claseSelected.selectDuracion.value,
-            tipo: claseSelected.selectTipo.label
-        }
-
-        return clase
-    }
 
     /**
      * Devuelve true si es posible anhadir una nueva clase al horario
      */
     canAddClase(clase) {
-        let canAddClase = true
         if (clase) {
-            console.log("candAddClase: clase NO es undefined")
-            let horaIndex = constants.RANGO_HORAS.findIndex((hora) => hora === clase.hora)
-            //Clase del horario situada en la anterior media hora
-            let claseAnteriorMediaHora = this.getClaseFromHorario(clase.dia, constants.RANGO_HORAS[horaIndex - 1])
-            if (claseAnteriorMediaHora && (claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA
-                || claseAnteriorMediaHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
-                //La clase que quiero anhadir se solapa con la clase de la anterior media hora
-                canAddClase = false
-                console.log("candAddClase: SOLAPA con la clase de la media hora enterior")
-            }
-            let claseAnteriorHora = this.getClaseFromHorario(clase.dia, constants.RANGO_HORAS[horaIndex - 2])
-            if (claseAnteriorHora && (claseAnteriorHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA)) {
-                // La clase que quiero anhadir se solapa con la clase de la anterior hora
-                canAddClase = false
-                console.log("candAddClase: SOLAPA con la clase de la hora enterior")
-            }
-
+            return !this.haySolapamiento(clase)
         } else {
-            console.log("candAddClase: clase es undefined")
-            canAddClase = false
+            return false
         }
-
-        return canAddClase
     }
 
     /**
-     * Gestiona el evento anhadir la clase seleccionada al horario
+     * @param newClase Objeto clase {dia, hora, asignatura, duracion, tipo}
+     * Intenta insertar la clase 'newClase' al horario
      */
-    addClase() {
-        //Chequear que la clase seleccionada por el usuario es valida
-        if (!this.formIsValid()) {
+    addClase(newClase) {
+        if(!this.canAddClase(newClase)) {
+            //No podemos insertar la clase al horario
             this.setState({
                 error: true,
-                errorMessage: constants.MENSAJE_ERROR.CAMPO_OBLIGATORIO
+                errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
             })
         } else {
-            //Caso formulario rellenado correctamente
-            var newClase = this.newClase(this.state.claseSelected)
-            //Comprobamos que podemos anhadir la nueva clase al horario
-            if(!this.canAddClase(newClase)) {
-                this.setState({
-                    error: true,
-                    errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
-                })
+            //Podemos insertar la clase al horario
+            this.setState({
+                error: false,
+                horario: [...this.state.horario, newClase],
+            })
+        }
+    }
+
+    /**
+     * @param oldClase Objeto clase que se quiere mover
+     * @param newClase Igual que oldClase pero con 'dia' y 'hora'
+     * actualizados al lugar donde se quiere mover la clase
+     */
+    moveClase = (oldClase, newClase) => {
+        if (oldClase && newClase && !this.haySolapamiento(newClase)) {
+            //Podemos mover oldClase a newClase
+            this.setState({
+                error: false,
+                horario: [...this.delClaseFromHorario(oldClase), newClase],
+            })
+        } else {
+            //No podemos mover oldClase a newClase
+            this.setState({
+                error: true,
+                errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
+            })
+        }
+    }
+
+    /**
+     *
+     * @param hora String "8:30"
+     * @param dia String "Lunes"
+     * Devuelve el objeto clase asociado a un dia y hora del horario.
+     * Si no existe, devuelve undefined
+     */
+    getClaseFromHorario(dia, hora) {
+        if (dia && hora) {
+            return this.state.horario.find(clase =>
+                clase.dia == dia && clase.hora == hora
+            )
+        }
+    }
+
+    /**
+     *
+     * @param clase Objeto clase
+     * Elimina una clase del horario
+     */
+    delClaseFromHorario(clase) {
+        let horario = this.state.horario.filter((c) => c !== clase)
+        return horario
+    }
+
+    /**
+     * @param e
+     * @param clase Objeto clase dia, hora, asignatura, duracion, tipo}
+     * Evento eliminar clase de horario
+     */
+    handleDelClase = (e, clase) => {
+        e.stopPropagation(); // Hace que el html padre no expanda su comportamiento onClick en este boton
+        this.setState({
+            horario:  this.delClaseFromHorario(clase),
+        })
+    }
+
+    /**
+     *
+     * @param clase Objeto clase
+     * @param duracion Duracion de 'clase'
+     * @param posicion [Inicio | Medio | Fin ] Posicion del fragmento a cada clase segun su tamanho
+     * Devuelve el CSS asociado a cada clase segun su tipo y posicion en el horario
+     */
+    getCSS(clase, duracion, posicion) {
+        let color
+        let className
+        switch (clase.tipo) {
+            case constants.TIPO_CLASE.TEORIA.NOMBRELARGO:
+                //Si es clase de teoria, azul
+                color =  "#d7dfe8"; break
+            case constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO:
+                color =  "#FCF7C3"; break //amarillo
+            case constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO:
+                color =  "#B4D4FF"; break //azul
+            case constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO:
+                color =  "#FF6262"; break //rojo
+            default:
+                //Resto de casos, blanco
+                color = "#FFFFFF"; break
+        }
+        if (duracion === constants.DURACION_CLASE.MEDIA_HORA) {
+            //La clase dura media hora
+            className = "claseDuracionMediaHora"
+        } else {
+            switch (posicion) {
+                case constants.POSICION.INICIO:
+                    className = "clasePosicionInicio";
+                    break
+                case constants.POSICION.MEDIO:
+                    className = "clasePosicionMedio";
+                    break
+                default:
+                    className = "clasePosicionFin"
+            }
+        }
+
+        return {className: className, color: color}
+    }
+
+    /**
+     * Devuelve un valor del rango [30, 60, 90]
+     * siguiendo la secuencia round-robin
+     */
+    roundRobin(duracion) {
+        let newDuracion = (duracion === 90)
+            ? 30
+            : duracion + 30
+        return newDuracion
+    }
+
+    /**
+     * Modifica la duracion de una clse
+     */
+    changeDuration(clase) {
+        clase.duracion = this.roundRobin(clase.duracion)
+    }
+
+
+    /**
+     * Evento clicar en una clase del horario.
+     * Aumenta la duracion de la clase
+     */
+    handleClick = (dia, hora) => {
+        // Obtenemos la clase que hemos clicado en el horario
+        let clase = this.getClaseFromHorario(dia, hora)
+        if(clase) {
+            let duracionBackup = clase.duracion
+            let indexHora = constants.RANGO_HORAS.findIndex((hora) => hora === clase.hora)
+            //Cambiamos la duracion de la clase seleccionada
+            this.changeDuration(clase)
+            if (this.solapamientoMediaHoraSiguiente(clase,indexHora)
+                || this.solapamientoHoraSiguiente(clase, indexHora)) {
+                // NO SE PUEDE AUMENTAR LA DURACION -> ROLLBACK
+                clase.duracion = duracionBackup
             } else {
-                //Eliminamos clases repetidas y solapadas con la nueva clase a
-                //anhadir
-                this.state.horario = this.eliminarRedundancias(newClase)
-                //Anadimos la nueva clase al horario
-                this.setState({
-                    error: false,
-                    horario: [...this.state.horario, newClase],
-                })
+                // SE PUEDE AUMENTAR LA DURACION
+                this.setState({})
+            }
+        }
+        this.state.horario.map((clase) => console.log("HORARIO:" + clase.asignatura + " " + clase.duracion))
+    }
+
+    /**************************
+     * Drag and Drop handlers
+     **************************/
+
+    /**
+     * Arrastrar una clase desde fuera del horario para INSERTARLA
+     */
+    handleDragStartInsertar = (e) =>{
+        e.target.style.opacity = '0.4';
+
+        this.state.dragSrcEl = e.target
+        this.state.origen_accion = constants.ACCION_ORIGEN.INSERTAR
+        e.dataTransfer.effectAllowed = 'move'
+        e.dataTransfer.setData('text/html', e.target.textContent)
+    }
+    /**
+     * Arrastrar una clase desde dentro del horario para MOVERLA
+     */
+    handleDragStartMover = (e, dia, hora) => {
+        e.target.style.opacity = '0.4';
+        this.state.dragSrcEl = e.target
+        this.state.origen_accion = constants.ACCION_ORIGEN.MOVER
+        this.state.diaOrigenAlMover = dia
+        this.state.horaOrigenAlMover = hora
+        e.dataTransfer.effectAllowed = 'move'
+        e.dataTransfer.setData('text/html', e.target.textContent)
+    }
+
+    /**
+     *
+     * @param e
+     * @param dia
+     * @param hora
+     * Evento: el usuario ha soltado una clase sobre la celda 'e.target'
+     */
+    handleDrop = (e, dia, hora) => {
+        e.stopPropagation(); // Evita redireccion del navegador.
+
+        if(this.state.dragSrcEl != e.target) {
+            let asignatura = e.dataTransfer.getData('text/html')
+            let newClase = {
+                dia: dia,
+                hora: hora,
+                asignatura: asignatura,
+                duracion: 30,
+                tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
+            }
+            switch(this.state.origen_accion) {
+                case constants.ACCION_ORIGEN.INSERTAR:
+                    this.addClase(newClase);break
+                case constants.ACCION_ORIGEN.MOVER:
+                    let oldClase = this.getClaseFromHorario(this.state.diaOrigenAlMover, this.state.horaOrigenAlMover)
+                    this.moveClase(oldClase, newClase);break
+                default:
+                    console.log("ERROR origen desconocido de la accion")
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Evento: el usuario ha soltado la clase 'e.target' sobre una celda
+     */
+    handleDragEnd(e) {
+        e.target.style.opacity = '1';
+        let objectOver = document.querySelectorAll("div[class^='objectOver']");
+        if (objectOver) {
+            for(var i = 0; i < objectOver.length; i++) {
+                console.log("handleDragEnd")
+                objectOver[i].classList.remove('objectOver');
             }
         }
     }
 
-    delClase(clase) {
-        let horario = this.state.horario.filter((c) => c !== clase)
-        this.setState({
-            horario: horario,
-        })
+
+    /**
+     * Si se arrastra un objeto sobre un link, evita
+     * que el navegador redirija a ese link
+     */
+    handleDragOver(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        return false
     }
 
-    //html de la cabecera con el logo y titulo
+    /**
+     * Evento: el usuario arrastra la clase encima de la celda 'e.target'
+     */
+    handleDragEnter(e) {
+        //Mostrar borde punteado para que el usuario entienda que es dropeable
+        e.target.classList.add('objectOver');
+    }
+
+    /**
+     * Evento: el usuario ha dejado de arrastrar una clase encima de la celda 'e.target'
+     */
+    handleDragLeave(e) {
+        //Esconder borde punteado
+        e.target.classList.remove('objectOver');
+    }
+
+    /**********************
+     * Html subcomponentes
+     *********************/
+
+    /**
+     * html de la cabecera con el logo y titulo
+     */
     htmlCabecera() {
         return(
             <div>
                 <div className="header">
                     <Link to="/"><img className="logoCabecera" src={eina} /></Link>
+                    <h4 className="titulo">EDITAR HORARIO</h4>
                     <Link to="/pantalla-horarios">
                         <button type="button" className="btn btn-info btn-lg">SALIR SIN GUARDAR</button>
                     </Link>
@@ -246,7 +417,7 @@ class Horario extends Component {
      */
     htmlAlertError(error) {
         return(
-            <div className="elementoFormulario">
+            <div style={{marginTop: "20px"}}>
                 <Alert severity="error">{error}</Alert>
             </div>
         )
@@ -263,124 +434,54 @@ class Horario extends Component {
         )
     }
 
-    //html con el formulario para anhadir una asignatura
-     htmlFormulario() {
+    /**
+     *  html con la tarjeta contenedora de la asignaturas arrastables
+     */
+     htmlCard() {
         return(
-            <div className="fondoFormulario">
-                <p>Añade una clase al calendario</p>
-                <div className="contenidoFormulario">
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.state.asignaturasOptions}
-                            placeholder={<div>Asignatura</div>}
-                            onChange={(a) => {
-                                this.setState(this.state.claseSelected.selectAsignatura = a);
-                            } }
-                            value={this.state.claseSelected.selectAsignatura} />
+            <div className="fondoCard">
+                <p>Arrastra una clase al horario</p>
+                <div className="contenidoCard">
+                    <p style={{fontWeight: "bold"}}>Cases teóricas:</p>
+                    <div className="asignaturas">
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Física 1 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Programación 1 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Matemáticas 1 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Matemáticas 2 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Introducción a los computadores</div>
                     </div>
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.getDiasOptions()}
-                            placeholder={<div>Día</div>}
-                            onChange={(d) => {
-                                this.setState(this.state.claseSelected.selectDia = d);
-                            } }
-                            value={this.state.claseSelected.selectDia} />
-                    </div>
-                    <div className="elementoFormulario">
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <TimePicker style={{ boxSizing: "border-box" }}
-                                        placeholder="Hora"
-                                        minutesStep={30}
-                                        minTime={new Date(0, 0, 0, 8)}
-                                        maxTime={new Date(0, 0, 0, 20, 30)}
-                                        onChange={(h) => {
-                                            this.setState(this.state.claseSelected.selectHora = h);
-                                        } }
-                                        value={this.state.claseSelected.selectHora}
-                                        renderInput={(params) => <TextField {...params} />} />
-                        </LocalizationProvider>
-                    </div>
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.getDuracionOptions()}
-                            placeholder={<div>Duración</div>}
-                            onChange={(d) => {
-                                this.setState(this.state.claseSelected.selectDuracion = d);
-                            } }
-                            value={this.state.claseSelected.selectDuracion} />
-                    </div>
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.getTipoOptions()}
-                            placeholder={<div>Tipo</div>}
-                            onChange={(t) => {
-                                this.setState(this.state.claseSelected.selectTipo = t);
-                            } }
-                            value={this.state.claseSelected.selectTipo} />
-                    </div>
-                </div>
-
-                <button className="btn btn-info" id="addButton" onClick={() => this.addClase()}>Añadir clase</button>
-
-                {this.state.error === null
-                    ? ""
-                    : this.state.error
+                    {(this.state.error)
                         ? this.htmlAlertError(this.state.errorMessage)
-                        : this.htmlAlertSuccess()}
+                        : <div style={{minHeight:"45px"}}></div>
+                    }
+                </div>
             </div>
         )
-    }
-
-    /**
-     *
-     * @param hora String "8:30"
-     * @param dia String "Lunes"
-     * Devuelve la clase asociada a un dia y hora del horario.
-     * Si no existe, devuelve undefined
-     */
-    getClaseFromHorario(dia, hora) {
-        return this.state.horario.find(clase =>
-            clase.dia == dia && clase.hora == hora
-        )
-    }
-
-    /**
-     *
-     * @param clase
-     * Devuelve el CSS asociado a cada clase segun su tipo y posicion en el horario
-     */
-    getCSS(clase, duracion, posicion) {
-        let color
-        let className
-        switch (clase.tipo) {
-            case constants.TIPO_CLASE.TEORIA.NOMBRELARGO:
-                color =  "#d7dfe8"; break //azul
-            case constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO:
-                color =  "#FCF7C3"; break //amarillo 
-            case constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO:
-                color =  "#B4D4FF"; break //azul   
-            case constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO:
-                color =  "#FF6262"; break //rojo           
-            default:
-                color = "#FFFFFF"; break //blanco
-        }
-        if (duracion === constants.DURACION_CLASE.MEDIA_HORA) {
-            className = "claseDuracionMediaHora"
-        } else {
-            switch (posicion) {
-                case constants.POSICION.INICIO:
-                    className = "clasePosicionInicio";
-                    break
-                case constants.POSICION.MEDIO:
-                    className = "clasePosicionMedio";
-                    break
-                default:
-                    className = "clasePosicionFin"
-            }
-        }
-
-        return {className: className, color: color}
     }
 
     /**
@@ -423,16 +524,31 @@ class Horario extends Component {
                     //Caso la clase de la hora anterior dura una hora y media
                     //console.log("Clase SEGUNDO ABAJO!: " + clase.asignatura)
                     css = this.getCSS(claseAnteriorHora, claseAnteriorHora.duracion, constants.POSICION.FIN)
-                    console.log("AAAA: " + css.className)
                 }
             }
         }
         return (
-            <td className={css.className} style={{backgroundColor: css.color}}>
+            <td className={css.className}
+                id={dia + " " + hora}
+                style={{backgroundColor: css.color, cursor:(nombreAsignatura) ? "move" : "default"}}
+                draggable={(nombreAsignatura) ? "true" : "false"}
+                onDragStart={(e) => this.handleDragStartMover(e, dia, hora)}
+                onDragEnd={this.handleDragEnd}
+                onDragOver={this.handleDragOver}
+                onDragEnter={this.handleDragEnter}
+                onDragLeave={this.handleDragLeave}
+                onDrop={(e) => this.handleDrop(e,dia,hora)}
+                onClick={() => this.handleClick(dia, hora)}
+            >
                 <div>
                     {nombreAsignatura}
                     {(nombreAsignatura)
-                        ? <button className="btn btn-info" id="delButton" onClick={() => this.delClase(clase)}>x</button>
+                        ? <button style={{padding:"0px", backgroundColor:"white", color:"dimgrey"}}
+                                  id="delButton"
+                                  onClick={(e) => this.handleDelClase(e, clase)}
+                        >
+                            <DeleteSharpIcon></DeleteSharpIcon>
+                        </button>
                         : ""
                     }
                 </div>
@@ -440,6 +556,10 @@ class Horario extends Component {
         )
     }
 
+    /**
+     *
+     * Html asociado a la tabla del horario
+     */
     htmlHorario() {
         return(
             <table className="timetable">
@@ -475,11 +595,34 @@ class Horario extends Component {
             </table>
         )
     }
+
+    /**
+     * Html para informar al usuario sobre la funcionalidad de esta interfaz
+     */
+    htmlAlertInfo() {
+        return (
+            <div className="alertInfo">
+                <Alert severity="info">Información:
+                    <ul>
+                        <li> Puedes <b>añadir clases</b> al horario arrastrándolas.</li>
+                        <li> Dentro del horario puedes <b>mover clases</b> arrastrándolas.</li>
+                        <li> Dentro del horario puedes <b>cambiar la duración</b> de las clases clicando sobre ellas.</li>
+                        <li> Dentro del horario puedes <b>eliminar clases</b> clicando sobre el icono: <DeleteSharpIcon></DeleteSharpIcon></li>
+                    </ul>
+                </Alert>
+            </div>
+        )
+    }
+
+
+
     render() {
         return (
             <div>
                 {this.htmlCabecera()}
-                {this.htmlFormulario()}
+                <h5 className="titulo" style={{marginLeft:"5%"}}>Grado en Ingeniería Informática > 1ºcurso > Otoño > Grupo Mañanas</h5>
+                {this.htmlAlertInfo()}
+                {this.htmlCard()}
                 {this.htmlHorario()}
             </div>
 
