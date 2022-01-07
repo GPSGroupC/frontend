@@ -22,13 +22,13 @@ class Horario extends Component {
             error: null,
             errorMessage: "",
             //Drag and Drop
-            //Asignatura seleccionada
-            dragSrcEl: null,
+            //Asignatura seleccionada al arrastrar
+            asignaturaSelected: null,
             //Origen de la accion de arrastrar una asignatura
             // (INSERTAR desde fuera del horario o MOVER desde dentro)
             origen_accion: constants.ACCION_ORIGEN.INSERTAR,
-            diaOrigenAlMover: null,
-            horaOrigenAlMover: null,
+            diaOrigenAlMover: null, //Dia de la clase que se mueve
+            horaOrigenAlMover: null, //Hora de la clase que se mueve
         }
     }
 
@@ -293,10 +293,10 @@ class Horario extends Component {
     /**
      * Arrastrar una clase desde fuera del horario para INSERTARLA
      */
-    handleDragStartInsertar = (e) =>{
+    handleDragStartInsertar = (e, asignatura) =>{
         e.target.style.opacity = '0.4';
 
-        this.state.dragSrcEl = e.target
+        this.state.asignaturaSelected = asignatura
         this.state.origen_accion = constants.ACCION_ORIGEN.INSERTAR
         e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('text/html', e.target.textContent)
@@ -304,12 +304,12 @@ class Horario extends Component {
     /**
      * Arrastrar una clase desde dentro del horario para MOVERLA
      */
-    handleDragStartMover = (e, dia, hora) => {
+    handleDragStartMover = (e, dia, hora, asignatura) => {
         e.target.style.opacity = '0.4';
-        this.state.dragSrcEl = e.target
         this.state.origen_accion = constants.ACCION_ORIGEN.MOVER
         this.state.diaOrigenAlMover = dia
         this.state.horaOrigenAlMover = hora
+        this.state.asignaturaSelected = asignatura
         e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('text/html', e.target.textContent)
     }
@@ -324,12 +324,11 @@ class Horario extends Component {
     handleDrop = (e, dia, hora) => {
         e.stopPropagation(); // Evita redireccion del navegador.
 
-        if(this.state.dragSrcEl != e.target) {
-            let asignatura = e.dataTransfer.getData('text/html')
+        if(this.state.asignaturaSelected) {
             let newClase = {
                 dia: dia,
                 hora: hora,
-                asignatura: asignatura,
+                asignatura: this.state.asignaturaSelected,
                 duracion: 30,
                 tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
             }
@@ -446,31 +445,31 @@ class Horario extends Component {
                     <div className="asignaturas">
                         <div className="asignatura"
                              draggable="true"
-                             onDragStart={this.handleDragStartInsertar}
+                             onDragStart={(e) => this.handleDragStartInsertar(e,"Física 1")}
                              onDragEnd={this.handleDragEnd}>
                             <DragIndicatorIcon></DragIndicatorIcon>
                             Física 1 </div>
                         <div className="asignatura"
                              draggable="true"
-                             onDragStart={this.handleDragStartInsertar}
+                             onDragStart={(e) => this.handleDragStartInsertar(e,"Programación 1")}
                              onDragEnd={this.handleDragEnd}>
                             <DragIndicatorIcon></DragIndicatorIcon>
                             Programación 1 </div>
                         <div className="asignatura"
                              draggable="true"
-                             onDragStart={this.handleDragStartInsertar}
+                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 1")}
                              onDragEnd={this.handleDragEnd}>
                             <DragIndicatorIcon></DragIndicatorIcon>
                             Matemáticas 1 </div>
                         <div className="asignatura"
                              draggable="true"
-                             onDragStart={this.handleDragStartInsertar}
+                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 2")}
                              onDragEnd={this.handleDragEnd}>
                             <DragIndicatorIcon></DragIndicatorIcon>
                             Matemáticas 2 </div>
                         <div className="asignatura"
                              draggable="true"
-                             onDragStart={this.handleDragStartInsertar}
+                             onDragStart={(e) => this.handleDragStartInsertar(e,"Introducción a los computadores")}
                              onDragEnd={this.handleDragEnd}>
                             <DragIndicatorIcon></DragIndicatorIcon>
                             Introducción a los computadores</div>
@@ -532,7 +531,7 @@ class Horario extends Component {
                 id={dia + " " + hora}
                 style={{backgroundColor: css.color, cursor:(nombreAsignatura) ? "move" : "default"}}
                 draggable={(nombreAsignatura) ? "true" : "false"}
-                onDragStart={(e) => this.handleDragStartMover(e, dia, hora)}
+                onDragStart={(e) => this.handleDragStartMover(e, dia, hora, nombreAsignatura)}
                 onDragEnd={this.handleDragEnd}
                 onDragOver={this.handleDragOver}
                 onDragEnter={this.handleDragEnter}
