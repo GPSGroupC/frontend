@@ -330,7 +330,7 @@ class Horario extends Component {
                 hora: hora,
                 asignatura: this.state.asignaturaSelected,
                 duracion: 30,
-                tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
+                tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO /*siempre se inserta como teoria*/
             }
             
             switch(this.state.origen_accion) {
