@@ -45,6 +45,30 @@
     flex-wrap: wrap;
 }
 
+.asignaturas_problemas {
+    display: flex;
+    flex-direction: row;
+    justify-content: start; /*Horizontal*/
+    align-items: start; /*Vertical*/
+    flex-wrap: wrap;
+}
+
+.asignaturas_practicas_A {
+    display: flex;
+    flex-direction: row;
+    justify-content: start; /*Horizontal*/
+    align-items: start; /*Vertical*/
+    flex-wrap: wrap;
+}
+
+
+.asignaturas_practicas_B {
+    display: flex;
+    flex-direction: row;
+    justify-content: start; /*Horizontal*/
+    align-items: start; /*Vertical*/
+    flex-wrap: wrap;
+}
 
 /* Tabla de horario*/
 .timetable {
@@ -59,7 +83,7 @@
 }
 
 .timetable tr {
-    border-bottom: 1px solid #b8b894;
+    /*border-bottom: 1px solid #b8b894;*/
 
 }
 
@@ -91,6 +115,8 @@
 
 .timetable .celdaSinClase {
     border-right: 1px solid #b8b894;
+    border-bottom: 1px solid #b8b894;
+
 }
 
 
@@ -131,6 +157,36 @@
 /*Drag and drop*/
 .asignatura {
     background-color: #d7dfe8;
+    padding: 10px;
+    cursor: move;
+    border: 1px solid #666;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+/*Drag and drop*/
+.asignatura_practicas_A {
+    background-color: #B4D4FF;
+    padding: 10px;
+    cursor: move;
+    border: 1px solid #666;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+/*Drag and drop*/
+.asignatura_practicas_B {
+    background-color: #FF6262;
+    padding: 10px;
+    cursor: move;
+    border: 1px solid #666;
+    border-radius: 8px;
+    margin-right: 5px;
+}
+
+/*Drag and drop*/
+.asignatura_problemas {
+    background-color: #FCF7C3;
     padding: 10px;
     cursor: move;
     border: 1px solid #666;
