@@ -90,7 +90,7 @@ class Calendario extends Component {
                 //Dias recuperados de la libreria dates generator
                 semestre1: this.getPeriodo("semestre1",r[0]?.getMonth() ?? 8, r[0]?.getFullYear() ?? 2021, 5, this.state.fechasSemestre1,r[0]),
                 semestre2: this.getPeriodo("semestre2", r[1]?.getMonth() ?? 1, r[1]?.getFullYear() ?? 2022, 5, this.state.fechasSemestre2),
-                recuperacion: this.getPeriodo("recuperacion",r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion)
+                recuperacion: this.getPeriodo("recuperacion",r[2]?.getMonth() ?? 8, r[2]?.getFullYear() ?? 2022, 1, this.state.fechasRecuperacion,null,[r[2],r[4]])
             })
         }).catch(err => {
             console.log("Error al actualizar el calendario: ", err)
@@ -180,12 +180,20 @@ class Calendario extends Component {
     handleChangeSegundaConv = (newValue) => {
         this.setState({
             inicioSegundaConvocatoria: newValue,
+        }, () => {
+            this.setState({
+                recuperacion : this.getPeriodo("recuperacion",8, parseInt(this.state.estadoCurso.split('-')[1]), 1, this.state.fechasRecuperacion,null,[this.state.inicioSegundaConvocatoria,this.state.finSegundaConvocatoria]),
+            })
         })
     };
 
     handleChangeFinSegundaConv = (newValue) => {
         this.setState({
             finSegundaConvocatoria: newValue,
+        },() => {
+            this.setState({
+                recuperacion : this.getPeriodo("recuperacion",8, parseInt(this.state.estadoCurso.split('-')[1]), 1, this.state.fechasRecuperacion,null,[this.state.inicioSegundaConvocatoria,this.state.finSegundaConvocatoria]),
+            })
         })
     };
     handleDescriptionFestivo = (event) => {
@@ -306,7 +314,7 @@ class Calendario extends Component {
      * @param {number} numMonths Duracion del periodo en meses
      * @param {fechasCuatri} Periodo recuperado de backend
      */
-    getPeriodo = (semesterName, month, year, numMonths, fechasCuatri, inicioPrimerCuatri) => {
+    getPeriodo = (semesterName, month, year, numMonths, fechasCuatri, inicioPrimerCuatri,tuplaInicioFinSeptiembre) => {
         let queryDate = {month: month, year: year, startingDay: 1}
         let acumDates = []
         let monthNames = []
@@ -327,8 +335,8 @@ class Calendario extends Component {
                 }
             }
 
-            Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri)
-            Parser.parseFestivos(dates)
+            Parser.ParseDate(dates, fechasCuatri,inicioPrimerCuatri,tuplaInicioFinSeptiembre)
+            if(semesterName !== "recuperacion") Parser.parseFestivos(dates);
 
             acumDates = [...acumDates, dates]
             monthNames = [...monthNames, constants.MONTHS[queryDate.month]]
@@ -846,7 +854,7 @@ class Calendario extends Component {
                             </Stack>
                         </label>
                         <br></br>
-                    <label>Final período exámenes 2ª convocatoria
+                    <label>Final período exámenes 2ª convocatoria (fecha no incluida)
                             <Stack spacing={3} className="datePicker">
                                 <DesktopDatePicker
                                     label="dd/mm/yyyy"

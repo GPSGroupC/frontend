@@ -74,13 +74,27 @@ class Parser {
         }
     }
 
-    static async ParseDate(semester,fechasCuatri,inicioPrimerCuatri) {
+    static ParseDaysRemedialSemester(tuplaInicioFinSeptiembre,currentDate,diaSemestre){
+        const fechaInicioSeptiembre = this.dateToString(new Date(tuplaInicioFinSeptiembre[0]))
+        const fechaFinSeptiembre = this.dateToString(new Date(tuplaInicioFinSeptiembre[1]))
+        
+        if(this.isPreviousDate(fechaInicioSeptiembre,currentDate) || !(this.isPreviousDate(fechaFinSeptiembre,currentDate))){
+            diaSemestre.date = this.BLANK_DATE
+            diaSemestre.type = undefined
+        }
+
+    }
+
+    static async ParseDate(semester,fechasCuatri,inicioPrimerCuatri,inicio_FinSeptiembre) {
+        
         semester.map( week => {
             week.map((day) => {
-               // console.log(day,inicioPrimerCuatri)
                 const specificDay = day.jsDate.split(this.BLANK_DATE)[0]
                 if( !isNaN(inicioPrimerCuatri)){
                   this.ParseDaysBeforeSemester1Beginning(this.dateToString(new Date(inicioPrimerCuatri)),specificDay,day)
+                }
+                if( inicio_FinSeptiembre !== undefined ){
+                    this.ParseDaysRemedialSemester(inicio_FinSeptiembre,specificDay,day)
                 }
 
                 for(let i = 0; i < fechasCuatri.length; i++) {
