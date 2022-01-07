@@ -7,6 +7,7 @@ import {Alert} from "@material-ui/lab";
 import {Link} from "react-router-dom";
 import eina from "../images/eina-logo.png";
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import './Horario.css'
 import constants from "./utils/Constants";
 
@@ -33,6 +34,9 @@ class Horario extends Component {
             errorMessage: "",
             //Drag & Drop
             dragSrcEl: null,
+            origen_accion: constants.ACCION_ORIGEN.INSERTAR,
+            diaOrigenAlMover: null,
+            horaOrigenAlMover: null,
         }
     }
 
@@ -274,15 +278,34 @@ class Horario extends Component {
         }
     }
 
-    moveClase = (e, clase) => {
-
+    moveClase = (claseDestino) => {
+        if (claseDestino && !this.haySolapamiento(claseDestino)) {
+            //La clase a mover no se solapa con ninguna otra
+            if (this.state.diaOrigenAlMover && this.state.horaOrigenAlMover) {
+                //El dia y hora de la clase que se ha movido no son null
+                let claseOrigen = this.getClaseFromHorario(this.state.diaOrigenAlMover, this.state.horaOrigenAlMover)
+                this.setState({
+                    error: false,
+                    horario: [...this.delClaseFromHorario(claseOrigen), claseDestino],
+                })
+            } else {
+                console.log("moveClase: diaOrigen o HoraOrigen undefined")
+            }
+        } else {
+            this.setState({
+                error: true,
+                errorMessage: constants.MENSAJE_ERROR.SOLAPAMIENTO
+            })
+        }
     }
 
 
 
     handleDelClase = (e, clase) => {
         e.stopPropagation(); // Hace que el html padre no expanda su comportamiento onClick en este boton
-        this.delClaseFromHorario(clase)
+        this.setState({
+            horario:  this.delClaseFromHorario(clase),
+        })
     }
 
     //html de la cabecera con el logo y titulo
@@ -291,6 +314,7 @@ class Horario extends Component {
             <div>
                 <div className="header">
                     <Link to="/"><img className="logoCabecera" src={eina} /></Link>
+                    <h4 className="titulo">EDITAR HORARIO</h4>
                     <Link to="/pantalla-horarios">
                         <button type="button" className="btn btn-info btn-lg">SALIR SIN GUARDAR</button>
                     </Link>
@@ -325,69 +349,45 @@ class Horario extends Component {
     }
 
     //html con el formulario para anhadir una asignatura
-     htmlFormulario() {
+     htmlCard() {
         return(
-            <div className="fondoFormulario">
-                <p>Añade una clase al calendario</p>
-                <div className="contenidoFormulario">
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.state.asignaturasOptions}
-                            placeholder={<div>Asignatura</div>}
-                            onChange={(a) => {
-                                this.setState(this.state.claseSelected.selectAsignatura = a);
-                            } }
-                            value={this.state.claseSelected.selectAsignatura} />
-                    </div>
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.getDiasOptions()}
-                            placeholder={<div>Día</div>}
-                            onChange={(d) => {
-                                this.setState(this.state.claseSelected.selectDia = d);
-                            } }
-                            value={this.state.claseSelected.selectDia} />
-                    </div>
-                    <div className="elementoFormulario">
-                        <LocalizationProvider dateAdapter={AdapterDateFns}>
-                            <TimePicker style={{ boxSizing: "border-box" }}
-                                        placeholder="Hora"
-                                        minutesStep={30}
-                                        minTime={new Date(0, 0, 0, 8)}
-                                        maxTime={new Date(0, 0, 0, 20, 30)}
-                                        onChange={(h) => {
-                                            this.setState(this.state.claseSelected.selectHora = h);
-                                        } }
-                                        value={this.state.claseSelected.selectHora}
-                                        renderInput={(params) => <TextField {...params} />} />
-                        </LocalizationProvider>
-                    </div>
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.getDuracionOptions()}
-                            placeholder={<div>Duración</div>}
-                            onChange={(d) => {
-                                this.setState(this.state.claseSelected.selectDuracion = d);
-                            } }
-                            value={this.state.claseSelected.selectDuracion} />
-                    </div>
-                    <div className="elementoFormulario">
-                        <Select
-                            options={this.getTipoOptions()}
-                            placeholder={<div>Tipo</div>}
-                            onChange={(t) => {
-                                this.setState(this.state.claseSelected.selectTipo = t);
-                            } }
-                            value={this.state.claseSelected.selectTipo} />
+            <div className="fondoCard">
+                <p>Arrastra una clase al horario</p>
+                <div className="contenidoCard">
+                    <p style={{fontWeight: "bold"}}>Cases teóricas:</p>
+                    <div className="asignaturas">
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Física 1 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Programación 1 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Matemáticas 1 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Matemáticas 2 </div>
+                        <div className="asignatura"
+                             draggable="true"
+                             onDragStart={this.handleDragStartInsertar}
+                             onDragEnd={this.handleDragEnd}>
+                            <DragIndicatorIcon></DragIndicatorIcon>
+                            Introducción a los computadores</div>
                     </div>
                 </div>
-
-                <button className="btn btn-info" id="addButton" onClick={() => this.addClase()}>Añadir clase</button>
-                {this.state.error === null
-                    ? ""
-                    : this.state.error
-                        ? this.htmlAlertError(this.state.errorMessage)
-                        : this.htmlAlertSuccess()}
             </div>
         )
     }
@@ -406,10 +406,11 @@ class Horario extends Component {
     }
 
     delClaseFromHorario(clase) {
+        console.log("delClase")
         let horario = this.state.horario.filter((c) => c !== clase)
-        this.setState({
-            horario: horario,
-        })
+        horario.map((clase) => console.log("HORARIO: " + clase.asignatura +" "+clase.hora))
+
+        return horario
     }
 
     /**
@@ -491,9 +492,9 @@ class Horario extends Component {
         return (
             <td className={css.className}
                 id={dia + " " + hora}
-                style={{backgroundColor: css.color}}
-                draggable="true"
-                onDragStart={this.handleDragStart}
+                style={{backgroundColor: css.color, cursor:(nombreAsignatura) ? "move" : "default"}}
+                draggable={(nombreAsignatura) ? "true" : "false"}
+                onDragStart={(e) => this.handleDragStartMover(e, dia, hora)}
                 onDragEnd={this.handleDragEnd}
                 onDragOver={this.handleDragOver}
                 onDragEnter={this.handleDragEnter}
@@ -601,12 +602,27 @@ class Horario extends Component {
     }
 
     /**
-     * Empezar a arrastrar un objeto
+     * Empezar a arrastrar una clase desde fuera para insertarla
+     * en el horario
      */
-    handleDragStart = (e) =>{
+    handleDragStartInsertar = (e) =>{
         e.target.style.opacity = '0.4';
 
         this.state.dragSrcEl = e.target
+        this.state.origen_accion = constants.ACCION_ORIGEN.INSERTAR
+        e.dataTransfer.effectAllowed = 'move'
+        e.dataTransfer.setData('text/html', e.target.textContent)
+    }
+    /**
+     * Empezar a arrastrar una clase del horario para moverla a otra
+     * posicion del horario
+     */
+    handleDragStartMover = (e, dia, hora) => {
+        e.target.style.opacity = '0.4';
+        this.state.dragSrcEl = e.target
+        this.state.origen_accion = constants.ACCION_ORIGEN.MOVER
+        this.state.diaOrigenAlMover = dia
+        this.state.horaOrigenAlMover = hora
         e.dataTransfer.effectAllowed = 'move'
         e.dataTransfer.setData('text/html', e.target.textContent)
     }
@@ -625,7 +641,14 @@ class Horario extends Component {
                 duracion: 30,
                 tipo: constants.TIPO_CLASE.TEORIA.NOMBRELARGO
             }
-            this.addClase(clase)
+            switch(this.state.origen_accion) {
+                case constants.ACCION_ORIGEN.INSERTAR:
+                    this.addClase(clase);break
+                case constants.ACCION_ORIGEN.MOVER:
+                    this.moveClase(clase);break
+                default:
+                    console.log("ERROR origen desconocido de la accion")
+            }
         }
             return false;
     }
@@ -635,6 +658,13 @@ class Horario extends Component {
      */
     handleDragEnd(e) {
         e.target.style.opacity = '1';
+        let objectOver = document.querySelectorAll("div[class^='objectOver']");
+        if (objectOver) {
+            for(var i = 0; i < objectOver.length; i++) {
+                console.log("handleDragEnd")
+                objectOver[i].classList.remove('objectOver');
+            }
+        }
     }
 
 
@@ -656,6 +686,7 @@ class Horario extends Component {
         //console.log("onDragEnter!!")
         // Insertamos css para que este objeto tenga un borde de puntitos
         // indicando que el otro objeto se puede soltar sobre este.
+        //e.target.classList.remove('celdaSinClase');
         e.target.classList.add('objectOver');
     }
 
@@ -667,6 +698,22 @@ class Horario extends Component {
         // Eliminamos el css con el borde de puntitos indicando que el otro
         // objeto ya no se puede soltar sobre este.
         e.target.classList.remove('objectOver');
+        //e.target.classList.add('celdaSinClase');
+    }
+
+    htmlAlertInfo() {
+        return (
+            <div className="alertInfo">
+                <Alert severity="info">Información:
+                    <ul>
+                        <li> Puedes añadir clases al horario arrastrándolas.</li>
+                        <li> Dentro del horario puedes mover clases arrastrándolas.</li>
+                        <li> Dentro del horario puedes cambiar la duración de las clases clicando sobre ellas.</li>
+                        <li> Dentro del horario puedes eliminar clases clicando sobre el icono: <DeleteSharpIcon></DeleteSharpIcon></li>
+                    </ul>
+                </Alert>
+            </div>
+        )
     }
 
 
@@ -675,23 +722,9 @@ class Horario extends Component {
         return (
             <div>
                 {this.htmlCabecera()}
-                {this.htmlFormulario()}
-                <div className="objectDrag"
-                     draggable="true"
-                     onDragStart={this.handleDragStart}
-                     onDragEnd={this.handleDragEnd}
-                >
-                    Naturales
-                </div>
-
-                <div className="objectDrag"
-                     draggable="true"
-                     onDragStart={this.handleDragStart}
-                     onDragEnd={this.handleDragEnd}
-                >
-                    Biologia
-                </div>
-
+                <h5 className="titulo" style={{marginLeft:"5%"}}>Grado en Ingeniería Informática > 1ºcurso > Otoño > Grupo Mañanas</h5>
+                {this.htmlAlertInfo()}
+                {this.htmlCard()}
                 {this.htmlHorario()}
             </div>
 

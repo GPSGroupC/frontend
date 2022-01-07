@@ -46,6 +46,12 @@ import React from "react";
         SOLAPAMIENTO: "La asignatura que quieres añadir se solapa con otra existente"
     },
 
+    //Origen de la accion de anhadir una nueva clase al horario
+    ACCION_ORIGEN: {
+        MOVER: "Mover", //Mover clase ya insertada
+        INSERTAR: "Insertar" //Mover clase no insertada
+    }
+
 
 
 }

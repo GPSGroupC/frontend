@@ -11,11 +11,16 @@
     align-items: center;
     flex-wrap: wrap;
 }
+/*Alert info*/
+.alertInfo {
+    display: block;
+    margin: 40px auto auto;
+    width: 80%;
+}
 
-/*Formulario*/
-.fondoFormulario {
-    display: flex;
-    flex-direction: column;
+/*Card*/
+.fondoCard {
+    display: block;
     margin: 40px auto auto;
     width: 80%;
     border: 1px solid #b8b894;
@@ -23,17 +28,23 @@
     padding: 10px;
     box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
 }
-.contenidoFormulario {
+.contenidoCard {
     display: flex;
-    flex-direction: row;
-    margin: auto;
-    justify-content: center;
+    flex-direction: column;
+    margin: 5px;
+    justify-content: start; /*Horizontal*/
+    align-items: stretch; /*Vertical*/
     flex-wrap: wrap;
 }
 
-.elementoFormulario {
-    margin: 6px;
+.asignaturas {
+    display: flex;
+    flex-direction: row;
+    justify-content: start; /*Horizontal*/
+    align-items: start; /*Vertical*/
+    flex-wrap: wrap;
 }
+
 
 /* Tabla de horario*/
 .timetable {
@@ -43,6 +54,7 @@
     border: 1px solid #b8b894;
     border-radius: 8px;
     box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
+    border-collapse: collapse;
 
 }
 
@@ -75,9 +87,8 @@
 .timetable .celdaSinClase {
     border-right: 1px solid #b8b894;
     border-bottom: 1px solid #b8b894;
-    width: 15%;
-    text-align: center;
 }
+
 
 .timetable .claseDuracionMediaHora {
     border: 2px solid #b8b894;
@@ -114,11 +125,13 @@
 }
 
 /*Drag and drop*/
-.objectDrag {
-    border:1px solid #b8b894;
-    background-color:grey;
-    max-width:90px;
+.asignatura {
+    background-color: #d7dfe8;
+    padding: 10px;
     cursor: move;
+    border: 1px solid #666;
+    border-radius: 8px;
+    margin-right: 5px;
 }
 
 .objectOver {
