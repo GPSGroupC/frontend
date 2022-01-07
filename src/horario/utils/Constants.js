@@ -24,8 +24,9 @@ import React from "react";
 
     TIPO_CLASE: {
         TEORIA: {NOMBRECORTO: "T", NOMBRELARGO: "Teoría"},
-        //PROBLEMAS: {NOMBRECORTO: "PRO", NOMBRELARGO: "Problemas"},
-        //PRACTICAS: {NOMBRECORTO: "PRA", NOMBRELARGO: "Prácticas"}
+        PROBLEMAS: {NOMBRECORTO: "PRO", NOMBRELARGO: "Problemas"},
+        PRACTICAS_A: {NOMBRECORTO: "PRA_A", NOMBRELARGO: "Prácticas Semana A"},
+        PRACTICAS_B: {NOMBRECORTO: "PRA_B", NOMBRELARGO: "Prácticas Semana B"}
     },
 
     DURACION_CLASE : {

@@ -214,6 +214,12 @@ class Horario extends Component {
             case constants.TIPO_CLASE.TEORIA.NOMBRELARGO:
                 //Si es clase de teoria, azul
                 color =  "#d7dfe8"; break
+            case constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO:
+                color =  "#FCF7C3"; break //amarillo
+            case constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO:
+                color =  "#B4D4FF"; break //azul
+            case constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO:
+                color =  "#FF6262"; break //rojo
             default:
                 //Resto de casos, blanco
                 color = "#FFFFFF"; break

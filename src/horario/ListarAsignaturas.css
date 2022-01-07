@@ -2,9 +2,13 @@
  * CSS PARA EL COMPONENTE LISTAR ASIGNATURAS
  */
 .tablaAsignaturas {
-    margin: 50px auto auto;
+    margin-top: 2%;
+    /*margin: 50px auto auto;*/
+    align-items: center;
+    justify-content: center;
     display: block;
-    width: 75%;
+
+    /*width: 75%;*/
     border: 1px solid #b8b894;
     border-radius:8px;
     box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
