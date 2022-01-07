@@ -598,10 +598,10 @@ class Horario extends Component {
             <div className="alertInfo">
                 <Alert severity="info">Información:
                     <ul>
-                        <li> Puedes añadir clases al horario arrastrándolas.</li>
-                        <li> Dentro del horario puedes mover clases arrastrándolas.</li>
-                        <li> Dentro del horario puedes cambiar la duración de las clases clicando sobre ellas.</li>
-                        <li> Dentro del horario puedes eliminar clases clicando sobre el icono: <DeleteSharpIcon></DeleteSharpIcon></li>
+                        <li> Puedes <b>añadir clases</b> al horario arrastrándolas.</li>
+                        <li> Dentro del horario puedes <b>mover clases</b> arrastrándolas.</li>
+                        <li> Dentro del horario puedes <b>cambiar la duración</b> de las clases clicando sobre ellas.</li>
+                        <li> Dentro del horario puedes <b>eliminar clases</b> clicando sobre el icono: <DeleteSharpIcon></DeleteSharpIcon></li>
                     </ul>
                 </Alert>
             </div>

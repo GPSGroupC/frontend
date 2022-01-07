@@ -58,6 +58,11 @@
 
 }
 
+.timetable tr {
+    border-bottom: 1px solid #b8b894;
+
+}
+
 .timetable td {
     width: 5%;
     text-align: center;
@@ -86,7 +91,6 @@
 
 .timetable .celdaSinClase {
     border-right: 1px solid #b8b894;
-    border-bottom: 1px solid #b8b894;
 }
 
 
