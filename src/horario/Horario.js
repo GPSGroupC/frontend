@@ -5,6 +5,7 @@ import eina from "../images/eina-logo.png";
 import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import constants from "./utils/Constants";
+import Api from "./servicios/api";
 import './Horario.css'
 
 /**
@@ -16,8 +17,10 @@ class Horario extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            //Estructura que guarda las clases del horario
+            //Lista de clases [{dia, hora, asignatura, duracion, tipo}], insertadas al horario
             horario: [],
+            //Lista de asignaturas asociadas a una carrera, curso y cuatrimestre
+            asignaturas: [],
             //Errores
             error: null,
             errorMessage: "",
@@ -32,6 +35,32 @@ class Horario extends Component {
             diaOrigenAlMover: null, //Dia de la clase que se mueve
             horaOrigenAlMover: null, //Hora de la clase que se mueve
         }
+    }
+
+    /**
+     * Actualiza las asignaturas asociadas al horario de una carrera, curso y cuatrimestre concreto
+     * solo si ha recibido una respuesta correcta del backend
+     */
+    async updateAsignaturas () {
+        await Api.obtenerAsignaturasHorario(558,1,"S1").then(response => {
+            if (response.data) {
+                let asignaturas = []
+                response.data.map((asignatura) => {
+                    asignaturas.push(
+                        {codasig: asignatura.codasig, nombre: asignatura.nombre}
+                    )
+                })
+                this.setState({
+                    asignaturas: asignaturas
+                })
+            }
+        }).catch(err => {
+            console.log("Error al obtener asignaturas para un horario", err)
+        })
+    }
+
+    componentDidMount() {
+      this.updateAsignaturas()
     }
 
     /**
@@ -448,141 +477,69 @@ class Horario extends Component {
                 <div className="contenidoCard">
                     <p style={{fontWeight: "bold"}}>Clases Teóricas:</p>
                     <div className="asignaturas">
-                        <div className="asignatura"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Física 1", constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Física 1 </div>
-                        <div className="asignatura"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Programación 1", constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Programación 1 </div>
-                        <div className="asignatura"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 1", constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 1 </div>
-                        <div className="asignatura"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 2", constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 2 </div>
-                        <div className="asignatura"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Introducción a los computadores", constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Introducción a los computadores</div>
+                        {
+                            this.state.asignaturas.map((asignatura) => {
+                                return (
+                                    <div className="asignatura"
+                                         draggable="true"
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
+                                         onDragEnd={this.handleDragEnd}>
+                                        <DragIndicatorIcon></DragIndicatorIcon>
+                                        {asignatura.nombre}</div>
+                                )
+                            })
+                        }
                     </div>
                     <br></br>
 
                     <p style={{fontWeight: "bold"}}>Clases Prácticas Semana A:</p>
                     <div className="asignaturas_practicas_A">
-                        <div className="asignatura_practicas_A"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Física 1", constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Física 1 </div>
-                        <div className="asignatura_practicas_A"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Programación 1", constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Programación 1 </div>
-                        <div className="asignatura_practicas_A"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 1", constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 1 </div>
-                        <div className="asignatura_practicas_A"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 2", constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 2 </div>
-                        <div className="asignatura_practicas_A"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Introducción a los computadores", constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Introducción a los computadores</div>
+                        {
+                            this.state.asignaturas.map((asignatura) => {
+                                return (
+                                    <div className="asignatura_practicas_A"
+                                         draggable="true"
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
+                                         onDragEnd={this.handleDragEnd}>
+                                        <DragIndicatorIcon></DragIndicatorIcon>
+                                        {asignatura.nombre}</div>
+                                )
+                            })
+                        }
                     </div>
                     <br></br>
 
                     <p style={{fontWeight: "bold"}}>Clases Prácticas Semana B:</p>
                     <div className="asignaturas_practicas_B">
-                        <div className="asignatura_practicas_B"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Física 1", constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Física 1 </div>
-                        <div className="asignatura_practicas_B"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Programación 1", constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Programación 1 </div>
-                        <div className="asignatura_practicas_B"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 1", constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 1 </div>
-                        <div className="asignatura_practicas_B"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 2", constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 2 </div>
-                        <div className="asignatura_practicas_B"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Introducción a los computadores", constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Introducción a los computadores</div>
+                        {
+                            this.state.asignaturas.map((asignatura) => {
+                                return (
+                                    <div className="asignatura_practicas_B"
+                                         draggable="true"
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
+                                         onDragEnd={this.handleDragEnd}>
+                                        <DragIndicatorIcon></DragIndicatorIcon>
+                                        {asignatura.nombre}</div>
+                                )
+                            })
+                        }
                     </div>
                     <br></br>
 
                     <p style={{fontWeight: "bold"}}>Clases Problemas:</p>
                     <div className="asignaturas_problemas">
-                        <div className="asignatura_problemas"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Física 1", constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Física 1 </div>
-                        <div className="asignatura_problemas"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Programación 1", constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Programación 1 </div>
-                        <div className="asignatura_problemas"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 1", constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 1 </div>
-                        <div className="asignatura_problemas"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Matemáticas 2", constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Matemáticas 2 </div>
-                        <div className="asignatura_problemas"
-                             draggable="true"
-                             onDragStart={(e) => this.handleDragStartInsertar(e,"Introducción a los computadores", constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
-                             onDragEnd={this.handleDragEnd}>
-                            <DragIndicatorIcon></DragIndicatorIcon>
-                            Introducción a los computadores</div>
+                        {
+                            this.state.asignaturas.map((asignatura) => {
+                                return (
+                                    <div className="asignaturas_problemas"
+                                         draggable="true"
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
+                                         onDragEnd={this.handleDragEnd}>
+                                        <DragIndicatorIcon></DragIndicatorIcon>
+                                        {asignatura.nombre}</div>
+                                )
+                            })
+                        }
                     </div>
 
                     {(this.state.error)

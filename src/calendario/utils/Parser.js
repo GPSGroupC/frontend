@@ -86,34 +86,33 @@ class Parser {
     }
 
     static async ParseDate(semester,fechasCuatri,inicioPrimerCuatri,inicio_FinSeptiembre) {
-        
-        semester.map( week => {
-            week.map((day) => {
-                const specificDay = day.jsDate.split(this.BLANK_DATE)[0]
-                if( !isNaN(inicioPrimerCuatri)){
-                  this.ParseDaysBeforeSemester1Beginning(this.dateToString(new Date(inicioPrimerCuatri)),specificDay,day)
-                }
-                if( inicio_FinSeptiembre !== undefined ){
-                    this.ParseDaysRemedialSemester(inicio_FinSeptiembre,specificDay,day)
-                }
+        if (fechasCuatri) {
+            semester.map(week => {
+                week.map((day) => {
+                    const specificDay = day.jsDate.split(this.BLANK_DATE)[0]
+                    if (!isNaN(inicioPrimerCuatri)) {
+                        this.ParseDaysBeforeSemester1Beginning(this.dateToString(new Date(inicioPrimerCuatri)), specificDay, day)
+                    }
+                    if (inicio_FinSeptiembre !== undefined) {
+                        this.ParseDaysRemedialSemester(inicio_FinSeptiembre, specificDay, day)
+                    }
 
-                for(let i = 0; i < fechasCuatri.length; i++) {
-                    let diaencontrado = fechasCuatri[i].find( dia =>
-                        dia.diafecha === specificDay
-                    )
-                    if(diaencontrado !== undefined && day.date !== this.BLANK_DATE){
-                        day.type = diaencontrado.docencia
-                        day.horarioCambiado = diaencontrado.horariocambiado
-                        day.description = diaencontrado.festividad
-                        if(diaencontrado.semana_a_b !== 'c'){
-                            day.semanaAB = diaencontrado.semana_a_b
+                    for (let i = 0; i < fechasCuatri.length; i++) {
+                        let diaencontrado = fechasCuatri[i].find(dia =>
+                            dia.diafecha === specificDay
+                        )
+                        if (diaencontrado !== undefined && day.date !== this.BLANK_DATE) {
+                            day.type = diaencontrado.docencia
+                            day.horarioCambiado = diaencontrado.horariocambiado
+                            day.description = diaencontrado.festividad
+                            if (diaencontrado.semana_a_b !== 'c') {
+                                day.semanaAB = diaencontrado.semana_a_b
+                            }
                         }
                     }
-                }
+                })
             })
-        })
-      
-       
+        }
     }
 
     /**

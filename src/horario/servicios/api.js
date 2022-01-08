@@ -36,6 +36,24 @@ class Api {
     return result
   }
 
+  static obtenerAsignaturasHorario = async (codplan, curso, periodo) => {
+    console.log("obtenerAsignaturasHorario");
+    let result = null
+    await axios.get(baseUrl + "/obtenerAsignaturasHorario", {
+      params: {
+        codplan: codplan,
+        curso: curso,
+        periodo: periodo
+      }
+    }).then(response => {
+          result = response;
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    return result
+  }
+
   static añadirAsignatura = async (asignaturaObj) => {
     console.log("Añadir asignatura");
     let result = null
