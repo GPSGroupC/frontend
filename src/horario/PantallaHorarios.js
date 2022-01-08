@@ -7,6 +7,7 @@ import ListarAsignaturas from "./ListarAsignaturas";
 import SeleccionHorarioGrados from "./SeleccionHorarioGrados";
 import ListarAulas from "./ListarAulas";
 import ImportarAulas from "./ImportarAulas";
+import PantallaCursos from "./PantallaCursos";
 
 /**
  * Menu de pantallas de horarios.
@@ -24,7 +25,8 @@ class PantallaHorarios extends Component {
                 {id: 2, name: "LISTAR ASIGNATURAS", component: <ListarAsignaturas/>},
                 {id: 3, name: "IMPORTAR AULAS", component: <ImportarAulas/>},
                 {id: 4, name: "LISTAR AULAS", component: <ListarAulas/>},
-                {id: 5, name: "LISTAR HORARIOS", component: <SeleccionHorarioGrados/>}
+                {id: 5, name: "LISTAR GRADOS", component: <SeleccionHorarioGrados/>},
+                {id: 6, name: "LISTAR HORARIOS", component: <PantallaCursos/>}
             ],
             menuItemSelected: <ImportarAsignaturas/>
         }

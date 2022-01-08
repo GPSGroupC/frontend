@@ -1,37 +1,37 @@
 /**
  * CSS PARA EL COMPONENTE LISTAR ASIGNATURAS
  */
-.tablaAsignaturas {
+ .tablaCursos {
     margin-top: 2%;
     /*margin: 50px auto auto;*/
     align-items: center;
     justify-content: center;
     display: block;
 
-    /*width: 75%;*/
+    margin-left: 18%;
+    width: 64%;
     border: 1px solid #b8b894;
     border-radius:8px;
     box-shadow: 4px 5px 4px -3px rgba(97,97,97,1);
 
-    height: 800px;
+    height: 500px;
     overflow-y: auto;
     border-collapse: collapse;
 }
 
-.tablaAsignaturas thead {
+.tablaCursos thead {
     background-color: #d7dfe8;
     border-bottom: 2px solid black;
 }
 
-.tablaAsignaturas thead  {
+.tablaCursos thead  {
     position: sticky;
     top: 0;
 }
 
-.tablaAsignaturas tr:hover {
+.tablaCursos tr:hover {
 background: #e6f7ff;
 }
-
 
 .tablaGrados {
     margin-top: 2%;
