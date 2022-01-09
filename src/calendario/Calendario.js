@@ -290,15 +290,19 @@ class Calendario extends Component {
         for(let i=0; i < 5; i++){
             // Dia concreto de la semana
             let day = semester.dates[monthIndex][weekIndex][i]
-            if (day.date != ' ' && day.type == constants.TIPOS_FECHA.LECTIVO) {
-                // Actualizamos el dia con value -> ("a" o "b")
+            if (day.date != ' ' && day.type !== constants.TIPOS_FECHA.FESTIVO
+                && day.type !== constants.TIPOS_FECHA.CONVOCATORIA) {
+                //Actualizamos los dias lectivos o sin tipo asociado
                 day.semanaAB = value
+                day.type = constants.TIPOS_FECHA.LECTIVO
                 // Agregamos el dia a la estructura de datos semestre_changed que usamos para actualizar
                 // el backend solo con los dias que se modifican
-                const indiceS1 = semester_changed.dates.findIndex( fecha => fecha.jsDate === day.jsDate);
-                if(indiceS1 !== -1){
-                    semester_changed.dates[indiceS1] = day
+                const indice = semester_changed.dates.findIndex( fecha => fecha.jsDate === day.jsDate);
+                if(indice !== -1){
+                    console.log("ADD EXISTING DAY: " + day.date)
+                    semester_changed.dates[indice] = day
                 }else{
+                    console.log("ADD NEW DAY: " + day.date)
                     semester_changed.dates.push(day)
                 }
             }
