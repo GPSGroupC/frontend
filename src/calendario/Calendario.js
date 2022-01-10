@@ -7,7 +7,7 @@ import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import Stack from '@mui/material/Stack';
 import {Alert} from "@material-ui/lab";
 import isWeekend from 'date-fns/isWeekend';
-
+import swal from 'sweetalert2'
 import Api from "./servicios/api";
 import Parser from "./utils/Parser";
 import Pdf from "./utils/Pdf";
@@ -928,16 +928,29 @@ class Calendario extends Component {
                 <br/><br/>
                 <div className="header">
                 <Link to="/">
-                    <button onClick={() => {
-                        Api.putMetadataCalendar(this.state.inicioPrimer_cuatri,
-                            this.state.inicioSegundo_cuatri,
-                            this.state.inicioSegundaConvocatoria,
-                            this.state.finSegundaConvocatoria,
-                            this.state.estadoCurso);
-                        //Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1)
-                        Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed)
-                        Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2_changed)
-                        Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed)
+                    <button onClick={(e) => {
+                        
+                          Promise.all([
+                            Api.putMetadataCalendar(this.state.inicioPrimer_cuatri,
+                                this.state.inicioSegundo_cuatri,
+                                this.state.inicioSegundaConvocatoria,
+                                this.state.finSegundaConvocatoria,
+                                this.state.estadoCurso),
+                            Api.putSemester(this.state.estadoCurso, "semestre1", this.state.semestre1_changed),
+                            Api.putSemester(this.state.estadoCurso, "semestre2", this.state.semestre2_changed),
+                            Api.putSemester(this.state.estadoCurso, "recuperacion", this.state.recuperacion_changed),
+                          ]).then(() =>{
+                            swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                text: "Operación exitosa.",
+                                title: 'Cambios guardados éxitosamente.',
+                                confirmButtonText: "Vale",
+                                confirmButtonColor: "#00A300",
+                                showConfirmButton: true,
+                                timer: 2500
+                              })
+                          }) 
 
                     }} type="button" className="btn btn-info btn-lg" >GUARDAR CALENDARIO
                     </button>

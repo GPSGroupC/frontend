@@ -87,7 +87,7 @@ class Api {
                     semester: dayList,
                 }
             })
-           // console.log(dayList)
+           //console.log(dayList)
         }
     }
 }
