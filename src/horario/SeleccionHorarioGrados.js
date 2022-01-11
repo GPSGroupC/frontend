@@ -8,6 +8,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import DeleteSharpIcon from '@mui/icons-material/DeleteSharp';
 
 const StyledMenu = styled((props) => (
   <Menu
@@ -100,6 +101,15 @@ function SeleccionHorarioGrados() {
       }
     }).catch(err => {
       console.log("Error al obtener grupos: ", err)
+    })
+  }
+
+  async function eliminarHorario(idHorario) {
+    await Api.eliminarHorario(idHorario).then(r => {
+      console.log(r);
+      obtenerHorarios();
+    }).catch(err => {
+      console.log("Error al eliminar horario: ", err)
     })
   }
 
@@ -267,6 +277,12 @@ function SeleccionHorarioGrados() {
     setAddFormData(newFormData);
   };
 
+  const handleDelHorario = (e, horario) => {
+    e.stopPropagation(); // Hace que el html padre no expanda su comportamiento onClick en este boton
+    console.log(horario);
+    eliminarHorario(horario.id);
+  };
+
 
   return (
 
@@ -285,10 +301,15 @@ function SeleccionHorarioGrados() {
             <Button style={{ width: '500px', marginLeft: '32.5%', marginBottom: '5px' }} id="fade-button" aria-controls="fade-menu" aria-haspopup="true" aria-expanded={open ? 'true' : undefined} onClick={(event) => handleClick(event, grado)} endIcon={<KeyboardArrowDownIcon />}>
               {grado.codplan}-{grado.nombre} </Button>
               {
-                horarios.map(horario => (grado.codplan === horario.codplan) ? <MenuItem component={Link} to="/editar-horario" disableRipple> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º {horario.descripcion} </MenuItem> : null)
+                openGradoId === grado.codplan ? (
+                horarios.map(horario => (grado.codplan === horario.codplan) ? 
+                <div class="contenedor" style={{ width: '500px', marginLeft: '32.5%', marginBottom: '5px' }}>
+                  <div class="contenido"><MenuItem component={Link} to="/editar-horario" disableRipple> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º {horario.descripcion} </MenuItem></div>
+                  <div class="contenido"><button style={{padding:"0px", backgroundColor:"white", color:"dimgrey"}}id="delButton"onClick={(e) => handleDelHorario(e, horario)}><DeleteSharpIcon></DeleteSharpIcon></button></div>
+                </div> : null)) : (null)
               }
               {openGradoId === grado.codplan ? (
-              <form onSubmit={(event) => handleAddFormSubmit(event,grado.codplan)}>
+              <form onSubmit={(event) => handleAddFormSubmit(event,grado.codplan)} style={{ width: '500px', marginLeft: '32.5%', marginBottom: '5px' }}>
                 <input style={{ width: "75px", marginLeft: '3%', marginRight: '5px' }}
                   type="number"
                   min="0"

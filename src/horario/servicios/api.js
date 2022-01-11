@@ -300,6 +300,19 @@ class Api {
       })
     return result
   }
+
+  static eliminarHorario = async (id) => {
+    console.log("Eliminar horario con id: " + id);
+    let result = null
+    await axios.delete(baseUrl + "/eliminarHorario", {
+      data: {
+        id : id
+      }
+    }).then(response => {
+      result = response;
+    })
+    return result
+  }
 }
 
 export default Api
