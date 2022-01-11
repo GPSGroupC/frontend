@@ -252,6 +252,36 @@ class Api {
         })
     return result
   }
+
+  static obtenerPlanes = async () => {
+    console.log("obtenerPlanes");
+    let result = null
+    await axios({ method: 'GET', url: baseUrl + "/obtenerPlanes" })
+      .then((response) => {
+        if (response.status === 200) {
+          result = response;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    return result
+  }
+
+  static obtenerHorarios = async () => {
+    console.log("obtenerHorarios");
+    let result = null
+    await axios({ method: 'GET', url: baseUrl + "/obtenerHorarios" })
+      .then((response) => {
+        if (response.status === 200) {
+          result = response;
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    return result
+  }
 }
 
 export default Api
