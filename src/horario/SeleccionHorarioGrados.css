@@ -7,7 +7,9 @@
 }
 .contenido{
     height:80px;
-    width:10%;
+    width:15%;
     float:left;
     margin: 10px;
+    font-weight: bold;
 }
+
