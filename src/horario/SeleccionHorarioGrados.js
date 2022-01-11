@@ -246,10 +246,8 @@ function SeleccionHorarioGrados() {
               }} anchorEl={anchorEl} open={open} onClose={handleClose}
             >
               {
-                horarios.map(horario => <MenuItem component={Link} to="/editar-horario" disableRipple> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º </MenuItem>)
+                horarios.map(horario => (grado.codplan===horario.codplan) ? <MenuItem component={Link} to="/editar-horario" disableRipple> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º </MenuItem>:null)
               }
-              
-
             </StyledMenu>
           </div>)
         }
