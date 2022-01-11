@@ -1,4 +1,4 @@
-import React,{ useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import eina from '../images/eina-logo.png'
 import { Link } from 'react-router-dom'
 import Api from "./servicios/api";
@@ -50,15 +50,18 @@ const StyledMenu = styled((props) => (
   },
 }));
 
-
-
-
-
 function SeleccionHorarioGrados() {
 
   //const grados = ['Grado 1', 'Grado 2', 'Grado 3']
   const [grados, setGrados] = useState([]);
   const [horarios, setHorarios] = useState([]);
+  const [addFormData, setAddFormData] = useState({
+    curso: "",
+    periodo: "",
+    grupo: "",
+    descripcion: ""
+  });
+  const [openGradoId, setOpenGradoId] = useState(null);
 
   async function obtenerPlanes() {
     await Api.obtenerPlanes().then(r => {
@@ -70,6 +73,20 @@ function SeleccionHorarioGrados() {
       }
     }).catch(err => {
       console.log("Error al obtener planes: ", err)
+    })
+  }
+
+  async function añadirHorario(horarioObj) {
+    await Api.añadirHorario(horarioObj).then(r => {
+      console.log(r);
+      document.getElementById("curso").value = "";
+      document.getElementById("periodo").value = "";
+      document.getElementById("grupo").value = "";
+      document.getElementById("descripcion").value = "";
+      window.alert("Horario añadido con éxito");
+      obtenerHorarios();
+    }).catch(err => {
+      console.log("Error al añadir horario: ", err)
     })
   }
 
@@ -94,8 +111,9 @@ function SeleccionHorarioGrados() {
   //Ingenieria Informatica
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event, grado) => {
     setAnchorEl(event.currentTarget);
+    setOpenGradoId(grado.codplan);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -222,6 +240,33 @@ function SeleccionHorarioGrados() {
     setAnchorEl13(null);
   };
 
+  const handleAddFormSubmit = (event, codplan) => {
+    event.preventDefault();
+
+    const horarioObj = {
+      codplan: codplan,
+      curso: addFormData.curso,
+      periodo: addFormData.periodo,
+      grupo: addFormData.grupo,
+      descripcion: addFormData.descripcion
+    };
+
+    console.log(horarioObj);
+    añadirHorario(horarioObj);
+  };
+
+  const handleAddFormChange = (event) => {
+    event.preventDefault();
+
+    const fieldName = event.target.getAttribute("name");
+    const fieldValue = event.target.value;
+
+    const newFormData = { ...addFormData };
+    newFormData[fieldName] = fieldValue;
+
+    setAddFormData(newFormData);
+  };
+
 
   return (
 
@@ -237,18 +282,50 @@ function SeleccionHorarioGrados() {
         {
 
           grados.map(grado => <div>
-            <Button style={{ width: '500px', marginLeft: '32.5%', marginBottom: '5px' }} id="fade-button" aria-controls="fade-menu" aria-haspopup="true" aria-expanded={open ? 'true' : undefined} onClick={handleClick} endIcon={<KeyboardArrowDownIcon />}>
+            <Button style={{ width: '500px', marginLeft: '32.5%', marginBottom: '5px' }} id="fade-button" aria-controls="fade-menu" aria-haspopup="true" aria-expanded={open ? 'true' : undefined} onClick={(event) => handleClick(event, grado)} endIcon={<KeyboardArrowDownIcon />}>
               {grado.codplan}-{grado.nombre} </Button>
-
-            <StyledMenu id="demo-customized-menu"
-              MenuListProps={{
-                'aria-labelledby': 'demo-customized-button',
-              }} anchorEl={anchorEl} open={open} onClose={handleClose}
-            >
               {
-                horarios.map(horario => (grado.codplan===horario.codplan) ? <MenuItem component={Link} to="/editar-horario" disableRipple> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º </MenuItem>:null)
+                horarios.map(horario => (grado.codplan === horario.codplan) ? <MenuItem component={Link} to="/editar-horario" disableRipple> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º {horario.descripcion} </MenuItem> : null)
               }
-            </StyledMenu>
+              {openGradoId === grado.codplan ? (
+              <form onSubmit={(event) => handleAddFormSubmit(event,grado.codplan)}>
+                <input style={{ width: "75px", marginLeft: '3%', marginRight: '5px' }}
+                  type="number"
+                  min="0"
+                  id="curso"
+                  name="curso"
+                  required="required"
+                  placeholder="Curso"
+                  onChange={handleAddFormChange}
+                />
+                <input style={{ width: "75px", marginLeft: '1px', marginRight: '5px' }}
+                  type="text"
+                  id="periodo"
+                  name="periodo"
+                  required="required"
+                  placeholder="Periodo"
+                  onChange={handleAddFormChange}
+                />
+                <input style={{ width: "75px", marginLeft: '1px', marginRight: '5px' }}
+                  type="number"
+                  min="0"
+                  id="grupo"
+                  name="grupo"
+                  required="required"
+                  placeholder="Grupo"
+                  onChange={handleAddFormChange}
+                />
+                <input style={{ width: "150px", marginLeft: '1px', marginRight: '5px' }}
+                  type="text"
+                  id="descripcion"
+                  name="descripcion"
+                  required="required"
+                  placeholder="Descripción"
+                  onChange={handleAddFormChange}
+                />
+                <button type="submit" class="btn btn-info btn-md" style={{ width: "75px", marginLeft: '0%' }}>Añadir </button>
+              </form>
+              ):(null)}
           </div>)
         }
       </div>

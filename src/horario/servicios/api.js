@@ -268,6 +268,24 @@ class Api {
     return result
   }
 
+  static añadirHorario = async (horarioObj) => {
+    console.log("Añadir horario");
+    let result = null
+    await axios.post(baseUrl + "/anyadirHorario", { 
+      codplan: horarioObj.codplan,
+      curso: horarioObj.curso,
+      periodo: horarioObj.periodo,
+      grupo: horarioObj.grupo,
+      descripcion: horarioObj.descripcion })
+      .then(response => {
+        result = response;
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      return result
+  }
+
   static obtenerHorarios = async () => {
     console.log("obtenerHorarios");
     let result = null
