@@ -47,7 +47,7 @@ class Horario extends Component {
                 let asignaturas = []
                 response.data.map((asignatura) => {
                     asignaturas.push(
-                        {codasig: asignatura.codasig, nombre: asignatura.nombre}
+                        {codasig: asignatura.codasig, nomasig: asignatura.nombre}
                     )
                 })
                 this.setState({
@@ -59,8 +59,35 @@ class Horario extends Component {
         })
     }
 
+    async guardarListadoClases(idhorario, listadoClases) {
+        await Api.guardarListadoClases(idhorario, listadoClases).then(r => {
+            console.log(r);
+            if (r.status === 200) {
+                window.alert("Horario guardado con éxito");
+            } else {
+                window.alert("Ha ocurrido un error al guardar el horario");
+            }
+        }).catch(err => {
+            console.log("Error al guardar las clases de un horario", err)
+        })
+    }
+
+    async obtenerListadoClases(idhorario) {
+        await Api.obtenerListadoClases(idhorario).then(response => {
+            if (response.data) {
+                console.log(response.data)
+                response.data.map((clase) => {
+                    this.addClase(clase)
+                })
+            }
+        }).catch(err => {
+            console.log("Error al obtener las clases de un horario", err)
+        })
+    }
+
     componentDidMount() {
       this.updateAsignaturas()
+      this.obtenerListadoClases(1)
     }
 
     /**
@@ -314,7 +341,7 @@ class Horario extends Component {
                 this.setState({})
             }
         }
-        this.state.horario.map((clase) => console.log("HORARIO:" + clase.asignatura + " " + clase.duracion))
+        this.state.horario.map((clase) => console.log("HORARIO:" + clase.nomasig + " " + clase.duracion))
     }
 
     /**************************
@@ -361,11 +388,11 @@ class Horario extends Component {
             let newClase = {
                 dia: dia,
                 hora: hora,
-                asignatura: this.state.asignaturaSelected,
+                nomasig: this.state.asignaturaSelected,
                 duracion: 30,
                 tipo: this.state.tipoSelected
             }
-            
+            console.log(newClase)
             switch(this.state.origen_accion) {
                 case constants.ACCION_ORIGEN.INSERTAR:
                     this.addClase(newClase);break
@@ -482,10 +509,10 @@ class Horario extends Component {
                                 return (
                                     <div className="asignatura"
                                          draggable="true"
-                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nomasig, constants.TIPO_CLASE.TEORIA.NOMBRELARGO)}
                                          onDragEnd={this.handleDragEnd}>
                                         <DragIndicatorIcon></DragIndicatorIcon>
-                                        {asignatura.nombre}</div>
+                                        {asignatura.nomasig}</div>
                                 )
                             })
                         }
@@ -499,10 +526,10 @@ class Horario extends Component {
                                 return (
                                     <div className="asignatura_practicas_A"
                                          draggable="true"
-                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nomasig, constants.TIPO_CLASE.PRACTICAS_A.NOMBRELARGO)}
                                          onDragEnd={this.handleDragEnd}>
                                         <DragIndicatorIcon></DragIndicatorIcon>
-                                        {asignatura.nombre}</div>
+                                        {asignatura.nomasig}</div>
                                 )
                             })
                         }
@@ -516,10 +543,10 @@ class Horario extends Component {
                                 return (
                                     <div className="asignatura_practicas_B"
                                          draggable="true"
-                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nomasig, constants.TIPO_CLASE.PRACTICAS_B.NOMBRELARGO)}
                                          onDragEnd={this.handleDragEnd}>
                                         <DragIndicatorIcon></DragIndicatorIcon>
-                                        {asignatura.nombre}</div>
+                                        {asignatura.nomasig}</div>
                                 )
                             })
                         }
@@ -531,12 +558,12 @@ class Horario extends Component {
                         {
                             this.state.asignaturas.map((asignatura) => {
                                 return (
-                                    <div className="asignaturas_problemas"
+                                    <div className="asignatura_problemas"
                                          draggable="true"
-                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nombre, constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
+                                         onDragStart={(e) => this.handleDragStartInsertar(e, asignatura.nomasig, constants.TIPO_CLASE.PROBLEMAS.NOMBRELARGO)}
                                          onDragEnd={this.handleDragEnd}>
                                         <DragIndicatorIcon></DragIndicatorIcon>
-                                        {asignatura.nombre}</div>
+                                        {asignatura.nomasig}</div>
                                 )
                             })
                         }
@@ -567,7 +594,7 @@ class Horario extends Component {
 
         if (clase) {
             //Caso hay una clase que empieza el dia 'dia' a la hora 'hora'
-            nombreAsignatura = clase.asignatura
+            nombreAsignatura = clase.nomasig
             css = this.getCSS(clase, clase.duracion, constants.POSICION.INICIO)
             //console.log("color: " + colorAsignatura)
         } else {
@@ -589,7 +616,7 @@ class Horario extends Component {
                 //Caso hay una clase que empieza el dia 'dia' a la hora 'hora' - 60 minutos
                 if (claseAnteriorHora.duracion === constants.DURACION_CLASE.HORA_Y_MEDIA) {
                     //Caso la clase de la hora anterior dura una hora y media
-                    //console.log("Clase SEGUNDO ABAJO!: " + clase.asignatura)
+                    //console.log("Clase SEGUNDO ABAJO!: " + clase.nomasig)
                     css = this.getCSS(claseAnteriorHora, claseAnteriorHora.duracion, constants.POSICION.FIN)
                 }
             }
@@ -681,16 +708,30 @@ class Horario extends Component {
         )
     }
 
+    htmlGuardarButton() {
+        return (
+            //<Link to="/">
+                    <button onClick={() => {
+                        console.log("Guardar listado clases")
+                        console.log(this.state.horario)
+                        this.guardarListadoClases(1, this.state.horario)
+                    }} type="button" className="btn btn-info btn-lg" style={{marginLeft:"5%",marginTop:"1%"}}>GUARDAR
+                    </button>
+                //</Link>
+        )
+    }
+
 
 
     render() {
         return (
             <div>
                 {this.htmlCabecera()}
-                <h5 className="titulo" style={{marginLeft:"5%"}}>Grado en Ingeniería Informática > 1ºcurso > Otoño > Grupo Mañanas</h5>
+                <h5 className="titulo" style={{marginLeft:"5%"}}>Grado en Ingeniería Informática {">"} 1ºcurso {">"} Otoño {">"} Grupo Mañanas</h5>
                 {this.htmlAlertInfo()}
                 {this.htmlCard()}
                 {this.htmlHorario()}
+                {this.htmlGuardarButton()}
             </div>
 
         )

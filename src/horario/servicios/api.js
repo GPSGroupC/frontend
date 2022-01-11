@@ -224,6 +224,34 @@ class Api {
     })
     return result
   }
+
+  static guardarListadoClases = async (idhorario, listadoClases) => {
+    console.log(listadoClases)
+    console.log("Guardar listado de clases");
+    let result = null
+    await axios.post(baseUrl + "/listadoClases/" + idhorario, {
+        listadoClases : listadoClases
+    }).then(response => {
+      result = response;
+    })
+    return result
+  }
+
+  static obtenerListadoClases = async (idhorario) => {
+    console.log("Obtener listado de clases");
+    let result = null
+    await axios.get(baseUrl + "/listadoClases", {
+      params: {
+        idhorario: idhorario
+      }
+    }).then(response => {
+          result = response;
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    return result
+  }
 }
 
 export default Api
