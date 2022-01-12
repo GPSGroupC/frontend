@@ -65,7 +65,7 @@ it('Transforma un semestre a JSON', () => {
                 ],
     }
     var semesterJSON = [ //Lista de fechas en formato JSON
-        JSON.stringify({date:"1/1/2021", type: constants.TIPOS_FECHA.LECTIVO, horarioCambiado: null, semanaAB: "c"})
+        JSON.stringify({date:"1/1/2021", type: constants.TIPOS_FECHA.LECTIVO, horarioCambiado: null, semanaAB: "c", description:""})
     ]
 
     expect(Parser.semesterToJSON(semester)).toEqual(semesterJSON)
