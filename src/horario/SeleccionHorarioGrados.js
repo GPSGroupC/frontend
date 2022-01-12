@@ -157,6 +157,12 @@ function SeleccionHorarioGrados() {
     setAddFormData(newFormData);
   };
 
+  const handleClickHorario = (e, horario) => {
+    e.stopPropagation(); // Hace que el html padre no expanda su comportamiento onClick en este boton
+    console.log(horario);
+    //window.location.href='/editar-horario'
+  };
+
   const handleDelHorario = (e, horario) => {
     e.stopPropagation(); // Hace que el html padre no expanda su comportamiento onClick en este boton
     console.log(horario);
@@ -183,7 +189,7 @@ function SeleccionHorarioGrados() {
                 openGradoId === grado.codplan ? (
                 horarios.map(horario => (grado.codplan === horario.codplan) ? 
                 <div class="contenedor" style={{ width: '500px', marginLeft: '32.5%' }}>
-                  <div class="contenido" style={{ width:'700px', alignItems:'center' ,fontWeight: 'bold'}}><MenuItem component={Link} to={'/editar-horario/'}> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º {horario.descripcion} <button style={{padding:"0px", backgroundColor:"white", color:"dimgrey"}}id="delButton"onClick={(e) => handleDelHorario(e, horario)}><DeleteSharpIcon></DeleteSharpIcon></button> </MenuItem></div>
+                  <div class="contenido" style={{ width:'700px', alignItems:'center' ,fontWeight: 'bold'}}><MenuItem component={Link} to={{pathname:'/editar-horario/',nombre: grado.nombre, horario: horario}}> {horario.grupo}-{horario.periodo} {grado.nombre}. {horario.curso}º {horario.descripcion} <button style={{padding:"0px", backgroundColor:"white", color:"dimgrey"}}id="delButton"onClick={(e) => handleDelHorario(e, horario)}><DeleteSharpIcon></DeleteSharpIcon></button> </MenuItem></div>
                 </div> : null)) : (null)
               }
               {openGradoId === grado.codplan ? (

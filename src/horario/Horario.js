@@ -34,6 +34,8 @@ class Horario extends Component {
             origen_accion: constants.ACCION_ORIGEN.INSERTAR,
             diaOrigenAlMover: null, //Dia de la clase que se mueve
             horaOrigenAlMover: null, //Hora de la clase que se mueve
+            //Los campos del horario que nos pasan desde SeleccionHorarioGrados.js (id,codplan,curso,periodo...)
+            camposHorario: this.props.location.horario
         }
     }
 
@@ -42,7 +44,7 @@ class Horario extends Component {
      * solo si ha recibido una respuesta correcta del backend
      */
     async updateAsignaturas () {
-        await Api.obtenerAsignaturasHorario(558,1,"S1").then(response => {
+        await Api.obtenerAsignaturasHorario(this.state.camposHorario.codplan,this.state.camposHorario.curso,this.state.camposHorario.periodo).then(response => {
             if (response.data) {
                 let asignaturas = []
                 response.data.map((asignatura) => {
@@ -87,7 +89,7 @@ class Horario extends Component {
 
     componentDidMount() {
       this.updateAsignaturas()
-      this.obtenerListadoClases(1)
+      this.obtenerListadoClases(this.state.camposHorario.id)
     }
 
     /**
@@ -193,6 +195,7 @@ class Horario extends Component {
             })
         } else {
             //Podemos insertar la clase al horario
+            console.log(this.state.camposHorario)
             this.setState({
                 error: false,
                 horario: [...this.state.horario, newClase],
@@ -714,7 +717,7 @@ class Horario extends Component {
                     <button onClick={() => {
                         console.log("Guardar listado clases")
                         console.log(this.state.horario)
-                        this.guardarListadoClases(1, this.state.horario)
+                        this.guardarListadoClases(this.state.camposHorario.id, this.state.horario)
                     }} type="button" className="btn btn-info btn-lg" style={{marginLeft:"5%",marginTop:"1%"}}>GUARDAR
                     </button>
                 //</Link>
@@ -724,10 +727,12 @@ class Horario extends Component {
 
 
     render() {
+        const { nombre } = this.props.location
+        const { horario } = this.props.location
         return (
             <div>
                 {this.htmlCabecera()}
-                <h5 className="titulo" style={{marginLeft:"5%"}}>Grado en Ingeniería Informática {">"} 1ºcurso {">"} Otoño {">"} Grupo Mañanas</h5>
+                <h5 className="titulo" style={{marginLeft:"5%"}}>{nombre} {">"} {horario.curso}ºcurso {">"} {horario.periodo} {">"} Grupo {horario.grupo} {horario.descripcion}</h5>
                 {this.htmlAlertInfo()}
                 {this.htmlCard()}
                 {this.htmlHorario()}
