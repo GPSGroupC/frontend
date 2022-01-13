@@ -1,0 +1,170 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot testing Se renderiza correctamente 1`] = `
+<div>
+  <div>
+    <div
+      className="header"
+    >
+      <a
+        href="/"
+        onClick={[Function]}
+      >
+        <img
+          className="einaImg"
+          src="eina-logo.png"
+        />
+      </a>
+      <h4
+        className="titulo"
+      >
+        HORARIOS
+      </h4>
+      <a
+        href="/"
+        onClick={[Function]}
+      >
+        <button
+          className="btn btn-info btn-lg"
+          type="button"
+        >
+          INICIO
+        </button>
+      </a>
+    </div>
+    <br />
+    <hr
+      color="black"
+      size="5px"
+    />
+  </div>
+  <br />
+  <br />
+  <div
+    style={
+      Object {
+        "marginLeft": "10%",
+      }
+    }
+  >
+                        
+    <div
+      className="btn-group-toggle navBar"
+      data-toggle="buttons"
+    >
+      <button
+        className="btn btn-secondary"
+        onClick={[Function]}
+        style={
+          Object {
+            "borderColor": "#e3f2fd",
+          }
+        }
+        type="button"
+        value={1}
+      >
+        IMPORTAR ASIGNATURAS
+      </button>
+      <button
+        className="btn btn-secondary"
+        onClick={[Function]}
+        style={
+          Object {
+            "borderColor": "#e3f2fd",
+          }
+        }
+        type="button"
+        value={2}
+      >
+        LISTAR ASIGNATURAS
+      </button>
+      <button
+        className="btn btn-secondary"
+        onClick={[Function]}
+        style={
+          Object {
+            "borderColor": "#e3f2fd",
+          }
+        }
+        type="button"
+        value={3}
+      >
+        IMPORTAR AULAS
+      </button>
+      <button
+        className="btn btn-secondary"
+        onClick={[Function]}
+        style={
+          Object {
+            "borderColor": "#e3f2fd",
+          }
+        }
+        type="button"
+        value={4}
+      >
+        LISTAR AULAS
+      </button>
+      <button
+        className="btn btn-secondary"
+        onClick={[Function]}
+        style={
+          Object {
+            "borderColor": "#e3f2fd",
+          }
+        }
+        type="button"
+        value={5}
+      >
+        LISTAR HORARIOS
+      </button>
+    </div>
+    <br />
+    <br />
+    <div>
+      <div
+        id="import-box"
+      >
+        <h3>
+          Importar Asignaturas
+        </h3>
+        <br />
+        <br />
+        <p>
+          Selecciona el archivo excel para importar las asignaturas
+        </p>
+        <br />
+        <br />
+        <div
+          id="fileform"
+        >
+          <form
+            onSubmit={[Function]}
+          >
+            <label>
+              <input
+                id="file"
+                name="file"
+                type="file"
+              />
+            </label>
+            <input
+              id="importarbutton"
+              type="submit"
+              value="Importar"
+            />
+          </form>
+          <br />
+          <br />
+          <label>
+            <input
+              id="conservarAsignaturas"
+              type="checkbox"
+            />
+            Conservar asignaturas que se habían añadido manualmente
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

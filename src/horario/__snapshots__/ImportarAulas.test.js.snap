@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot testing Se renderiza correctamente 1`] = `
+<div>
+  <div
+    id="import-box"
+  >
+    <h3>
+      Importar Aulas
+    </h3>
+    <br />
+    <br />
+    <p>
+      Selecciona el archivo excel para importar las aulas
+    </p>
+    <br />
+    <br />
+    <div
+      id="fileform"
+    >
+      <form
+        onSubmit={[Function]}
+      >
+        <label>
+          <input
+            id="file"
+            name="file"
+            type="file"
+          />
+        </label>
+        <input
+          id="importarbutton"
+          type="submit"
+          value="Importar"
+        />
+      </form>
+      <br />
+      <br />
+      <label>
+        <input
+          id="conservarAulas"
+          type="checkbox"
+        />
+        Conservar aulas que se habían añadido manualmente
+      </label>
+    </div>
+  </div>
+</div>
+`;

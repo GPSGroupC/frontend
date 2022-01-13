@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot testing Se renderiza correctamente 1`] = `
+<div>
+  <div
+    style={
+      Object {
+        "border": "1px solid #b8b894",
+        "borderRadius": "8px",
+        "boxShadow": "4px 5px 4px -3px rgba(97,97,97,1)",
+        "display": "block",
+        "margin": "20px auto auto",
+        "padding": "10px",
+        "width": "61%",
+      }
+    }
+  >
+    <h3>
+      Añadir Curso
+    </h3>
+    <form
+      onSubmit={[Function]}
+    >
+      <input
+        id="grupo"
+        min="0"
+        name="grupo"
+        onChange={[Function]}
+        placeholder="Grupo"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="number"
+      />
+      <input
+        id="nombre"
+        name="nombre"
+        onChange={[Function]}
+        placeholder="Nombre"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="text"
+      />
+      <input
+        id="curso"
+        min="0"
+        name="curso"
+        onChange={[Function]}
+        placeholder="Curso"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="number"
+      />
+      <input
+        id="turno"
+        name="turno"
+        onChange={[Function]}
+        placeholder="Turno"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="text"
+      />
+      <input
+        id="semestre"
+        min="0"
+        name="semestre"
+        onChange={[Function]}
+        placeholder="Semestre"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="number"
+      />
+      <br />
+      <button
+        class="btn btn-info btn-md"
+        style={
+          Object {
+            "marginLeft": "0%",
+            "marginTop": "10px",
+            "width": "150px",
+          }
+        }
+        type="submit"
+      >
+        Añadir 
+      </button>
+    </form>
+    <div>
+      <br />
+      <br />
+      <p
+        style={
+          Object {
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Añadir cursos desde un archivo excel
+      </p>
+      <div
+        id="fileform"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <label>
+            <input
+              id="file"
+              name="file"
+              type="file"
+            />
+          </label>
+          <input
+            class="btn btn-info btn-md"
+            id="añadirButton"
+            style={
+              Object {
+                "marginLeft": "2%",
+              }
+            }
+            type="submit"
+            value="Añadir"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+  <div
+    className="tablaCursos"
+  >
+    <form
+      onSubmit={[Function]}
+    >
+      <table
+        class="table table-hover"
+      >
+        <thead>
+          <tr
+            class="table-light"
+          >
+            <th
+              scope="col"
+            >
+              Grupo
+            </th>
+            <th
+              scope="col"
+            >
+              Nombre
+            </th>
+            <th
+              scope="col"
+            >
+              Curso
+            </th>
+            <th
+              scope="col"
+            >
+              Turno
+            </th>
+            <th
+              scope="col"
+            >
+              Semestre
+            </th>
+            <th
+              scope="col"
+            >
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody />
+      </table>
+    </form>
+  </div>
+</div>
+`;

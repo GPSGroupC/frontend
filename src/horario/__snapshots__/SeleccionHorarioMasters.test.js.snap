@@ -1,0 +1,663 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot testing Se renderiza correctamente 1`] = `
+<div
+  className="HorarioSeleccion"
+>
+  <div>
+    <a
+      href="/"
+      onClick={[Function]}
+    >
+      <img
+        className="logoCabecera"
+        src="eina-logo.png"
+      />
+    </a>
+    <a
+      href="/"
+      onClick={[Function]}
+    >
+      <button
+        className="btn btn-info btn-lg"
+        style={
+          Object {
+            "margin-left": "750px",
+            "margin-top": "15px",
+          }
+        }
+        type="button"
+      >
+        SALIR SIN GUARDAR
+      </button>
+    </a>
+    <hr
+      color="black"
+      size="5px"
+    />
+  </div>
+   
+  <br />
+  <div
+    style={
+      Object {
+        "marginLeft": "5%",
+      }
+    }
+  >
+    <h4
+      className="titulo"
+    >
+      EDITAR HORARIOS
+    </h4>
+  </div>
+  <div
+    style={
+      Object {
+        "margin-left": "30%",
+        "marginRight": "30%",
+      }
+    }
+  >
+    <a
+      href="/importar-asignaturas"
+      onClick={[Function]}
+    >
+      <button
+        class="btn btn-outline-info"
+        type="button"
+      >
+        IMPORTAR ASIGNATURAS
+      </button>
+    </a>
+    <a
+      href="/listar-asignaturas"
+      onClick={[Function]}
+    >
+      <button
+        class="btn btn-outline-info"
+        type="button"
+      >
+        LISTAR ASIGNATURAS
+      </button>
+    </a>
+    <a
+      href="/seleccion-horario-masters"
+      onClick={[Function]}
+    >
+      <button
+        class="btn btn-info btn-md"
+        type="button"
+      >
+        EDITAR HORARIOS
+      </button>
+    </a>
+  </div>
+   
+  <br />
+  <div
+    style={
+      Object {
+        "margin-left": "37.5%",
+      }
+    }
+  >
+    <a
+      href="/seleccion-horario-grados"
+      onClick={[Function]}
+    >
+      <button
+        class="btn btn-outline-info"
+        style={
+          Object {
+            "margin-left": "70px",
+          }
+        }
+        type="button"
+      >
+        GRADO
+      </button>
+    </a>
+    <button
+      class="btn btn-info btn-md"
+      type="button"
+    >
+      MASTER
+    </button>
+  </div>
+   
+  <br />
+  <div
+    className="titulaciones"
+  >
+    <div>
+      <button
+        aria-controls="fade-menu"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería Informática  
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu2"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button2"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Arquitectura
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu3"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button3"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería Electrónica
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu4"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button4"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería Química
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu5"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button5"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería Industrial
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu6"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button6"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería de Telecomunicación
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu7"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button7"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Energías Renovables y Eficiencia Energética
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu8"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button8"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería Mecánica
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu9"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button9"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Ingeniería Biomédica
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu10"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button10"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Master Universitario en Ingeniería de Diseño de Producto
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+    <div>
+      <button
+        aria-controls="fade-menu11"
+        aria-haspopup="true"
+        className="MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButtonBase-root  css-1e6y48t-MuiButtonBase-root-MuiButton-root"
+        disabled={false}
+        id="fade-button11"
+        onBlur={[Function]}
+        onClick={[Function]}
+        onContextMenu={[Function]}
+        onDragLeave={[Function]}
+        onFocus={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseLeave={[Function]}
+        onMouseUp={[Function]}
+        onTouchEnd={[Function]}
+        onTouchMove={[Function]}
+        onTouchStart={[Function]}
+        style={
+          Object {
+            "marginBottom": "5px",
+            "marginLeft": "27.5%",
+            "width": "700px",
+          }
+        }
+        tabIndex={0}
+        type="button"
+      >
+        Máster Universitario en Robotics, Graphics and Computer Vision
+        <span
+          className="MuiButton-endIcon MuiButton-iconSizeMedium css-9tj150-MuiButton-endIcon"
+        >
+          <svg
+            aria-hidden={true}
+            className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-i4bv87-MuiSvgIcon-root"
+            data-testid="KeyboardArrowDownIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M7.41 8.59 12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"
+            />
+          </svg>
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

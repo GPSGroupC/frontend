@@ -1,0 +1,187 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot testing Se renderiza correctamente 1`] = `
+<div>
+  <div
+    style={
+      Object {
+        "border": "1px solid #b8b894",
+        "borderRadius": "8px",
+        "boxShadow": "4px 5px 4px -3px rgba(97,97,97,1)",
+        "display": "block",
+        "margin": "auto",
+        "padding": "10px",
+        "width": "50%",
+      }
+    }
+  >
+    <h3>
+      Añadir Aula
+    </h3>
+    <form
+      onSubmit={[Function]}
+    >
+      <input
+        id="acronimo"
+        name="acronimo"
+        onChange={[Function]}
+        placeholder="Acrónimo"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="text"
+      />
+      <input
+        id="nombre"
+        name="nombre"
+        onChange={[Function]}
+        placeholder="Nombre"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="text"
+      />
+      <input
+        id="capacidad"
+        min="0"
+        name="capacidad"
+        onChange={[Function]}
+        placeholder="Capacidad"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="number"
+      />
+      <input
+        id="edificio"
+        min="0"
+        name="edificio"
+        onChange={[Function]}
+        placeholder="Edificio"
+        required="required"
+        style={
+          Object {
+            "marginLeft": "1px",
+            "marginRight": "1px",
+          }
+        }
+        type="number"
+      />
+      <br />
+      <button
+        class="btn btn-info btn-md"
+        style={
+          Object {
+            "marginLeft": "0%",
+            "marginTop": "10px",
+            "width": "150px",
+          }
+        }
+        type="submit"
+      >
+        Añadir 
+      </button>
+    </form>
+    <div>
+      <br />
+      <br />
+      <p
+        style={
+          Object {
+            "fontWeight": "bold",
+          }
+        }
+      >
+        Añadir aulas desde un archivo excel
+      </p>
+      <div
+        id="fileform"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <label>
+            <input
+              id="file"
+              name="file"
+              type="file"
+            />
+          </label>
+          <input
+            class="btn btn-info btn-md"
+            id="añadirButton"
+            style={
+              Object {
+                "marginLeft": "2%",
+              }
+            }
+            type="submit"
+            value="Añadir"
+          />
+        </form>
+      </div>
+    </div>
+  </div>
+  <div
+    className="horarioTablaAula"
+  >
+    <form
+      onSubmit={[Function]}
+    >
+      <table
+        class="table table-hover"
+      >
+        <thead>
+          <tr
+            class="table-light"
+          >
+            <th
+              scope="col"
+            >
+              Código Aula
+            </th>
+            <th
+              scope="col"
+            >
+              Acrónimo
+            </th>
+            <th
+              scope="col"
+            >
+              Nombre
+            </th>
+            <th
+              scope="col"
+            >
+              Capacidad
+            </th>
+            <th
+              scope="col"
+            >
+              Edificio
+            </th>
+            <th
+              scope="col"
+            >
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody />
+      </table>
+    </form>
+  </div>
+</div>
+`;

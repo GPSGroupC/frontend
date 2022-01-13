@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Snapshot testing Se renderiza correctamente 1`] = `
+<div
+  className="HorarioSeleccion"
+>
+  <div
+    style={
+      Object {
+        "margin-left": "37.5%",
+      }
+    }
+  >
+    <button
+      class="btn btn-info btn-md"
+      style={
+        Object {
+          "margin-left": "70px",
+        }
+      }
+      type="button"
+    >
+      GRADOS Y MASTERS
+    </button>
+  </div>
+   
+  <br />
+  <div
+    className="titulaciones"
+  />
+</div>
+`;
