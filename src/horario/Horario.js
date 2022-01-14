@@ -35,7 +35,8 @@ class Horario extends Component {
             diaOrigenAlMover: null, //Dia de la clase que se mueve
             horaOrigenAlMover: null, //Hora de la clase que se mueve
             //Los campos del horario que nos pasan desde SeleccionHorarioGrados.js (id,codplan,curso,periodo...)
-            camposHorario: this.props.location.horario
+            camposHorario: "",
+            nombre: ""
         }
     }
 
@@ -88,8 +89,17 @@ class Horario extends Component {
     }
 
     componentDidMount() {
-      this.updateAsignaturas()
-      this.obtenerListadoClases(this.state.camposHorario.id)
+        if (this.props.location.horario === undefined || this.props.location.nombre === undefined) {
+            this.state.camposHorario = JSON.parse(localStorage.getItem('horario'));
+            this.state.nombre = JSON.parse(localStorage.getItem('nombre'));
+        } else {
+            localStorage.setItem('horario', JSON.stringify(this.props.location.horario))
+            localStorage.setItem('nombre', JSON.stringify(this.props.location.nombre))
+            this.state.camposHorario = this.props.location.horario;
+            this.state.nombre = this.props.location.nombre;
+        }
+        this.updateAsignaturas()
+        this.obtenerListadoClases(this.state.camposHorario.id)
     }
 
     /**
@@ -732,7 +742,7 @@ class Horario extends Component {
         return (
             <div>
                 {this.htmlCabecera()}
-                <h5 className="titulo" style={{marginLeft:"5%"}}>{nombre} {">"} {horario.curso}ºcurso {">"} {horario.periodo} {">"} Grupo {horario.grupo} {horario.descripcion}</h5>
+                <h5 className="titulo" style={{marginLeft:"5%"}}>{this.state.nombre} {">"} {this.state.camposHorario.curso}ºcurso {">"} {this.state.camposHorario.periodo} {">"} Grupo {this.state.camposHorario.grupo} {this.state.camposHorario.descripcion}</h5>
                 {this.htmlAlertInfo()}
                 {this.htmlCard()}
                 {this.htmlHorario()}
